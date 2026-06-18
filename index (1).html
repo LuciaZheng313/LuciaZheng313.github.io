@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucia Guo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg2:#f7f6f3;--bg3:#efede8;
+  --text:#1a1a1a;--text2:#6b6b6b;--text3:#adadad;
+  --border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.13);
+  --purple-bg:#EEEDFE;--purple:#534AB7;--purple-text:#3C3489;
+  --teal-bg:#E1F5EE;--teal:#0F6E56;
+  --amber-bg:#FAEEDA;--amber:#854F0B;--amber-text:#633806;
+  --coral-bg:#FAECE7;--coral-text:#712B13;
+  --radius:14px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.88);backdrop-filter:blur(16px);border-bottom:0.5px solid var(--border);padding:0 48px;height:54px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-size:14px;font-weight:500;color:var(--text);text-decoration:none;letter-spacing:-0.01em}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{font-size:13px;color:var(--text2);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{font-size:12px;padding:6px 14px;border-radius:8px;background:var(--text);color:#fff;text-decoration:none;transition:opacity .15s}
+.nav-cta:hover{opacity:.8}
+
+/* CONTAINER */
+.container{max-width:880px;margin:0 auto;padding:0 48px}
+section{padding:88px 0;border-bottom:0.5px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.eyebrow{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:36px}
+
+/* HERO */
+#hero{padding:112px 0 88px;position:relative;overflow:hidden}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text3);border:0.5px solid var(--border2);border-radius:20px;padding:4px 12px;margin-bottom:28px}
+.hero-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+h1{font-size:48px;font-weight:500;line-height:1.12;letter-spacing:-.03em;margin-bottom:22px;max-width:580px}
+h1 em{font-style:italic;color:var(--text2)}
+.hero-sub{font-size:16px;color:var(--text2);max-width:440px;line-height:1.75;margin-bottom:36px}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn-primary{font-size:13px;font-weight:500;padding:10px 20px;border-radius:10px;background:var(--text);color:#fff;text-decoration:none;transition:opacity .15s}
+.btn-primary:hover{opacity:.8}
+.btn-secondary{font-size:13px;padding:10px 20px;border-radius:10px;border:0.5px solid var(--border2);color:var(--text);text-decoration:none;background:var(--bg2);transition:background .15s}
+.btn-secondary:hover{background:var(--bg3)}
+.hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px}
+.badge{font-size:12px;padding:4px 12px;border-radius:20px;font-weight:400}
+.badge-purple{background:var(--purple-bg);color:var(--purple-text)}
+.badge-teal{background:var(--teal-bg);color:var(--teal)}
+.badge-amber{background:var(--amber-bg);color:var(--amber-text)}
+
+/* WORK — LIST */
+.work-list{display:flex;flex-direction:column}
+.work-item{display:flex;align-items:flex-start;gap:20px;padding:22px 0;border-bottom:0.5px solid var(--border);cursor:default;transition:background .15s;border-radius:4px}
+.work-item:first-child{border-top:0.5px solid var(--border)}
+.work-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;margin-top:2px}
+.work-body{flex:1}
+.work-meta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.work-title{font-size:15px;font-weight:500;letter-spacing:-.01em}
+.work-period{font-size:12px;color:var(--text3)}
+.work-role{font-size:13px;color:var(--text3);margin-bottom:6px}
+.work-desc{font-size:13px;color:var(--text2);line-height:1.65}
+.work-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.wtag{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--bg2);border:0.5px solid var(--border);color:var(--text2)}
+
+/* PROJECTS — BOARD */
+.project-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.project-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:border-color .2s,transform .15s;position:relative;overflow:hidden}
+.project-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.project-card:hover .project-arrow{opacity:1;transform:translate(0,0)}
+.pc-accent{width:32px;height:3px;border-radius:2px;margin-bottom:16px}
+.pc-tag{font-size:11px;color:var(--text3);margin-bottom:8px}
+.pc-title{font-size:14px;font-weight:500;margin-bottom:8px;letter-spacing:-.01em;line-height:1.4}
+.pc-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px}
+.pc-tags{display:flex;gap:5px;flex-wrap:wrap}
+.pc-tag-pill{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--bg);border:0.5px solid var(--border2);color:var(--text2)}
+.project-arrow{position:absolute;top:16px;right:16px;font-size:14px;color:var(--text3);opacity:0;transform:translate(-4px,4px);transition:opacity .2s,transform .2s}
+
+/* PROJECT MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg);border-radius:20px;max-width:560px;width:100%;max-height:88vh;overflow-y:auto;padding:36px;position:relative;transform:translateY(16px) scale(.98);transition:transform .25s}
+.modal-overlay.open .modal{transform:translateY(0) scale(1)}
+.modal-close{position:absolute;top:20px;right:20px;width:28px;height:28px;border-radius:50%;background:var(--bg2);border:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:background .15s}
+.modal-close:hover{background:var(--bg3)}
+.modal-accent{width:40px;height:4px;border-radius:2px;margin-bottom:20px}
+.modal-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.modal-title{font-size:22px;font-weight:500;letter-spacing:-.02em;margin-bottom:20px}
+.modal-section{margin-bottom:20px}
+.modal-section-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:8px}
+.modal-text{font-size:14px;color:var(--text2);line-height:1.75}
+.modal-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.modal-tag{font-size:12px;padding:4px 11px;border-radius:20px;background:var(--bg2);border:0.5px solid var(--border);color:var(--text2)}
+
+/* SKILLS */
+.skills-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.skill-group{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:22px}
+.sg-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:18px}
+.skill-row{margin-bottom:14px}
+.skill-row:last-child{margin-bottom:0}
+.skill-top{display:flex;justify-content:space-between;margin-bottom:7px}
+.skill-name{font-size:13px;color:var(--text)}
+.skill-pct{font-size:12px;color:var(--text3)}
+.bar-bg{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.bar-fill{height:100%;border-radius:2px;width:0;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.fill-purple{background:var(--purple)}
+.fill-teal{background:var(--teal)}
+.fill-amber{background:var(--amber)}
+
+/* ABOUT */
+.about-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+.about-left p{font-size:16px;color:var(--text2);line-height:1.85;margin-bottom:16px}
+.about-left p:last-child{margin-bottom:0}
+.about-cards{display:flex;flex-direction:column;gap:10px}
+.about-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:18px 20px}
+.ac-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.ac-value{font-size:14px;font-weight:500}
+.ac-sub{font-size:12px;color:var(--text2);margin-top:3px}
+
+/* CONTACT */
+#contact{padding-bottom:110px}
+.contact-h{font-size:36px;font-weight:500;letter-spacing:-.025em;margin-bottom:12px}
+.contact-sub{font-size:15px;color:var(--text2);margin-bottom:32px}
+.contact-row{display:flex;gap:10px;flex-wrap:wrap}
+.contact-btn{display:flex;align-items:center;gap:9px;padding:11px 20px;border-radius:11px;font-size:13px;text-decoration:none;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text);transition:background .15s}
+.contact-btn:hover{background:var(--bg3)}
+.contact-btn svg{width:15px;height:15px;opacity:.45;flex-shrink:0}
+
+/* FOOTER */
+footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justify-content:space-between;align-items:center}
+.ft{font-size:12px;color:var(--text3)}
+
+/* SCROLL ANIM */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#hero" class="nav-logo">Lucia Guo</a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="mailto:luciazg313@gmail.com" class="nav-cta">Get in touch</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-tag">
+      <span class="hero-dot"></span>
+      Open to opportunities
+    </div>
+    <h1>I build things,<br><em>then measure</em><br>if they work.</h1>
+    <p class="hero-sub">Math &amp; CS at UIUC. Interning at Coohom — running paid social across the Middle East, India &amp; NA, and building the dashboards to make sense of it all.</p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn-primary">See my projects</a>
+      <a href="#contact" class="btn-secondary">Say hello</a>
+    </div>
+    <div class="hero-badges">
+      <span class="badge badge-purple">Python · Data</span>
+      <span class="badge badge-teal">Meta Ads · B2B</span>
+      <span class="badge badge-amber">UIUC GPA 4.0</span>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work">
+  <div class="container">
+    <p class="eyebrow">Work</p>
+    <div class="work-list reveal">
+
+      <div class="work-item">
+        <div class="work-icon" style="background:var(--purple-bg)">📊</div>
+        <div class="work-body">
+          <div class="work-meta">
+            <span class="work-title">Coohom (群核科技)</span>
+            <span class="work-period">2025 – present</span>
+          </div>
+          <p class="work-role">Marketing Intern</p>
+          <p class="work-desc">Paid social (Meta Ads) across EMEA, India &amp; NA. Built a multi-region data pipeline and Streamlit dashboard so the sales team gets a daily read on leads without touching raw files. Also ran GCC campaign strategy, lead generation, and CRM ops.</p>
+          <div class="work-tags">
+            <span class="wtag">Meta Ads</span>
+            <span class="wtag">Python</span>
+            <span class="wtag">Streamlit</span>
+            <span class="wtag">B2B</span>
+            <span class="wtag">CRM</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="work-item">
+        <div class="work-icon" style="background:var(--teal-bg)">🎓</div>
+        <div class="work-body">
+          <div class="work-meta">
+            <span class="work-title">UIUC — CS124</span>
+            <span class="work-period">Jan 2026 – present</span>
+          </div>
+          <p class="work-role">Course Assistant</p>
+          <p class="work-desc">Java tutoring and forum Q&amp;A for introductory CS students. Guided students through problem-solving logic, not just syntax.</p>
+          <div class="work-tags">
+            <span class="wtag">Java</span>
+            <span class="wtag">Teaching</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="container">
+    <p class="eyebrow">Projects</p>
+    <div class="project-grid reveal">
+
+      <div class="project-card" onclick="openModal('p1')">
+        <div class="pc-accent" style="background:var(--purple)"></div>
+        <p class="pc-tag">2025 · Coohom</p>
+        <p class="pc-title">Multi-Region Meta Ads Dashboard</p>
+        <p class="pc-desc">Python pipeline → Google Sheets → Streamlit. Unified campaign data across 3 regions.</p>
+        <div class="pc-tags">
+          <span class="pc-tag-pill">Python</span>
+          <span class="pc-tag-pill">Streamlit</span>
+          <span class="pc-tag-pill">Pandas</span>
+        </div>
+        <span class="project-arrow">↗</span>
+      </div>
+
+      <div class="project-card" onclick="openModal('p2')">
+        <div class="pc-accent" style="background:var(--teal)"></div>
+        <p class="pc-tag">2025 · Data Analysis</p>
+        <p class="pc-title">Identity V Survivor Performance Analysis</p>
+        <p class="pc-desc">Classified 49 characters, ran 1k-iteration simulation, applied linear regression.</p>
+        <div class="pc-tags">
+          <span class="pc-tag-pill">Python</span>
+          <span class="pc-tag-pill">Matplotlib</span>
+          <span class="pc-tag-pill">Simulation</span>
+        </div>
+        <span class="project-arrow">↗</span>
+      </div>
+
+      <div class="project-card" onclick="openModal('p3')">
+        <div class="pc-accent" style="background:var(--amber)"></div>
+        <p class="pc-tag">2025 · Android</p>
+        <p class="pc-title">Event Filtering Interface</p>
+        <p class="pc-desc">Multi-stage filter pipeline with async API sync and RecyclerView display.</p>
+        <div class="pc-tags">
+          <span class="pc-tag-pill">Java</span>
+          <span class="pc-tag-pill">Android</span>
+          <span class="pc-tag-pill">Async</span>
+        </div>
+        <span class="project-arrow">↗</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <p class="eyebrow">Skills</p>
+    <div class="skills-grid reveal">
+      <div class="skill-group">
+        <p class="sg-title">Programming</p>
+        <div class="skill-row"><div class="skill-top"><span class="skill-name">Python</span><span class="skill-pct">85%</span></div><div class="bar-bg"><div class="bar-fill fill-purple" data-w="85"></div></div></div>
+        <div class="skill-row"><div class="skill-top"><span class="skill-name">Java</span><span class="skill-pct">70%</span></div><div class="bar-bg"><div class="bar-fill fill-purple" data-w="70"></div></div></div>
+        <div class="skill-row"><div class="skill-top"><span class="skill-name">C++</span><span class="skill-pct">50%</span></div><div class="bar-bg"><div class="bar-fill fill-purple" data-w="50"></div></div></div>
+        <div class="skill-row"><div class="skill-top"><span class="skill-name">LaTeX</span><span class="skill-pct">60%</span></div><div class="bar-bg"><div class="bar-fill fill-purple" data-w="60"></div></div></div>
+      </div>
+      <div class="skill-group">
+        <p class="sg-title">Tools &amp; Data</p>
+        <div class="skill-row"><div class="skill-top"><span class="skill-name">Pandas / NumPy</span><span class="skill-pct">80%</span></div><div class="bar-bg"><div class="bar-fill fill-teal" data-w="80"></div></div></div>
+        <div class="skill-row"><div class="skill-top"><span class="skill-name">Streamlit</span><span class="skill-pct">70%</span></div><div class="bar-bg"><div class="bar-fill fill-teal" data-w="70"></div></div></div>
+        <div class="skill-row"><div class="skill-top"><span class="skill-name">Matplotlib</span><span class="skill-pct">65%</span></div><div class="bar-bg"><div class="bar-fill fill-teal" data-w="65"></div></div></div>
+        <div class="skill-row"><div class="skill-top"><span class="skill-name">Meta Ads</span><span class="skill-pct">75%</span></div><div class="bar-bg"><div class="bar-fill fill-teal" data-w="75"></div></div></div>
+      </div>
+      <div class="skill-group">
+        <p class="sg-title">Languages</p>
+        <div class="skill-row"><div class="skill-top"><span class="skill-name">中文</span><span class="skill-pct">Native</span></div><div class="bar-bg"><div class="bar-fill fill-amber" data-w="100"></div></div></div>
+        <div class="skill-row"><div class="skill-top"><span class="skill-name">English</span><span class="skill-pct">Fluent</span></div><div class="bar-bg"><div class="bar-fill fill-amber" data-w="95"></div></div></div>
+        <div class="skill-row"><div class="skill-top"><span class="skill-name">Español</span><span class="skill-pct">B2</span></div><div class="bar-bg"><div class="bar-fill fill-amber" data-w="55"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <p class="eyebrow">About</p>
+    <div class="about-wrap reveal">
+      <div class="about-left">
+        <p>从小喜欢把问题拆开看清楚再拼回去。学数学是因为喜欢那种"想清楚了"的感觉；做 marketing 是因为想看到分析真的变成结果。</p>
+        <p><!-- 旅行 / 生活经历 — 越具体越好，你来填 -->[Your story here — where you've been, what surprised you, what shaped how you see the world.]</p>
+      </div>
+      <div class="about-cards">
+        <div class="about-card">
+          <p class="ac-label">Education</p>
+          <p class="ac-value">University of Illinois Urbana-Champaign</p>
+          <p class="ac-sub">B.S. Mathematics · GPA 4.0 · Class of 2029</p>
+        </div>
+        <div class="about-card">
+          <p class="ac-label">Based in</p>
+          <p class="ac-value">Champaign, IL</p>
+          <p class="ac-sub">Open to remote &amp; relocation</p>
+        </div>
+        <div class="about-card">
+          <p class="ac-label">Open to</p>
+          <p class="ac-value">Data · Marketing · Growth</p>
+          <p class="ac-sub">Internship &amp; full-time</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <p class="eyebrow">Contact</p>
+    <h2 class="contact-h">Let's talk.</h2>
+    <p class="contact-sub">Open to internships, collaborations, or just a good conversation.</p>
+    <div class="contact-row">
+      <a href="mailto:luciazg313@gmail.com" class="contact-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        luciazg313@gmail.com
+      </a>
+      <a href="https://github.com/LuciaZheng313" class="contact-btn" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        github.com/LuciaZheng313
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="ft">Lucia Guo · 2025</span>
+  <span class="ft">Built with plain HTML</span>
+</footer>
+
+<!-- PROJECT MODALS -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+const projects = {
+  p1: {
+    accent: '#534AB7',
+    label: '2025 · Internship at Coohom',
+    title: 'Multi-Region Meta Ads Dashboard',
+    problem: 'Campaign data across EMEA, India, and NA lived in separate Excel exports with inconsistent naming conventions. The sales team had no unified view — every morning was a manual file-hunting exercise.',
+    what: 'Built a Python ingestion pipeline that pulls daily Meta Ads reports into a central Google Sheet via Apps Script. Connected to a Streamlit dashboard with region filters, MQL/SQL conversion rate analysis, and auto sheet-role detection for non-standard file formats (openpyxl → calamine fallback). Deployed on Streamlit Community Cloud with invite-only access.',
+    result: 'Sales team gets a daily read on leads, spend, and conversion by region without ever opening a raw file.',
+    tags: ['Python', 'Streamlit', 'Google Sheets API', 'Pandas', 'Apps Script', 'Meta Ads']
+  },
+  p2: {
+    accent: '#0F6E56',
+    label: '2025 · Data Analysis',
+    title: 'Identity V Survivor Performance Analysis',
+    problem: 'Which survivor characters in Identity V are actually most efficient at completing in-game objectives? The game has 49 playable characters with overlapping stats — hard to compare intuitively.',
+    what: 'Classified all 49 characters into 4 functional roles (decoder, support, escape, utility) using threshold-based logic on Decoding Time, Rocket Chair Ascent Time, and healing metrics. Built a 1,000-iteration simulation model to estimate team task-completion efficiency under different role compositions. Applied standardized linear regression to identify the strongest predictors of Decoding Time.',
+    result: '[Your most interesting finding here — what did you discover that surprised you?]',
+    tags: ['Python', 'Pandas', 'NumPy', 'Matplotlib', 'Simulation', 'Linear Regression']
+  },
+  p3: {
+    accent: '#854F0B',
+    label: '2025 · Android Development',
+    title: 'Event Filtering Interface',
+    problem: 'How do multi-stage UI filters (date, virtual, favorites, search) compose correctly, and how does client state stay in sync with async API responses?',
+    what: 'Extended an instructor-provided Android skeleton to implement sequential filter application on live event data. Analyzed the data flow through RecyclerView display logic, traced how UI state synchronizes with backend API responses, and implemented robust error-handling patterns for asynchronous data retrieval.',
+    result: 'Gained a concrete understanding of client-side data pipelines and stateful query logic — skills directly applicable to dashboard and data product work.',
+    tags: ['Java', 'Android', 'RecyclerView', 'Async / API', 'State management']
+  }
+}
+
+function openModal(id) {
+  const p = projects[id]
+  document.getElementById('modal-content').innerHTML = `
+    <div class="modal-accent" style="background:${p.accent}"></div>
+    <p class="modal-label">${p.label}</p>
+    <h2 class="modal-title">${p.title}</h2>
+    <div class="modal-section">
+      <p class="modal-section-label">Problem</p>
+      <p class="modal-text">${p.problem}</p>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">What I built</p>
+      <p class="modal-text">${p.what}</p>
+    </div>
+    <div class="modal-section">
+      <p class="modal-section-label">Result</p>
+      <p class="modal-text">${p.result}</p>
+    </div>
+    <div class="modal-tags">${p.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('')}</div>
+  `
+  document.getElementById('modal-overlay').classList.add('open')
+  document.body.style.overflow = 'hidden'
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open')
+  document.body.style.overflow = ''
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal()
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal() })
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(el => { if (el.isIntersecting) el.target.classList.add('visible') })
+}, { threshold: 0.12 })
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+
+// Animate skill bars when visible
+const barObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.w + '%'
+      })
+      barObserver.unobserve(entry.target)
+    }
+  })
+}, { threshold: 0.3 })
+document.querySelectorAll('.skills-grid').forEach(el => barObserver.observe(el))
+</script>
+</body>
+</html>
