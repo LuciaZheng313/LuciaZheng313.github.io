@@ -29,7 +29,6 @@ nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.88);backdrop
 .nav-cta{font-size:12px;padding:6px 14px;border-radius:8px;background:var(--text);color:#fff;text-decoration:none;transition:opacity .15s}
 .nav-cta:hover{opacity:.8}
 
-/* CONTAINER */
 .container{max-width:880px;margin:0 auto;padding:0 48px}
 section{padding:88px 0;border-bottom:0.5px solid var(--border)}
 section:last-of-type{border-bottom:none}
@@ -37,37 +36,41 @@ section:last-of-type{border-bottom:none}
 
 /* HERO */
 #hero{padding:100px 0 88px}
-.hero-inner{display:flex;align-items:center;justify-content:space-between;gap:48px}
-.hero-left{flex:1;min-width:0}
+.hero-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:56px}
+.hero-left{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
 .hero-right{flex-shrink:0}
 
 .avatar{
-  width:180px;height:180px;
-  border-radius:24px;
-  object-fit:cover;
+  width:260px;height:330px;
+  border-radius:28px;
+  object-fit:cover;object-position:center top;
   border:0.5px solid var(--border2);
   display:block;
-  box-shadow:0 8px 32px rgba(0,0,0,0.08);
+  box-shadow:0 12px 40px rgba(0,0,0,0.10);
 }
 
-.hero-tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text3);border:0.5px solid var(--border2);border-radius:20px;padding:4px 12px;margin-bottom:28px}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text3);border:0.5px solid var(--border2);border-radius:20px;padding:4px 12px;margin-bottom:24px;width:fit-content}
 .hero-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-h1{font-size:44px;font-weight:500;line-height:1.12;letter-spacing:-.03em;margin-bottom:22px;max-width:540px}
+
+h1{font-size:42px;font-weight:500;line-height:1.12;letter-spacing:-.03em;margin-bottom:18px;max-width:480px}
 h1 em{font-style:italic;color:var(--text2)}
-.hero-sub{font-size:15px;color:var(--text2);max-width:420px;line-height:1.75;margin-bottom:36px}
-.hero-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.btn-primary{font-size:13px;font-weight:500;padding:10px 20px;border-radius:10px;background:var(--text);color:#fff;text-decoration:none;transition:opacity .15s}
-.btn-primary:hover{opacity:.8}
-.btn-secondary{font-size:13px;padding:10px 20px;border-radius:10px;border:0.5px solid var(--border2);color:var(--text);text-decoration:none;background:var(--bg2);transition:background .15s}
-.btn-secondary:hover{background:var(--bg3)}
-.hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px}
+.hero-sub{font-size:15px;color:var(--text2);max-width:400px;line-height:1.75;margin-bottom:24px}
+
+.hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px}
 .badge{font-size:12px;padding:4px 12px;border-radius:20px;font-weight:400}
 .badge-purple{background:var(--purple-bg);color:var(--purple-text)}
 .badge-teal{background:var(--teal-bg);color:var(--teal)}
 .badge-amber{background:var(--amber-bg);color:var(--amber-text)}
 
-/* WORK LIST */
+/* info cards under avatar */
+.hero-info-cards{display:flex;flex-direction:column;gap:8px;margin-top:12px;width:240px}
+.hic{background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:11px 14px}
+.hic-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
+.hic-value{font-size:12px;font-weight:500;color:var(--text);line-height:1.4}
+.hic-sub{font-size:11px;color:var(--text2);margin-top:1px}
+
+/* WORK */
 .work-list{display:flex;flex-direction:column}
 .work-item{display:flex;align-items:flex-start;gap:20px;padding:22px 0;border-bottom:0.5px solid var(--border)}
 .work-item:first-child{border-top:0.5px solid var(--border)}
@@ -81,7 +84,7 @@ h1 em{font-style:italic;color:var(--text2)}
 .work-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 .wtag{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--bg2);border:0.5px solid var(--border);color:var(--text2)}
 
-/* PROJECTS BOARD */
+/* PROJECTS */
 .project-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .project-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:border-color .2s,transform .2s,box-shadow .2s;position:relative;overflow:hidden}
 .project-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.07)}
@@ -125,15 +128,91 @@ h1 em{font-style:italic;color:var(--text2)}
 .fill-teal{background:var(--teal)}
 .fill-amber{background:var(--amber)}
 
-/* ABOUT */
-.about-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
-.about-left p{font-size:15px;color:var(--text2);line-height:1.85;margin-bottom:16px}
-.about-left p:last-child{margin-bottom:0}
-.about-cards{display:flex;flex-direction:column;gap:10px}
-.about-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:18px 20px}
-.ac-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
-.ac-value{font-size:14px;font-weight:500}
-.ac-sub{font-size:12px;color:var(--text2);margin-top:3px}
+/* TRAVEL — Apple liquid glass */
+#travel{padding:88px 0}
+.travel-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}
+
+.spin-btn{
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(145deg,rgba(255,255,255,0.7),rgba(255,255,255,0.3));
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:0.5px solid rgba(255,255,255,0.6);
+  box-shadow:0 2px 12px rgba(0,0,0,0.08),inset 0 1px 0 rgba(255,255,255,0.8);
+  cursor:pointer;font-size:17px;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .15s,box-shadow .15s;
+  user-select:none;color:var(--text);
+}
+.spin-btn:hover{transform:scale(1.08);box-shadow:0 4px 20px rgba(0,0,0,0.12),inset 0 1px 0 rgba(255,255,255,0.9)}
+.spin-btn:active{transform:scale(.94)}
+.spin-btn.spinning{animation:btnSpin .5s cubic-bezier(.4,0,.2,1)}
+@keyframes btnSpin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+
+.travel-card{
+  position:relative;
+  border-radius:28px;
+  overflow:hidden;
+  min-height:160px;
+  background:linear-gradient(135deg,
+    rgba(180,200,255,0.22) 0%,
+    rgba(200,180,255,0.18) 30%,
+    rgba(180,230,220,0.18) 65%,
+    rgba(255,220,180,0.15) 100%);
+  backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);
+  border:0.5px solid rgba(255,255,255,0.55);
+  box-shadow:
+    0 8px 32px rgba(100,120,200,0.10),
+    0 1px 0 rgba(255,255,255,0.7) inset,
+    0 -1px 0 rgba(255,255,255,0.2) inset;
+  display:grid;
+  grid-template-columns:1fr 1.5fr;
+}
+
+/* subtle inner glow blob */
+.travel-card::before{
+  content:'';position:absolute;
+  width:260px;height:260px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(160,180,255,0.25) 0%,transparent 70%);
+  top:-80px;left:-60px;
+  pointer-events:none;
+}
+
+.travel-l{
+  padding:28px 24px;
+  border-right:0.5px solid rgba(255,255,255,0.4);
+  display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;z-index:1;
+}
+.travel-r{
+  padding:28px 28px;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;z-index:1;
+}
+
+.slot-wrap{
+  font-size:18px;font-weight:500;letter-spacing:-.02em;
+  color:rgba(30,30,50,0.9);
+  line-height:1.2;
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:0;
+  min-height:1.2em;
+}
+.s-char{display:inline-block;overflow:hidden;height:1.2em;vertical-align:bottom}
+.s-inner{display:flex;flex-direction:column;transition:transform .32s cubic-bezier(.4,0,.2,1)}
+.s-inner span{height:1.2em;line-height:1.2em;display:block}
+
+.travel-dot-row{display:flex;gap:5px;margin-top:16px}
+.travel-dot{width:5px;height:5px;border-radius:50%;background:rgba(80,80,120,0.2);transition:background .3s,transform .3s}
+.travel-dot.active{background:rgba(80,80,180,0.6);transform:scale(1.3)}
+
+.travel-emoji{font-size:24px;margin-bottom:10px;display:block}
+.travel-story{
+  font-size:14px;
+  color:rgba(30,30,60,0.75);
+  line-height:1.7;
+  transition:opacity .2s ease,transform .2s ease;
+}
+.travel-story.fading{opacity:0;transform:translateY(6px)}
 
 /* CONTACT */
 #contact{padding-bottom:110px}
@@ -144,38 +223,16 @@ h1 em{font-style:italic;color:var(--text2)}
 .contact-btn:hover{background:var(--bg3)}
 .contact-btn svg{width:15px;height:15px;opacity:.45;flex-shrink:0}
 
-/* FOOTER */
-footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justify-content:space-between;align-items:center}
+footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justify-content:space-between}
 .ft{font-size:12px;color:var(--text3)}
 
-/* =====================
-   SCROLL REVEAL ANIMATION
-   — 从下方 28px 处淡入弹出
-   ===================== */
+/* SCROLL REVEAL — bidirectional */
 .reveal{
-  opacity:0;
-  transform:translateY(28px);
-  transition:
-    opacity .6s cubic-bezier(.4,0,.2,1),
-    transform .6s cubic-bezier(.34,1.4,.64,1);
+  opacity:0;transform:translateY(28px);
+  transition:opacity .55s cubic-bezier(.4,0,.2,1),transform .55s cubic-bezier(.34,1.3,.64,1);
 }
-.reveal.visible{
-  opacity:1;
-  transform:translateY(0);
-}
-/* 子元素依次延迟，产生错落感 */
-.reveal-child{
-  opacity:0;
-  transform:translateY(22px);
-  transition:
-    opacity .55s cubic-bezier(.4,0,.2,1),
-    transform .55s cubic-bezier(.34,1.4,.64,1);
-}
-.reveal-child.visible{opacity:1;transform:translateY(0)}
-.reveal-child:nth-child(1){transition-delay:.05s}
-.reveal-child:nth-child(2){transition-delay:.13s}
-.reveal-child:nth-child(3){transition-delay:.21s}
-.reveal-child:nth-child(4){transition-delay:.29s}
+.reveal.up{transform:translateY(-28px)}
+.reveal.visible{opacity:1!important;transform:translateY(0)!important}
 </style>
 </head>
 <body>
@@ -186,7 +243,7 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
     <li><a href="#work">Work</a></li>
     <li><a href="#projects">Projects</a></li>
     <li><a href="#skills">Skills</a></li>
-    <li><a href="#about">About</a></li>
+    <li><a href="#travel">Travel</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <a href="mailto:luciazg313@gmail.com" class="nav-cta">Get in touch</a>
@@ -203,14 +260,10 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
         </div>
         <h1>I build things,<br><em>then measure</em><br>if they work.</h1>
         <p class="hero-sub">Math at UIUC. Interning at Coohom — running paid social across the Middle East, India &amp; NA, and building the dashboards to make sense of it all.</p>
-        <div class="hero-actions">
-          <a href="#projects" class="btn-primary">See my projects</a>
-          <a href="#contact" class="btn-secondary">Say hello</a>
-        </div>
         <div class="hero-badges">
-          <span class="badge badge-purple">Python · Data</span>
-          <span class="badge badge-teal">Meta Ads · B2B</span>
-          <span class="badge badge-amber">UIUC GPA 4.0</span>
+          <span class="badge badge-purple">UIUC · Mathematics · GPA 4.0 · 2029</span>
+          <span class="badge badge-teal">Champaign, IL · Open to remote</span>
+          <span class="badge badge-amber">Data · Marketing · Growth</span>
         </div>
       </div>
       <div class="hero-right">
@@ -220,12 +273,12 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
   </div>
 </section>
 
+
 <!-- WORK -->
 <section id="work">
   <div class="container">
     <p class="eyebrow reveal">Work</p>
     <div class="work-list">
-
       <div class="work-item reveal">
         <div class="work-icon" style="background:var(--purple-bg)">📊</div>
         <div class="work-body">
@@ -236,16 +289,11 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
           <p class="work-role">Marketing Intern</p>
           <p class="work-desc">Paid social (Meta Ads) across EMEA, India &amp; NA. Built a multi-region data pipeline and Streamlit dashboard so the sales team gets a daily read on leads without touching raw files.</p>
           <div class="work-tags">
-            <span class="wtag">Meta Ads</span>
-            <span class="wtag">Python</span>
-            <span class="wtag">Streamlit</span>
-            <span class="wtag">B2B</span>
-            <span class="wtag">CRM</span>
+            <span class="wtag">Meta Ads</span><span class="wtag">Python</span><span class="wtag">Streamlit</span><span class="wtag">B2B</span><span class="wtag">CRM</span>
           </div>
         </div>
       </div>
-
-      <div class="work-item reveal" style="transition-delay:.1s">
+      <div class="work-item reveal">
         <div class="work-icon" style="background:var(--teal-bg)">🎓</div>
         <div class="work-body">
           <div class="work-meta">
@@ -255,12 +303,10 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
           <p class="work-role">Course Assistant</p>
           <p class="work-desc">Java tutoring and forum Q&amp;A for introductory CS students. Guided students through problem-solving logic, not just syntax.</p>
           <div class="work-tags">
-            <span class="wtag">Java</span>
-            <span class="wtag">Teaching</span>
+            <span class="wtag">Java</span><span class="wtag">Teaching</span>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </section>
@@ -270,46 +316,30 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
   <div class="container">
     <p class="eyebrow reveal">Projects</p>
     <div class="project-grid">
-
-      <div class="project-card reveal reveal-child" onclick="openModal('p1')">
+      <div class="project-card reveal" onclick="openModal('p1')">
         <div class="pc-accent" style="background:var(--purple)"></div>
         <p class="pc-eyebrow">2025 · Coohom</p>
         <p class="pc-title">Multi-Region Meta Ads Dashboard</p>
         <p class="pc-desc">Python pipeline → Google Sheets → Streamlit. Unified campaign data across 3 regions.</p>
-        <div class="pc-tags">
-          <span class="pc-tag-pill">Python</span>
-          <span class="pc-tag-pill">Streamlit</span>
-          <span class="pc-tag-pill">Pandas</span>
-        </div>
+        <div class="pc-tags"><span class="pc-tag-pill">Python</span><span class="pc-tag-pill">Streamlit</span><span class="pc-tag-pill">Pandas</span></div>
         <span class="project-arrow">↗</span>
       </div>
-
-      <div class="project-card reveal reveal-child" onclick="openModal('p2')" style="transition-delay:.1s">
+      <div class="project-card reveal" onclick="openModal('p2')">
         <div class="pc-accent" style="background:var(--teal)"></div>
         <p class="pc-eyebrow">2025 · Data Analysis</p>
         <p class="pc-title">Identity V Survivor Performance Analysis</p>
         <p class="pc-desc">Classified 49 characters, ran 1k-iteration simulation, applied linear regression.</p>
-        <div class="pc-tags">
-          <span class="pc-tag-pill">Python</span>
-          <span class="pc-tag-pill">Matplotlib</span>
-          <span class="pc-tag-pill">Simulation</span>
-        </div>
+        <div class="pc-tags"><span class="pc-tag-pill">Python</span><span class="pc-tag-pill">Matplotlib</span><span class="pc-tag-pill">Simulation</span></div>
         <span class="project-arrow">↗</span>
       </div>
-
-      <div class="project-card reveal reveal-child" onclick="openModal('p3')" style="transition-delay:.2s">
+      <div class="project-card reveal" onclick="openModal('p3')">
         <div class="pc-accent" style="background:var(--amber)"></div>
         <p class="pc-eyebrow">2025 · Android</p>
         <p class="pc-title">Event Filtering Interface</p>
         <p class="pc-desc">Multi-stage filter pipeline with async API sync and RecyclerView display.</p>
-        <div class="pc-tags">
-          <span class="pc-tag-pill">Java</span>
-          <span class="pc-tag-pill">Android</span>
-          <span class="pc-tag-pill">Async</span>
-        </div>
+        <div class="pc-tags"><span class="pc-tag-pill">Java</span><span class="pc-tag-pill">Android</span><span class="pc-tag-pill">Async</span></div>
         <span class="project-arrow">↗</span>
       </div>
-
     </div>
   </div>
 </section>
@@ -319,21 +349,21 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
   <div class="container">
     <p class="eyebrow reveal">Skills</p>
     <div class="skills-grid" id="skills-grid">
-      <div class="skill-group reveal reveal-child">
+      <div class="skill-group reveal">
         <p class="sg-title">Programming</p>
         <div class="skill-row"><div class="skill-top"><span class="skill-name">Python</span><span class="skill-pct">85%</span></div><div class="bar-bg"><div class="bar-fill fill-purple" data-w="85"></div></div></div>
         <div class="skill-row"><div class="skill-top"><span class="skill-name">Java</span><span class="skill-pct">70%</span></div><div class="bar-bg"><div class="bar-fill fill-purple" data-w="70"></div></div></div>
         <div class="skill-row"><div class="skill-top"><span class="skill-name">C++</span><span class="skill-pct">70%</span></div><div class="bar-bg"><div class="bar-fill fill-purple" data-w="70"></div></div></div>
         <div class="skill-row"><div class="skill-top"><span class="skill-name">LaTeX</span><span class="skill-pct">50%</span></div><div class="bar-bg"><div class="bar-fill fill-purple" data-w="50"></div></div></div>
       </div>
-      <div class="skill-group reveal reveal-child" style="transition-delay:.1s">
+      <div class="skill-group reveal">
         <p class="sg-title">Tools &amp; Data</p>
         <div class="skill-row"><div class="skill-top"><span class="skill-name">Pandas / NumPy</span><span class="skill-pct">80%</span></div><div class="bar-bg"><div class="bar-fill fill-teal" data-w="80"></div></div></div>
         <div class="skill-row"><div class="skill-top"><span class="skill-name">Streamlit</span><span class="skill-pct">70%</span></div><div class="bar-bg"><div class="bar-fill fill-teal" data-w="70"></div></div></div>
         <div class="skill-row"><div class="skill-top"><span class="skill-name">Matplotlib</span><span class="skill-pct">65%</span></div><div class="bar-bg"><div class="bar-fill fill-teal" data-w="65"></div></div></div>
         <div class="skill-row"><div class="skill-top"><span class="skill-name">Meta Ads</span><span class="skill-pct">75%</span></div><div class="bar-bg"><div class="bar-fill fill-teal" data-w="75"></div></div></div>
       </div>
-      <div class="skill-group reveal reveal-child" style="transition-delay:.2s">
+      <div class="skill-group reveal">
         <p class="sg-title">Languages</p>
         <div class="skill-row"><div class="skill-top"><span class="skill-name">中文</span><span class="skill-pct">Native</span></div><div class="bar-bg"><div class="bar-fill fill-amber" data-w="100"></div></div></div>
         <div class="skill-row"><div class="skill-top"><span class="skill-name">English</span><span class="skill-pct">Fluent</span></div><div class="bar-bg"><div class="bar-fill fill-amber" data-w="95"></div></div></div>
@@ -342,31 +372,25 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
   </div>
 </section>
 
-<!-- ABOUT -->
-<section id="about">
+<!-- TRAVEL -->
+<section id="travel">
   <div class="container">
-    <p class="eyebrow reveal">About</p>
-    <div class="about-wrap reveal">
-      <div class="about-left">
-        <p>从小喜欢把问题拆开看清楚再拼回去。学数学是因为喜欢那种"想清楚了"的感觉；做 marketing 是因为想看到分析真的变成结果。</p>
-        <p>[Your travel / life experience here — the more specific, the better.]</p>
+    <div class="travel-top reveal">
+      <p class="eyebrow" style="margin-bottom:0">Travel</p>
+      <button class="spin-btn" id="spin-btn" onclick="rollTravel()" title="Somewhere new">✦</button>
+    </div>
+
+    <div class="travel-card reveal">
+      <div class="travel-l">
+        <div>
+          <p style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:12px">Location</p>
+          <div class="slot-wrap" id="slot-location"></div>
+        </div>
+        <div class="travel-dot-row" id="travel-dots"></div>
       </div>
-      <div class="about-cards">
-        <div class="about-card">
-          <p class="ac-label">Education</p>
-          <p class="ac-value">University of Illinois Urbana-Champaign</p>
-          <p class="ac-sub">B.S. Mathematics · GPA 4.0 · Class of 2029</p>
-        </div>
-        <div class="about-card">
-          <p class="ac-label">Based in</p>
-          <p class="ac-value">Champaign, IL</p>
-          <p class="ac-sub">Open to remote &amp; relocation</p>
-        </div>
-        <div class="about-card">
-          <p class="ac-label">Open to</p>
-          <p class="ac-value">Data · Marketing · Growth</p>
-          <p class="ac-sub">Internship &amp; full-time</p>
-        </div>
+      <div class="travel-r">
+        <span class="travel-emoji" id="travel-emoji">✈️</span>
+        <p class="travel-story" id="travel-story">Click ✦ to explore a memory.</p>
       </div>
     </div>
   </div>
@@ -396,105 +420,147 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
   <span class="ft">Built with plain HTML</span>
 </footer>
 
-<!-- PROJECT MODALS -->
+<!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
-  <div class="modal" id="modal-box">
+  <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div id="modal-content"></div>
   </div>
 </div>
 
 <script>
-const projects = {
-  p1: {
-    accent: '#534AB7',
-    label: '2025 · Internship at Coohom',
-    title: 'Multi-Region Meta Ads Dashboard',
-    problem: 'Campaign data across EMEA, India, and NA lived in separate Excel exports with inconsistent naming conventions. The sales team had no unified view — every morning was a manual file-hunting exercise.',
-    what: 'Built a Python ingestion pipeline that pulls daily Meta Ads reports into a central Google Sheet via Apps Script. Connected to a Streamlit dashboard with region filters, MQL/SQL conversion rate analysis, and auto sheet-role detection for non-standard file formats. Deployed on Streamlit Community Cloud with invite-only access.',
-    result: 'Sales team gets a daily read on leads, spend, and conversion by region without ever opening a raw file.',
-    tags: ['Python', 'Streamlit', 'Google Sheets API', 'Pandas', 'Apps Script', 'Meta Ads']
-  },
-  p2: {
-    accent: '#0F6E56',
-    label: '2025 · Data Analysis',
-    title: 'Identity V Survivor Performance Analysis',
-    problem: 'Which survivor characters in Identity V are actually most efficient at completing in-game objectives? The game has 49 playable characters with overlapping stats — hard to compare intuitively.',
-    what: 'Classified all 49 characters into 4 functional roles using threshold-based logic. Built a 1,000-iteration simulation model to estimate team task-completion efficiency under different role compositions. Applied standardized linear regression to identify the strongest predictors of decoding time.',
-    result: '[Your most interesting finding here — what surprised you most?]',
-    tags: ['Python', 'Pandas', 'NumPy', 'Matplotlib', 'Simulation', 'Linear Regression']
-  },
-  p3: {
-    accent: '#854F0B',
-    label: '2025 · Android Development',
-    title: 'Event Filtering Interface',
-    problem: 'How do multi-stage UI filters (date, virtual, favorites, search) compose correctly, and how does client state stay in sync with async API responses?',
-    what: 'Extended an instructor-provided Android skeleton to implement sequential filter application on live event data. Traced how UI state synchronizes with backend API responses, and implemented error-handling patterns for asynchronous data retrieval.',
-    result: 'Gained concrete understanding of client-side data pipelines and stateful query logic — skills directly applicable to dashboard and data product work.',
-    tags: ['Java', 'Android', 'RecyclerView', 'Async / API', 'State management']
+/* ── TRAVEL DATA ── replace with real memories */
+const travels = [
+  { location: "Tokyo, Japan",   emoji: "🗼", story: "Found a jazz record store in Shimokitazawa playing only 1960s vinyl. Bought an album I still can't find online." },
+  { location: "Chengdu, China", emoji: "🌶️", story: "Ate hotpot alone at midnight in a restaurant that seated 400. The waiter brought me a newspaper without asking." },
+  { location: "Kyoto, Japan",   emoji: "⛩️", story: "Hiked Fushimi Inari at 5am to beat the crowds. It rained halfway up. Kept going anyway." },
+  { location: "Hong Kong",      emoji: "🌃", story: "Took the Peak Tram at 11pm. The city looked like a circuit board. Stayed until the last car down." },
+  { location: "Hangzhou, China",emoji: "🚲", story: "Grew up cycling West Lake before school. Still the most reliable way I know to reset." },
+  { location: "Shanghai, China",emoji: "🎨", story: "Wandered into a gallery in the French Concession. Turned out to be someone's living room — the artist was home." }
+]
+
+/* ── SLOT TEXT ── */
+const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz,. '
+const STEPS = 5, DELAY = 36, STAGGER = 26
+
+function buildSlot(container, text) {
+  container.innerHTML = ''
+  ;[...text].forEach((ch, i) => {
+    const wrap = document.createElement('span')
+    wrap.className = 's-char'
+    const inner = document.createElement('span')
+    inner.className = 's-inner'
+    const rows = []
+    for (let s = 0; s < STEPS; s++) {
+      const span = document.createElement('span')
+      span.textContent = ch === ' ' ? '\u00A0' : CHARS[Math.floor(Math.random()*CHARS.length)]
+      rows.push(span); inner.appendChild(span)
+    }
+    const fin = document.createElement('span')
+    fin.textContent = ch === ' ' ? '\u00A0' : ch
+    inner.appendChild(fin); wrap.appendChild(inner); container.appendChild(wrap)
+
+    setTimeout(() => {
+      let step = 0
+      const tick = setInterval(() => {
+        step++
+        rows.forEach((r,ri) => { if(ri >= step) r.textContent = CHARS[Math.floor(Math.random()*CHARS.length)] })
+        inner.style.transform = `translateY(-${step*1.2}em)`
+        if(step >= STEPS){ clearInterval(tick); inner.style.transform = `translateY(-${STEPS*1.2}em)` }
+      }, DELAY)
+    }, i * STAGGER)
+  })
+}
+
+/* dots */
+function buildDots(total, active) {
+  const el = document.getElementById('travel-dots')
+  el.innerHTML = ''
+  for(let i=0;i<total;i++){
+    const d = document.createElement('span')
+    d.className = 'travel-dot' + (i===active?' active':'')
+    el.appendChild(d)
   }
 }
 
-function openModal(id) {
-  const p = projects[id]
-  document.getElementById('modal-content').innerHTML = `
+let cur = -1
+function rollTravel() {
+  let next
+  do { next = Math.floor(Math.random()*travels.length) } while(next===cur && travels.length>1)
+  cur = next
+  const t = travels[next]
+
+  const btn = document.getElementById('spin-btn')
+  btn.classList.add('spinning')
+  setTimeout(()=>btn.classList.remove('spinning'), 500)
+
+  buildSlot(document.getElementById('slot-location'), t.location)
+  buildDots(travels.length, next)
+
+  const storyEl = document.getElementById('travel-story')
+  const emojiEl = document.getElementById('travel-emoji')
+  storyEl.classList.add('fading')
+  setTimeout(()=>{
+    storyEl.textContent = t.story
+    emojiEl.textContent = t.emoji
+    storyEl.classList.remove('fading')
+  }, 200)
+}
+
+rollTravel()
+
+/* ── BIDIRECTIONAL SCROLL REVEAL ── */
+let lastY = window.scrollY
+window.addEventListener('scroll', ()=>{ lastY = window.scrollY }, {passive:true})
+
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.classList.add('visible')
+      e.target.classList.remove('up')
+    } else {
+      e.target.classList.remove('visible')
+      e.target.classList.toggle('up', window.scrollY < e.target.getBoundingClientRect().top + window.scrollY)
+    }
+  })
+}, {threshold:0.1, rootMargin:'0px 0px -40px 0px'})
+
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el))
+
+/* ── SKILL BARS ── */
+const bo = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting)
+      e.target.querySelectorAll('.bar-fill').forEach(b=>{ b.style.width='0'; requestAnimationFrame(()=>setTimeout(()=>b.style.width=b.dataset.w+'%',50)) })
+    else
+      e.target.querySelectorAll('.bar-fill').forEach(b=>b.style.width='0')
+  })
+}, {threshold:0.3})
+document.querySelectorAll('#skills-grid').forEach(el=>bo.observe(el))
+
+/* ── MODAL ── */
+const projects = {
+  p1:{accent:'#534AB7',label:'2025 · Internship at Coohom',title:'Multi-Region Meta Ads Dashboard',problem:'Campaign data across EMEA, India, and NA lived in separate Excel exports. No unified view — every morning was a manual file-hunting exercise.',what:'Built a Python ingestion pipeline pulling daily Meta Ads reports into Google Sheets via Apps Script. Connected to a Streamlit dashboard with region filters, MQL/SQL conversion tracking, and auto sheet-role detection for non-standard file formats.',result:'Sales team gets a daily read on leads, spend, and conversion by region without ever opening a raw file.',tags:['Python','Streamlit','Google Sheets API','Pandas','Apps Script','Meta Ads']},
+  p2:{accent:'#0F6E56',label:'2025 · Data Analysis',title:'Identity V Survivor Performance Analysis',problem:'Which survivor characters are actually most efficient at completing objectives? 49 characters with overlapping stats — hard to compare intuitively.',what:'Classified all 49 characters into 4 functional roles using threshold logic. Ran a 1,000-iteration simulation to estimate team efficiency. Applied linear regression to find the strongest predictors of decoding time.',result:'[Your most interesting finding here.]',tags:['Python','Pandas','NumPy','Matplotlib','Simulation','Linear Regression']},
+  p3:{accent:'#854F0B',label:'2025 · Android Development',title:'Event Filtering Interface',problem:'How do multi-stage filters compose correctly when UI state must stay in sync with async API responses?',what:'Extended an instructor-provided Android skeleton to implement sequential filter logic (date, virtual, favorites, search), RecyclerView display, and async error handling.',result:'Gained concrete understanding of client-side data pipelines — directly applicable to dashboard work.',tags:['Java','Android','RecyclerView','Async / API','State management']}
+}
+
+function openModal(id){
+  const p=projects[id]
+  document.getElementById('modal-content').innerHTML=`
     <div class="modal-accent" style="background:${p.accent}"></div>
     <p class="modal-eyebrow">${p.label}</p>
     <h2 class="modal-title">${p.title}</h2>
-    <div class="modal-section">
-      <p class="modal-section-label">Problem</p>
-      <p class="modal-text">${p.problem}</p>
-    </div>
-    <div class="modal-section">
-      <p class="modal-section-label">What I built</p>
-      <p class="modal-text">${p.what}</p>
-    </div>
-    <div class="modal-section">
-      <p class="modal-section-label">Result</p>
-      <p class="modal-text">${p.result}</p>
-    </div>
-    <div class="modal-tags">${p.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('')}</div>
-  `
+    <div class="modal-section"><p class="modal-section-label">Problem</p><p class="modal-text">${p.problem}</p></div>
+    <div class="modal-section"><p class="modal-section-label">What I built</p><p class="modal-text">${p.what}</p></div>
+    <div class="modal-section"><p class="modal-section-label">Result</p><p class="modal-text">${p.result}</p></div>
+    <div class="modal-tags">${p.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('')}</div>`
   document.getElementById('modal-overlay').classList.add('open')
-  document.body.style.overflow = 'hidden'
+  document.body.style.overflow='hidden'
 }
-
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open')
-  document.body.style.overflow = ''
-}
-
-function closeModalOutside(e) {
-  if (e.target === document.getElementById('modal-overlay')) closeModal()
-}
-
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal() })
-
-// SCROLL REVEAL — 带弹性的淡入上移
-const revealObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible')
-      revealObserver.unobserve(entry.target)
-    }
-  })
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' })
-
-document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el))
-
-// SKILL BARS — 滚动到位置后触发进度条动画
-const barObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.querySelectorAll('.bar-fill').forEach(bar => {
-        bar.style.width = bar.dataset.w + '%'
-      })
-      barObserver.unobserve(entry.target)
-    }
-  })
-}, { threshold: 0.3 })
-
-document.querySelectorAll('#skills-grid').forEach(el => barObserver.observe(el))
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');document.body.style.overflow=''}
+function closeModalOutside(e){if(e.target===document.getElementById('modal-overlay'))closeModal()}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()})
 </script>
 </body>
 </html>
