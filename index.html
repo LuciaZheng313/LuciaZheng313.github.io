@@ -590,7 +590,6 @@ function openModal(id){
 function closeModal(){document.getElementById('modal-overlay').classList.remove('open');document.body.style.overflow=''}
 function closeModalOutside(e){if(e.target===document.getElementById('modal-overlay'))closeModal()}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()})
-</script>
 
 /* ── TUBELIGHT NAV ── */
 (function(){
@@ -639,6 +638,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()})
     movePill(links[cur])
   }, {passive:true})
 })()
+</script>
 
 </body>
 </html>
