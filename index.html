@@ -117,15 +117,39 @@ h1 em{font-style:italic;color:var(--text2)}
 
 /* PROJECTS */
 .project-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.project-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:border-color .2s,transform .2s,box-shadow .2s;position:relative;overflow:hidden}
-.project-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.07)}
+.project-card{
+  background:rgba(247,246,243,0.6);
+  border:0.5px solid rgba(255,255,255,0.8);
+  border-radius:var(--radius);
+  padding:20px;cursor:pointer;
+  position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+  transform:perspective(800px) rotateX(0deg) rotateY(0deg);
+  transition:box-shadow .3s,border-color .3s;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:0 2px 8px rgba(0,0,0,0.06);
+}
+.project-card:hover{
+  border-color:rgba(255,255,255,0.95);
+  box-shadow:0 20px 40px rgba(0,0,0,0.12),0 1px 0 rgba(255,255,255,0.8) inset;
+}
 .project-card:hover .project-arrow{opacity:1;transform:translate(0,0)}
+
+/* 光晕层 */
+.pc-glare{
+  position:absolute;inset:0;border-radius:var(--radius);
+  pointer-events:none;opacity:0;
+  transition:opacity .3s;
+  background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.35) 0%, transparent 65%);
+}
+.project-card:hover .pc-glare{opacity:1}
+
 .pc-accent{width:32px;height:3px;border-radius:2px;margin-bottom:16px}
 .pc-eyebrow{font-size:11px;color:var(--text3);margin-bottom:8px}
 .pc-title{font-size:14px;font-weight:500;margin-bottom:8px;letter-spacing:-.01em;line-height:1.4}
 .pc-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px}
 .pc-tags{display:flex;gap:5px;flex-wrap:wrap}
-.pc-tag-pill{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--bg);border:0.5px solid var(--border2);color:var(--text2)}
+.pc-tag-pill{font-size:11px;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,0.7);border:0.5px solid var(--border2);color:var(--text2);backdrop-filter:blur(4px)}
 .project-arrow{position:absolute;top:16px;right:16px;font-size:14px;color:var(--text3);opacity:0;transform:translate(-4px,4px);transition:opacity .2s,transform .2s}
 
 /* MODAL */
@@ -340,7 +364,7 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
     <p class="eyebrow reveal">Work</p>
     <div class="work-list">
       <div class="work-item reveal">
-        <div class="work-icon" style="background:var(--purple-bg)">
+        <div class="work-icon" style="background:var(--white-bg)">
         <img src="images/Coohom.jpg" style="width:28px;height:28px;object-fit:contain;border-radius:6px">
         </div>
         <div class="work-body">
@@ -356,7 +380,7 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
         </div>
       </div>
       <div class="work-item reveal">
-        <div class="work-icon" style="background:var(--teal-bg)">
+        <div class="work-icon" style="background:var(--white-bg)">
         <img src="images/Illinois.png" style="width:28px;height:28px;object-fit:contain;border-radius:6px">
         </div>
         <div class="work-body">
@@ -761,6 +785,43 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()})
     movePill(links[cur])
   }, {passive:true})
 })()
+
+
+/* ── 3D TILT PROJECT CARDS ── */
+document.querySelectorAll('.project-card').forEach(card => {
+  const glare = document.createElement('div')
+  glare.className = 'pc-glare'
+  card.appendChild(glare)
+
+  const TILT = 14
+
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const cx = rect.width / 2
+    const cy = rect.height / 2
+    const rotateY = ((x - cx) / cx) * TILT
+    const rotateX = -((y - cy) / cy) * TILT
+
+    card.style.transition = 'box-shadow .3s, border-color .3s'
+    card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.04)`
+
+    const pctX = (x / rect.width) * 100
+    const pctY = (y / rect.height) * 100
+    glare.style.background = `radial-gradient(circle at ${pctX}% ${pctY}%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.05) 60%, transparent 80%)`
+  })
+
+  card.addEventListener('mouseenter', () => {
+    card.style.transition = 'box-shadow .3s, border-color .3s'
+  })
+
+  card.addEventListener('mouseleave', () => {
+    card.style.transition = 'transform .5s cubic-bezier(.34,1.3,.64,1), box-shadow .4s, border-color .3s'
+    card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)'
+    glare.style.background = 'none'
+  })
+})
 </script>
 
 </body>
