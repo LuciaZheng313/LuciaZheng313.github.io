@@ -249,6 +249,18 @@ h1 em{font-style:italic;color:var(--text2)}
 .evo-body{font-size:14px;font-weight:400;color:var(--text2);line-height:1.7;white-space:pre-line}
 .evo-card.is-collapsed .evo-body{display:none}
 
+.evo-indicator{position:absolute;top:50%;right:14%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:30}
+.evo-indicator-dot{
+  width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:600;color:var(--text3);
+  background:var(--bg2);border:0.5px solid var(--border2);
+  transition:background .25s,border-color .25s,color .25s,transform .2s;
+}
+.evo-indicator-dot.active{background:var(--purple-bg);border-color:rgba(83,74,183,0.35);color:var(--purple-text)}
+.evo-indicator-dot.pulse{animation:evoPulse .35s ease-out}
+@keyframes evoPulse{0%{transform:scale(1)}45%{transform:scale(1.35)}100%{transform:scale(1)}}
+
 /* CASE STUDY: screenshot carousel */
 .case-carousel{margin:0 -4px}
 .cc-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;border-radius:14px}
@@ -897,6 +909,9 @@ function renderEvoStack(){
       <p class="evo-title">${v.title}</p>
       <p class="evo-body">${v.body}</p>
     </div>`).join('')}
+    <div class="evo-indicator">
+      ${versions.map((v,i)=>`<span class="evo-indicator-dot${i===0?' active':''}">${i+1}</span>`).join('')}
+    </div>
   </div>`
 }
 
@@ -919,6 +934,7 @@ function initEvoStack(){
   const container = document.getElementById('evo-stack')
   if(!container) return
   const cards = [...container.querySelectorAll('.evo-card')]
+  const dots = [...container.querySelectorAll('.evo-indicator-dot')]
   evoState = {currentIndex:0, mode:'auto', isPaused:false, timer:null, observer:null, lastWheelTime:0}
 
   function render(){
@@ -930,6 +946,17 @@ function initEvoStack(){
       card.style.transform = `translate(-50%,-50%) translateY(${evoOffsetY(offset)}px) scale(${focused?1:0.85})`
       card.style.zIndex = focused ? 20 : (10 - Math.abs(offset))
     })
+    dots.forEach((dot,i)=>dot.classList.toggle('active', i===evoState.currentIndex))
+  }
+
+  function fireFeedback(){
+    if(navigator.vibrate) navigator.vibrate(15)
+    const activeDot = dots[evoState.currentIndex]
+    if(activeDot){
+      activeDot.classList.remove('pulse')
+      void activeDot.offsetWidth
+      activeDot.classList.add('pulse')
+    }
   }
 
   function stopAuto(){ if(evoState.timer){ clearInterval(evoState.timer); evoState.timer=null } }
@@ -949,11 +976,6 @@ function initEvoStack(){
   function toManual(){ evoState.mode='manual'; stopAuto() }
 
   cards.forEach((card,i)=>{
-    card.addEventListener('mouseenter', ()=>{
-      if(i === evoState.currentIndex) return
-      toManual()
-      goTo(i)
-    })
     card.addEventListener('click', ()=>{
       if(i === evoState.currentIndex) return
       toManual()
@@ -965,8 +987,8 @@ function initEvoStack(){
       if(now - evoState.lastWheelTime < 500) return
       evoState.lastWheelTime = now
       toManual()
-      if(e.deltaY>0) goTo(evoState.currentIndex+1)
-      else if(e.deltaY<0) goTo(evoState.currentIndex-1)
+      if(e.deltaY>0 && evoState.currentIndex<versions.length-1){ goTo(evoState.currentIndex+1); fireFeedback() }
+      else if(e.deltaY<0 && evoState.currentIndex>0){ goTo(evoState.currentIndex-1); fireFeedback() }
     }, {passive:false})
   })
 
