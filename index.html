@@ -18,7 +18,7 @@
   --radius:14px;
 }
 html{scroll-behavior:smooth}
-.container{max-width:880px;margin:0 auto;padding:0 48px}
+.container{max-width:1100px;margin:0 auto;padding:0 64px}
 section{padding:88px 0;border-bottom:0.5px solid var(--border)}
 section:last-of-type{border-bottom:none}
 .eyebrow{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:36px}
@@ -65,9 +65,29 @@ nav{
 }
 .nav-cta{display:none}
 
+/* SECTION BACKGROUNDS */
+#hero{
+  background:
+    radial-gradient(ellipse at 70% 50%, rgba(83,74,183,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 80%, rgba(15,110,86,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 10%, rgba(133,79,11,0.05) 0%, transparent 50%);
+}
+#projects{
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(83,74,183,0.10) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 70%, rgba(15,110,86,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 10%, rgba(133,79,11,0.06) 0%, transparent 45%);
+}
+#travel{
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(83,74,183,0.10) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 60%, rgba(15,110,86,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 90%, rgba(133,79,11,0.06) 0%, transparent 45%);
+}
+
 /* HERO */
-#hero{padding:100px 0 88px}
-.hero-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:56px}
+#hero{padding:130px 0 110px}
+.hero-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:80px}
 .hero-left{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
 .hero-right{flex-shrink:0}
 
@@ -84,15 +104,33 @@ nav{
 .hero-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-h1{font-size:42px;font-weight:500;line-height:1.12;letter-spacing:-.03em;margin-bottom:18px;max-width:480px}
+h1{font-size:52px;font-weight:500;line-height:1.08;letter-spacing:-.03em;margin-bottom:18px;max-width:560px}
+.cursor{
+  display:inline-block;
+  width:3px;height:0.8em;
+  background:var(--text);
+  margin-left:3px;
+  vertical-align:middle;
+  border-radius:1px;
+  animation:cursorBlink 0.8s step-end infinite;
+}
+@keyframes cursorBlink{
+  0%,100%{opacity:1}
+  50%{opacity:0}
+}
 h1 em{font-style:italic;color:var(--text2)}
 .hero-sub{font-size:15px;color:var(--text2);max-width:400px;line-height:1.75;margin-bottom:24px}
 
 .hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px}
-.badge{font-size:12px;padding:4px 12px;border-radius:20px;font-weight:400}
-.badge-purple{background:var(--purple-bg);color:var(--purple-text)}
-.badge-teal{background:var(--teal-bg);color:var(--teal)}
-.badge-amber{background:var(--amber-bg);color:var(--amber-text)}
+.badge{
+  font-size:12px;padding:5px 14px;border-radius:20px;font-weight:400;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:0.5px solid rgba(255,255,255,0.7);
+  box-shadow:0 1px 0 rgba(255,255,255,0.8) inset;
+}
+.badge-purple{background:rgba(83,74,183,0.12);color:var(--purple-text);border-color:rgba(83,74,183,0.2)}
+.badge-teal{background:rgba(15,110,86,0.10);color:var(--teal);border-color:rgba(15,110,86,0.18)}
+.badge-amber{background:rgba(133,79,11,0.10);color:var(--amber-text);border-color:rgba(133,79,11,0.18)}
 
 /* info cards under avatar */
 .hero-info-cards{display:flex;flex-direction:column;gap:8px;margin-top:12px;width:240px}
@@ -116,40 +154,50 @@ h1 em{font-style:italic;color:var(--text2)}
 .wtag{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--bg2);border:0.5px solid var(--border);color:var(--text2)}
 
 /* PROJECTS */
-.project-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.project-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .project-card{
-  background:rgba(247,246,243,0.6);
-  border:0.5px solid rgba(255,255,255,0.8);
-  border-radius:var(--radius);
-  padding:20px;cursor:pointer;
-  position:relative;overflow:hidden;
+  background:rgba(255,255,255,0.05);
+  border:0.5px solid rgba(255,255,255,0.6);
+  border-radius:18px;
+  padding:22px;cursor:pointer;
+  position:relative;
+  overflow:visible;
   transform-style:preserve-3d;
-  transform:perspective(800px) rotateX(0deg) rotateY(0deg);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.04),
+    0 1px 0 rgba(255,255,255,0.9) inset,
+    0 -1px 0 rgba(255,255,255,0.15) inset;
   transition:box-shadow .3s,border-color .3s;
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  box-shadow:0 2px 8px rgba(0,0,0,0.06);
+  will-change:transform;
 }
 .project-card:hover{
   border-color:rgba(255,255,255,0.95);
-  box-shadow:0 20px 40px rgba(0,0,0,0.12),0 1px 0 rgba(255,255,255,0.8) inset;
+  box-shadow:
+    0 20px 48px rgba(80,100,200,0.12),
+    0 1px 0 rgba(255,255,255,0.9) inset,
+    0 -1px 0 rgba(255,255,255,0.3) inset;
 }
 .project-card:hover .project-arrow{opacity:1;transform:translate(0,0)}
-
-/* 光晕层 */
 .pc-glare{
-  position:absolute;inset:0;border-radius:var(--radius);
-  pointer-events:none;opacity:0;
-  transition:opacity .3s;
-  background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.35) 0%, transparent 65%);
+  position:absolute;inset:-1px;
+  border-radius:18px;
+  pointer-events:none;
+  background:none;
+  z-index:10;
 }
-.project-card:hover .pc-glare{opacity:1}
-
 .pc-accent{width:32px;height:3px;border-radius:2px;margin-bottom:16px}
 .pc-eyebrow{font-size:11px;color:var(--text3);margin-bottom:8px}
-.pc-title{font-size:14px;font-weight:500;margin-bottom:8px;letter-spacing:-.01em;line-height:1.4}
+.pc-title{font-size:14px;font-weight:500;margin-bottom:8px;letter-spacing:-.01em;line-height:1.4;color:var(--text)}
 .pc-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px}
 .pc-tags{display:flex;gap:5px;flex-wrap:wrap}
-.pc-tag-pill{font-size:11px;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,0.7);border:0.5px solid var(--border2);color:var(--text2);backdrop-filter:blur(4px)}
+.pc-tag-pill{
+  font-size:11px;padding:3px 10px;border-radius:20px;
+  background:rgba(255,255,255,0.35);
+  border:0.5px solid rgba(255,255,255,0.7);
+  color:var(--text2);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
 .project-arrow{position:absolute;top:16px;right:16px;font-size:14px;color:var(--text3);opacity:0;transform:translate(-4px,4px);transition:opacity .2s,transform .2s}
 
 /* MODAL */
@@ -364,7 +412,7 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
     <p class="eyebrow reveal">Work</p>
     <div class="work-list">
       <div class="work-item reveal">
-        <div class="work-icon" style="background:var(--white-bg)">
+        <div class="work-icon" style="background:var(--purple-bg)">
         <img src="images/Coohom.jpg" style="width:28px;height:28px;object-fit:contain;border-radius:6px">
         </div>
         <div class="work-body">
@@ -380,7 +428,7 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
         </div>
       </div>
       <div class="work-item reveal">
-        <div class="work-icon" style="background:var(--white-bg)">
+        <div class="work-icon" style="background:var(--teal-bg)">
         <img src="images/Illinois.png" style="width:28px;height:28px;object-fit:contain;border-radius:6px">
         </div>
         <div class="work-body">
@@ -736,7 +784,7 @@ function openModal(id){
 }
 function closeModal(){document.getElementById('modal-overlay').classList.remove('open');document.body.style.overflow=''}
 function closeModalOutside(e){if(e.target===document.getElementById('modal-overlay'))closeModal()}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()})
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 
 /* ── TUBELIGHT NAV ── */
 (function(){
@@ -786,38 +834,81 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()})
   }, {passive:true})
 })()
 
+/* ── TYPEWRITER HERO ── */
+setTimeout(function(){
+  const h1 = document.querySelector('#hero h1')
+  if(!h1) { console.log('h1 not found'); return; }
+  
+  const lines = [
+    { text: 'I build things,', em: false },
+    { text: 'then measure', em: true },
+    { text: 'if they work.', em: false }
+  ]
+
+  let lineIdx = 0, charIdx = 0
+  const typed = []
+
+  function renderH1() {
+    let html = ''
+    typed.forEach((line, i) => {
+      if(line.em) html += `<em>${line.text}</em>`
+      else html += line.text
+      if(i < typed.length - 1) html += '<br>'
+    })
+    if(lineIdx < lines.length) {
+      const cur = lines[lineIdx]
+      const partial = cur.text.slice(0, charIdx)
+      if(typed.length > 0) html += '<br>'
+      if(cur.em) html += `<em>${partial}</em>`
+      else html += partial
+    }
+    html += '<span class="cursor">|</span>'
+    h1.innerHTML = html
+  }
+
+  function type() {
+    if(lineIdx >= lines.length) return
+    const line = lines[lineIdx]
+    if(charIdx < line.text.length) {
+      charIdx++
+      renderH1()
+      setTimeout(type, 55)
+    } else {
+      typed.push(line)
+      lineIdx++
+      charIdx = 0
+      renderH1()
+      setTimeout(type, 180)
+    }
+  }
+
+  h1.innerHTML = '<span class="cursor">|</span>'
+  type()
+}, 300)
 
 /* ── 3D TILT PROJECT CARDS ── */
 document.querySelectorAll('.project-card').forEach(card => {
   const glare = document.createElement('div')
   glare.className = 'pc-glare'
   card.appendChild(glare)
-
-  const TILT = 14
-
+  const TILT = 12
   card.addEventListener('mousemove', e => {
     const rect = card.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
-    const cx = rect.width / 2
-    const cy = rect.height / 2
-    const rotateY = ((x - cx) / cx) * TILT
-    const rotateX = -((y - cy) / cy) * TILT
-
-    card.style.transition = 'box-shadow .3s, border-color .3s'
-    card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.04)`
-
-    const pctX = (x / rect.width) * 100
-    const pctY = (y / rect.height) * 100
-    glare.style.background = `radial-gradient(circle at ${pctX}% ${pctY}%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.05) 60%, transparent 80%)`
+    const rotateY = ((x - rect.width/2) / (rect.width/2)) * TILT
+    const rotateX = -((y - rect.height/2) / (rect.height/2)) * TILT
+    card.style.transition = 'box-shadow .3s,border-color .3s'
+    card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`
+    const pctX = (x/rect.width)*100
+    const pctY = (y/rect.height)*100
+    glare.style.background = `radial-gradient(circle at ${pctX}% ${pctY}%, rgba(255,255,255,0.45) 0%, transparent 65%)`
   })
-
   card.addEventListener('mouseenter', () => {
-    card.style.transition = 'box-shadow .3s, border-color .3s'
+    card.style.transition = 'box-shadow .3s,border-color .3s'
   })
-
   card.addEventListener('mouseleave', () => {
-    card.style.transition = 'transform .5s cubic-bezier(.34,1.3,.64,1), box-shadow .4s, border-color .3s'
+    card.style.transition = 'transform .5s cubic-bezier(.34,1.3,.64,1),box-shadow .3s,border-color .3s'
     card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)'
     glare.style.background = 'none'
   })
