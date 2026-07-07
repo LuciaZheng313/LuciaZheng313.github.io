@@ -32,6 +32,7 @@ nav{
   z-index:200;
 }
 .nav-inner{
+  position:relative;
   display:flex;align-items:center;gap:4px;
   background:rgba(255,255,255,0.15);
   border:0.5px solid rgba(255,255,255,0.6);
@@ -50,7 +51,7 @@ nav{
 .nav-links a:hover{color:var(--text)}
 .nav-links a.active{color:var(--text)}
 .nav-pill{
-  position:absolute;border-radius:999px;
+  position:absolute;top:0;bottom:0;border-radius:999px;
   background:rgba(255,255,255,0.85);
   box-shadow:0 1px 4px rgba(0,0,0,0.08);
   transition:left .3s cubic-bezier(.34,1.3,.64,1),width .3s cubic-bezier(.34,1.3,.64,1);
@@ -87,7 +88,7 @@ nav{
 
 /* HERO */
 #hero{padding:130px 0 110px}
-.hero-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:80px}
+.hero-inner{display:flex;align-items:center;justify-content:space-between;gap:80px}
 .hero-left{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
 .hero-right{flex-shrink:0}
 
@@ -849,7 +850,7 @@ const projects = {
     ],
     tags:['Python','Streamlit','Google Sheets API','Apps Script','Meta Marketing API','Chart.js','SheetJS']
   },
-  p2:{accent:'#0F6E56',label:'2025 · Data Analysis',title:'Identity V Survivor Performance Analysis',problem:'Which survivor characters are actually most efficient at completing objectives? 49 characters with overlapping stats — hard to compare intuitively.',what:'Classified all 49 characters into 4 functional roles using threshold logic. Ran a 1,000-iteration simulation to estimate team efficiency. Applied linear regression to find the strongest predictors of decoding time.',result:'[Your most interesting finding here.]',tags:['Python','Pandas','NumPy','Matplotlib','Simulation','Linear Regression']},
+  p2:{accent:'#0F6E56',label:'2025 · Data Analysis',title:'Identity V Survivor Performance Analysis',problem:'Which survivor characters are actually most efficient at completing objectives? 49 characters with overlapping stats, hard to compare intuitively.',what:'Classified all 49 characters into 4 functional roles (rescue, fast/normal/slow decoders) using threshold logic on Rocket Chair Ascent Time (60s) and Decoding Time (75s/85s/95s). Ran a 1,000 iteration simulation to estimate team efficiency for a standard 4 person team composition. Applied linear regression on standardized features to find the strongest predictors of decoding time.',result:'A randomly composed team takes an average of 435 seconds to decode all 5 machines, but the range between the best and worst team compositions spans over a minute (404s to 475s), meaning team composition alone meaningfully changes survival risk. Regression also revealed a counterintuitive tradeoff: characters strong at self healing tend to be worse decoders, while the "Rescue Role" trait carries a consistent decoding penalty, suggesting the game enforces a genuine specialization tradeoff rather than letting any single character be good at everything.',tags:['Python','Pandas','NumPy','Matplotlib','Simulation','Linear Regression']},
   p3:{accent:'#854F0B',label:'2025 · Android Development',title:'Event Filtering Interface',problem:'How do multi-stage filters compose correctly when UI state must stay in sync with async API responses?',what:'Extended an instructor-provided Android skeleton to implement sequential filter logic (date, virtual, favorites, search), RecyclerView display, and async error handling.',result:'Gained concrete understanding of client-side data pipelines — directly applicable to dashboard work.',tags:['Java','Android','RecyclerView','Async / API','State management']}
 }
 
@@ -1017,13 +1018,15 @@ document.addEventListener('keydown',e=>{
 
   function movePill(el){
     const li = el.parentElement
-    const ul = li.parentElement
-    const ulRect = ul.getBoundingClientRect()
+    // .nav-pill's actual CSS containing block is .nav-inner (its positioned parent),
+    // not the <ul> — measuring against <ul> ignores .nav-inner's own padding/border,
+    // which is what caused the pill to render offset from the real tab position.
+    const navInner = pill.parentElement
+    const innerRect = navInner.getBoundingClientRect()
+    const innerBorderLeft = parseFloat(getComputedStyle(navInner).borderLeftWidth) || 0
     const liRect = li.getBoundingClientRect()
-    pill.style.left = (liRect.left - ulRect.left) + 'px'
+    pill.style.left = (liRect.left - innerRect.left - innerBorderLeft) + 'px'
     pill.style.width = liRect.width + 'px'
-    pill.style.height = liRect.height + 'px'
-    pill.style.top = '0px'
     links.forEach(a => {
       a.classList.remove('active')
       a.querySelector('.nav-light').style.opacity = '0'
@@ -1034,6 +1037,16 @@ document.addEventListener('keydown',e=>{
 
   // 初始化：激活第一个
   requestAnimationFrame(() => movePill(links[0]))
+
+  // 字体异步加载完成后，文字实际宽度可能和用 fallback 字体量出来的不一样，
+  // pill 的 left/width 是缓存的像素值，不会跟着字体变化自动更新（.nav-light 用的是
+  // CSS 百分比定位，是实时的，所以两者会跟着字体加载错开）。字体就绪后重新measure一次。
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(() => {
+      const current = document.querySelector('.nav-links a.active') || links[0]
+      movePill(current)
+    })
+  }
 
   // 点击切换
   links.forEach(a => a.addEventListener('click', () => movePill(a)))
