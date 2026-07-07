@@ -402,12 +402,15 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
 .ft{font-size:12px;color:var(--text3)}
 
 /* SCROLL REVEAL — bidirectional */
-.reveal{
+/* .reveal is a plain, unstyled measurement wrapper (no transform/opacity of its own),
+   so IntersectionObserver always measures a box that never moves. The actual fade/slide
+   animation lives on .reveal-inner instead, fully decoupled from what's being observed. */
+.reveal-inner{
   opacity:0;transform:translateY(28px);
   transition:opacity .55s cubic-bezier(.4,0,.2,1),transform .55s cubic-bezier(.34,1.3,.64,1);
 }
-.reveal.up{transform:translateY(-28px)}
-.reveal.visible{opacity:1!important;transform:translateY(0)!important}
+.reveal-inner.up{transform:translateY(-28px)}
+.reveal-inner.visible{opacity:1!important;transform:translateY(0)!important}
 </style>
 </head>
 <body>
@@ -454,9 +457,9 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
 <!-- WORK -->
 <section id="work">
   <div class="container">
-    <p class="eyebrow reveal">Work</p>
+    <div class="reveal"><p class="eyebrow reveal-inner">Work</p></div>
     <div class="work-list">
-      <div class="work-item reveal">
+      <div class="reveal"><div class="work-item reveal-inner">
         <div class="work-icon">
         <img src="images/Coohom.jpg" style="width:40px;height:40px;object-fit:cover;border-radius:10px">
         </div>
@@ -468,11 +471,11 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
           <p class="work-role">Marketing Intern</p>
           <p class="work-desc">Paid social (Meta Ads) across EMEA, India &amp; NA. Built a multi-region data pipeline and Streamlit dashboard so the sales team gets a daily read on leads without touching raw files.</p>
           <div class="work-tags">
-            <span class="wtag">Meta Ads</span><span class="wtag">Python</span><span class="wtag">Streamlit</span><span class="wtag">B2B</span><span class="wtag">CRM</span>
+            <span class="wtag">Meta Ads</span><span class="wtag">JavaScript</span><span class="wtag">Data</span><span class="wtag">Python</span><span class="wtag">B2B</span><span class="wtag">CRM</span>
           </div>
         </div>
-      </div>
-      <div class="work-item reveal">
+      </div></div>
+      <div class="reveal"><div class="work-item reveal-inner">
         <div class="work-icon">
         <img src="images/Illinois.png" style="width:40px;height:40px;object-fit:cover;border-radius:10px">
         </div>
@@ -484,10 +487,10 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
           <p class="work-role">Course Assistant</p>
           <p class="work-desc">Java tutoring and forum Q&amp;A for introductory CS students. Guided students through problem-solving logic, not just syntax.</p>
           <div class="work-tags">
-            <span class="wtag">Java</span><span class="wtag">Teaching</span>
+            <span class="wtag">Java</span><span class="wtag">Tutoring</span>
           </div>
         </div>
-      </div>
+      </div></div>
     </div>
   </div>
 </section>
@@ -495,32 +498,32 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
 <!-- PROJECTS -->
 <section id="projects">
   <div class="container">
-    <p class="eyebrow reveal">Projects</p>
+    <div class="reveal"><p class="eyebrow reveal-inner">Projects</p></div>
     <div class="project-grid">
-      <div class="project-card reveal" onclick="openModal('p1')">
+      <div class="reveal"><div class="project-card reveal-inner" onclick="openModal('p1')">
         <div class="pc-accent" style="background:var(--purple)"></div>
         <p class="pc-eyebrow">2026 · Coohom</p>
         <p class="pc-title"><svg class="pc-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Multi-Region Meta Ads Dashboard</p>
         <p class="pc-desc">Meta API → Apps Script → Sheets → single-file HTML dashboard. Automated daily reporting across 5 regions.</p>
         <div class="pc-tags"><span class="pc-tag-pill">Python</span><span class="pc-tag-pill">Apps Script</span><span class="pc-tag-pill">Meta API</span></div>
         <span class="project-arrow">↗</span>
-      </div>
-      <div class="project-card reveal" onclick="openModal('p2')">
+      </div></div>
+      <div class="reveal"><div class="project-card reveal-inner" onclick="openModal('p2')">
         <div class="pc-accent" style="background:var(--teal)"></div>
         <p class="pc-eyebrow">2025 · Data Analysis</p>
         <p class="pc-title">Identity V Survivor Performance Analysis</p>
         <p class="pc-desc">Classified 49 characters, ran 1k-iteration simulation, applied linear regression.</p>
         <div class="pc-tags"><span class="pc-tag-pill">Python</span><span class="pc-tag-pill">Matplotlib</span><span class="pc-tag-pill">Simulation</span></div>
         <span class="project-arrow">↗</span>
-      </div>
-      <div class="project-card reveal" onclick="openModal('p3')">
+      </div></div>
+      <div class="reveal"><div class="project-card reveal-inner" onclick="openModal('p3')">
         <div class="pc-accent" style="background:var(--amber)"></div>
         <p class="pc-eyebrow">2025 · Android</p>
         <p class="pc-title">Event Filtering Interface</p>
         <p class="pc-desc">Multi-stage filter pipeline with async API sync and RecyclerView display.</p>
         <div class="pc-tags"><span class="pc-tag-pill">Java</span><span class="pc-tag-pill">Android</span><span class="pc-tag-pill">Async</span></div>
         <span class="project-arrow">↗</span>
-      </div>
+      </div></div>
     </div>
   </div>
 </section>
@@ -528,10 +531,10 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
 <!-- SKILLS -->
 <section id="skills">
   <div class="container">
-    <p class="eyebrow reveal">Skills</p>
+    <div class="reveal"><p class="eyebrow reveal-inner">Skills</p></div>
     <div class="skills-grid">
 
-      <div class="skill-group reveal">
+      <div class="reveal"><div class="skill-group reveal-inner">
   <p class="sg-title">Programming</p>
   <div class="stack-wrap">
     <div class="skill-card">
@@ -580,9 +583,9 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
       <p class="sc-source">Portfolio website &amp Coohom internship · Dashboard</p>
     </div>
   </div>
-</div>
+</div></div>
 
-      <div class="skill-group reveal">
+      <div class="reveal"><div class="skill-group reveal-inner">
         <p class="sg-title">Tools &amp; Data</p>
         <div class="stack-wrap">
           <div class="skill-card">
@@ -622,9 +625,9 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
             <p class="sc-source">Coohom EMEA multi-region dashboard</p>
           </div>
         </div>
-      </div>
+      </div></div>
 
-      <div class="skill-group reveal">
+      <div class="reveal"><div class="skill-group reveal-inner">
         <p class="sg-title">Languages</p>
         <div class="stack-wrap">
           <div class="skill-card">
@@ -646,7 +649,7 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
             <p class="sc-source">Bilingual / Native</p>
           </div>
         </div>
-      </div>
+      </div></div>
 
     </div>
   </div>
@@ -655,12 +658,12 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
 <!-- TRAVEL -->
 <section id="travel">
   <div class="container">
-    <div class="travel-top reveal">
+    <div class="reveal"><div class="travel-top reveal-inner">
       <p class="eyebrow" style="margin-bottom:0">Travel</p>
       <button class="spin-btn" id="spin-btn" onclick="rollTravel()" title="Somewhere new">✦</button>
-    </div>
+    </div></div>
 
-    <div class="travel-card reveal">
+    <div class="reveal"><div class="travel-card reveal-inner">
       <div class="travel-l">
         <div>
           <p style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:12px">Location</p>
@@ -672,17 +675,17 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
         <span class="travel-emoji" id="travel-emoji">✈️</span>
         <p class="travel-story" id="travel-story">Click ✦ to explore a memory.</p>
       </div>
-    </div>
+    </div></div>
   </div>
 </section>
 
 <!-- CONTACT -->
 <section id="contact">
   <div class="container">
-    <p class="eyebrow reveal">Contact</p>
-    <h2 class="contact-h reveal">Let's talk.</h2>
-    <p class="contact-sub reveal">Open to internships, collaborations, or just a good conversation.</p>
-    <div class="contact-row reveal">
+    <div class="reveal"><p class="eyebrow reveal-inner">Contact</p></div>
+    <div class="reveal"><h2 class="contact-h reveal-inner">Let's talk.</h2></div>
+    <div class="reveal"><p class="contact-sub reveal-inner">Open to internships, collaborations, or just a good conversation.</p></div>
+    <div class="reveal"><div class="contact-row reveal-inner">
   <a href="mailto:luciazg313@gmail.com" class="contact-btn">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
     luciazg313@gmail.com
@@ -695,7 +698,7 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
     LinkedIn
   </a>
-</div>
+</div></div>
   </div>
 </section>
 
@@ -804,15 +807,19 @@ window.addEventListener('scroll', ()=>{ lastY = window.scrollY }, {passive:true}
 
 const ro = new IntersectionObserver(entries => {
   entries.forEach(e => {
+    // .reveal (observed here) is a plain, unstyled wrapper — it never moves, so this
+    // geometry is never affected by the animation. The actual fade/slide classes go on
+    // the .reveal-inner child, fully decoupled from what IntersectionObserver measures.
+    const inner = e.target.querySelector('.reveal-inner') || e.target
     if(e.isIntersecting){
-      e.target.classList.add('visible')
-      e.target.classList.remove('up')
+      inner.classList.add('visible')
+      inner.classList.remove('up')
     } else {
-      e.target.classList.remove('visible')
-      e.target.classList.toggle('up', window.scrollY < e.target.getBoundingClientRect().top + window.scrollY)
+      inner.classList.remove('visible')
+      inner.classList.toggle('up', window.scrollY < e.target.getBoundingClientRect().top + window.scrollY)
     }
   })
-}, {threshold:0.1, rootMargin:'-40px 0px -40px 0px'})
+}, {threshold:0.1, rootMargin:'0px 0px -40px 0px'})
 
 document.querySelectorAll('.reveal').forEach(el => ro.observe(el))
 
