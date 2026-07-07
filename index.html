@@ -189,6 +189,7 @@ h1 em{font-style:italic;color:var(--text2)}
 .pc-accent{width:32px;height:3px;border-radius:2px;margin-bottom:16px}
 .pc-eyebrow{font-size:11px;color:var(--text3);margin-bottom:8px}
 .pc-title{font-size:14px;font-weight:500;margin-bottom:8px;letter-spacing:-.01em;line-height:1.4;color:var(--text)}
+.pc-star{width:13px;height:13px;vertical-align:-2px;margin-right:5px;color:#F5B400;fill:currentColor}
 .pc-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px}
 .pc-tags{display:flex;gap:5px;flex-wrap:wrap}
 .pc-tag-pill{
@@ -204,9 +205,18 @@ h1 em{font-style:italic;color:var(--text2)}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);backdrop-filter:blur(4px);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .2s}
 .modal-overlay.open{opacity:1;pointer-events:all}
 .modal{background:var(--bg);border-radius:20px;max-width:560px;width:100%;max-height:88vh;overflow-y:auto;padding:36px;position:relative;transform:translateY(20px) scale(.97);transition:transform .28s cubic-bezier(.34,1.56,.64,1),max-width .2s}
-.modal.wide{max-width:920px}
+.modal.split{
+  position:fixed;top:0;right:0;
+  width:95vw;max-width:none;height:100vh;max-height:none;
+  border-radius:20px 0 0 20px;
+  padding:0;overflow:hidden;
+  transform:translateX(100%);
+  transition:transform .38s cubic-bezier(.4,0,.2,1);
+}
+.modal.split #modal-content{display:flex;width:100%;height:100%}
 .modal-overlay.open .modal{transform:translateY(0) scale(1)}
-.modal-close{position:absolute;top:20px;right:20px;width:28px;height:28px;border-radius:50%;background:var(--bg2);border:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:background .15s}
+.modal-overlay.open .modal.split{transform:translateX(0)}
+.modal-close{position:absolute;top:20px;right:20px;width:28px;height:28px;border-radius:50%;background:var(--bg2);border:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:background .15s;z-index:20}
 .modal-close:hover{background:var(--bg3)}
 .modal-accent{width:40px;height:4px;border-radius:2px;margin-bottom:20px}
 .modal-eyebrow{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
@@ -229,63 +239,31 @@ h1 em{font-style:italic;color:var(--text2)}
 .feature-list b{color:var(--text);font-weight:500}
 
 /* CASE STUDY: architecture diagram */
-.arch-diagram{width:100%;max-width:640px;display:block;margin:0 auto;font-family:'Inter',sans-serif}
+.arch-diagram{width:100%;display:block;margin:0 auto;font-family:'Inter',sans-serif}
 .arch-diagram text{font-family:'Inter',sans-serif}
 
-/* CASE STUDY: evolution card stack */
-.evo-stack{position:relative;height:860px;margin:0 -4px;user-select:none}
-.evo-card{
-  position:absolute;left:50%;top:50%;width:60%;
-  background:linear-gradient(135deg,rgba(180,200,255,0.22) 0%,rgba(200,180,255,0.18) 30%,rgba(180,230,220,0.18) 65%,rgba(255,220,180,0.15) 100%);
-  border:0.5px solid rgba(255,255,255,0.55);
-  box-shadow:0 8px 32px rgba(100,120,200,0.10),0 1px 0 rgba(255,255,255,0.7) inset,0 -1px 0 rgba(255,255,255,0.2) inset;
-  transition:transform .5s cubic-bezier(.4,0,.2,1),border-radius .5s cubic-bezier(.4,0,.2,1),padding .5s cubic-bezier(.4,0,.2,1);
-}
-.evo-card.is-focused{border-radius:var(--radius);padding:28px 32px;cursor:default}
-.evo-card.is-collapsed{height:52px;border-radius:999px;padding:0 32px;display:flex;align-items:center;justify-content:flex-start;cursor:pointer}
-.evo-title{font-size:16px;font-weight:600;color:var(--text);letter-spacing:-.01em}
-.evo-card.is-focused .evo-title{margin-bottom:10px}
-.evo-card.is-collapsed .evo-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;font-size:13.5px}
+/* CASE STUDY: evolution timeline (static) */
+.evo-list{list-style:none;position:relative;padding-left:22px}
+.evo-item{position:relative;padding-bottom:26px}
+.evo-item:last-child{padding-bottom:0}
+.evo-item::before{content:'';position:absolute;left:-22px;top:4px;width:7px;height:7px;border-radius:50%;background:var(--purple)}
+.evo-item::after{content:'';position:absolute;left:-19px;top:14px;bottom:-26px;width:1px;background:var(--border2)}
+.evo-item:last-child::after{display:none}
+.evo-title{font-size:15px;font-weight:600;color:var(--text);letter-spacing:-.01em;margin-bottom:6px}
 .evo-body{font-size:14px;font-weight:400;color:var(--text2);line-height:1.7;white-space:pre-line}
-.evo-card.is-collapsed .evo-body{display:none}
-.evo-image{display:block;max-width:150px;width:100%;height:auto;margin-top:14px;border-radius:10px;border:0.5px solid var(--border);background:var(--bg2);cursor:zoom-in}
-.evo-card.is-collapsed .evo-image{display:none}
 
-.evo-indicator{position:absolute;top:50%;right:14%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:30}
-.evo-indicator-dot{
-  width:22px;height:22px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:10px;font-weight:600;color:var(--text3);
-  background:var(--bg2);border:0.5px solid var(--border2);
-  transition:background .25s,border-color .25s,color .25s,transform .2s;
-  cursor:pointer;
-}
-.evo-indicator-dot.active{background:var(--purple-bg);border-color:rgba(83,74,183,0.35);color:var(--purple-text)}
-.evo-indicator-dot.pulse{animation:evoPulse .35s ease-out}
-@keyframes evoPulse{0%{transform:scale(1)}45%{transform:scale(1.35)}100%{transform:scale(1)}}
-
-/* CASE STUDY: screenshot carousel */
-.case-carousel{margin:0 -4px}
-.cc-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;border-radius:14px}
-.cc-track::-webkit-scrollbar{display:none}
-.cc-slide{flex:0 0 100%;scroll-snap-align:start;display:flex;flex-direction:column;gap:8px;padding:0 4px}
-.cc-slide img{width:100%;height:280px;object-fit:contain;background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;cursor:zoom-in;transition:filter .15s}
-.cc-slide img:hover{filter:brightness(0.96)}
-.cc-caption{font-size:12px;color:var(--text2);text-align:center;line-height:1.5;padding:0 8px}
-.cc-dots{display:flex;justify-content:center;gap:6px;margin-top:12px}
-.cc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);cursor:pointer;transition:background .2s,transform .2s;border:none;padding:0}
-.cc-dot.active{background:var(--purple);transform:scale(1.4)}
-
-/* LIGHTBOX */
-.lightbox-overlay{position:fixed;inset:0;background:rgba(10,10,15,0.88);z-index:600;display:flex;align-items:center;justify-content:center;padding:5vh 5vw;opacity:0;pointer-events:none;transition:opacity .2s}
-.lightbox-overlay.open{opacity:1;pointer-events:all}
-.lightbox-overlay img{max-width:100%;max-height:90vh;border-radius:10px;box-shadow:0 24px 64px rgba(0,0,0,0.4)}
+/* CASE STUDY: split-screen layout */
+.cs-left{width:26%;flex-shrink:0;overflow-y:auto;padding:32px 28px;box-sizing:border-box;border-right:0.5px solid var(--border)}
+.cs-right{width:74%;flex-shrink:0;background:var(--bg2);overflow-y:auto;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.demo-caption{font-style:italic;color:var(--text3);font-size:12px;margin-top:14px;text-align:center}
+.demo-scale-wrapper{width:100%;height:100%;overflow:hidden;position:relative}
+.demo-frame{border:none;position:absolute;top:0;left:0;transform-origin:top left}
 
 /* SKILLS */
 .skills-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:start}
 .skill-group{display:flex;flex-direction:column;gap:12px}
 .sg-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:6px}
-.stack-wrap{position:relative;width:100%;height:260px}
+.stack-wrap{position:relative;width:100%;height:380px}
 .skill-card{
   position:absolute;
   width:88%;
@@ -303,6 +281,7 @@ h1 em{font-style:italic;color:var(--text2)}
 .skill-card:nth-child(2){top:56px;left:14px;z-index:2;filter:grayscale(40%);opacity:0.8}
 .skill-card:nth-child(3){top:112px;left:28px;z-index:3;filter:none;opacity:1}
 .skill-card:nth-child(4){top:168px;left:42px;z-index:4;filter:none;opacity:1}
+.skill-card:nth-child(5){top:224px;left:56px;z-index:5;filter:none;opacity:1}
 .skill-card:hover{
   z-index:10;
   box-shadow:0 8px 28px rgba(0,0,0,0.10);
@@ -313,6 +292,7 @@ h1 em{font-style:italic;color:var(--text2)}
 .skill-card:nth-child(2):hover{transform:skewY(-5deg) translateY(-12px)}
 .skill-card:nth-child(3):hover{transform:skewY(-5deg) translateY(-12px)}
 .skill-card:nth-child(4):hover{transform:skewY(-5deg) translateY(-12px)}
+.skill-card:nth-child(5):hover{transform:skewY(-5deg) translateY(-12px)}
 .sc-top{display:flex;align-items:center;gap:10px}
 .sc-icon-wrap{width:26px;height:26px;border-radius:50%;background:#1a1a1a;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .sc-icon-wrap svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2}
@@ -456,7 +436,7 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
           Open to opportunities
         </div>
         <h1>I build things,<br><em>then measure</em><br>if they work.</h1>
-        <p class="hero-sub">Math at UIUC. Interning at Coohom — running paid social across the Middle East, India &amp; NA, and building the dashboards to make sense of it all.</p>
+        <p class="hero-sub">Hi there! This is Lucia, a Mathematics and Computer Science student interested in how data, technology, and business come together to solve real-world problems. I'm always excited to learn new things, connect with people from different backgrounds, and explore opportunities around the world.</p>
         <div class="hero-badges">
           <span class="badge badge-purple">UIUC · Mathematics · GPA 4.0 · 2029</span>
           <span class="badge badge-teal">Champaign, IL · Open to remote</span>
@@ -477,13 +457,13 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
     <p class="eyebrow reveal">Work</p>
     <div class="work-list">
       <div class="work-item reveal">
-        <div class="work-icon" style="background:var(--purple-bg)">
-        <img src="images/Coohom.jpg" style="width:28px;height:28px;object-fit:contain;border-radius:6px">
+        <div class="work-icon">
+        <img src="images/Coohom.jpg" style="width:40px;height:40px;object-fit:cover;border-radius:10px">
         </div>
         <div class="work-body">
           <div class="work-meta">
-            <span class="work-title">Coohom (群核科技)</span>
-            <span class="work-period">2025 – present</span>
+            <span class="work-title">Coohom</span>
+            <span class="work-period">May 2026 – Aug 2026</span>
           </div>
           <p class="work-role">Marketing Intern</p>
           <p class="work-desc">Paid social (Meta Ads) across EMEA, India &amp; NA. Built a multi-region data pipeline and Streamlit dashboard so the sales team gets a daily read on leads without touching raw files.</p>
@@ -493,12 +473,12 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
         </div>
       </div>
       <div class="work-item reveal">
-        <div class="work-icon" style="background:var(--teal-bg)">
-        <img src="images/Illinois.png" style="width:28px;height:28px;object-fit:contain;border-radius:6px">
+        <div class="work-icon">
+        <img src="images/Illinois.png" style="width:40px;height:40px;object-fit:cover;border-radius:10px">
         </div>
         <div class="work-body">
           <div class="work-meta">
-            <span class="work-title">UIUC — CS124</span>
+            <span class="work-title">UIUC, CS124</span>
             <span class="work-period">Jan 2026 – present</span>
           </div>
           <p class="work-role">Course Assistant</p>
@@ -519,8 +499,8 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
     <div class="project-grid">
       <div class="project-card reveal" onclick="openModal('p1')">
         <div class="pc-accent" style="background:var(--purple)"></div>
-        <p class="pc-eyebrow">2025 · Coohom</p>
-        <p class="pc-title">Multi-Region Meta Ads Dashboard</p>
+        <p class="pc-eyebrow">2026 · Coohom</p>
+        <p class="pc-title"><svg class="pc-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Multi-Region Meta Ads Dashboard</p>
         <p class="pc-desc">Meta API → Apps Script → Sheets → single-file HTML dashboard. Automated daily reporting across 5 regions.</p>
         <div class="pc-tags"><span class="pc-tag-pill">Python</span><span class="pc-tag-pill">Apps Script</span><span class="pc-tag-pill">Meta API</span></div>
         <span class="project-arrow">↗</span>
@@ -559,7 +539,16 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
         <div class="sc-icon-wrap">
           <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
         </div>
-        <span class="sc-name">C++ / LaTeX</span>
+        <span class="sc-name">C++</span>
+      </div>
+      <p class="sc-source">UIUC coursework</p>
+    </div>
+    <div class="skill-card">
+      <div class="sc-top">
+        <div class="sc-icon-wrap">
+          <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <span class="sc-name">LaTeX</span>
       </div>
       <p class="sc-source">UIUC coursework &amp; Math assignments</p>
     </div>
@@ -570,7 +559,7 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
         </div>
         <span class="sc-name">Java</span>
       </div>
-      <p class="sc-source">UIUC CS124 · Android project</p>
+      <p class="sc-source">UIUC CS124 tutor &amp coursework · Android project</p>
     </div>
     <div class="skill-card">
       <div class="sc-top">
@@ -579,7 +568,7 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
         </div>
         <span class="sc-name">Python</span>
       </div>
-      <p class="sc-source">Coohom internship · Personal projects</p>
+      <p class="sc-source">UIUC coursework &amp; Coohom internship · Dashboard v1</p>
     </div>
     <div class="skill-card">
       <div class="sc-top">
@@ -588,7 +577,7 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
         </div>
         <span class="sc-name">JavaScript</span>
       </div>
-      <p class="sc-source">This portfolio website</p>
+      <p class="sc-source">Portfolio website &amp Coohom internship · Dashboard</p>
     </div>
   </div>
 </div>
@@ -628,7 +617,7 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
               <div class="sc-icon-wrap">
                 <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
               </div>
-              <span class="sc-name">Streamlit · Meta Ads</span>
+              <span class="sc-name">Streamlit</span>
             </div>
             <p class="sc-source">Coohom EMEA multi-region dashboard</p>
           </div>
@@ -643,9 +632,9 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
               <div class="sc-icon-wrap">
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
               </div>
-              <span class="sc-name">中文</span>
+              <span class="sc-name">中文 / Mandarin</span>
             </div>
-            <p class="sc-source">Native · Hangzhou</p>
+            <p class="sc-source">Native</p>
           </div>
           <div class="skill-card">
             <div class="sc-top">
@@ -654,7 +643,7 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
               </div>
               <span class="sc-name">English</span>
             </div>
-            <p class="sc-source">Fluent · UIUC · Coohom daily work</p>
+            <p class="sc-source">Bilingual / Native</p>
           </div>
         </div>
       </div>
@@ -723,21 +712,17 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
   </div>
 </div>
 
-<!-- LIGHTBOX -->
-<div class="lightbox-overlay" id="lightbox-overlay" onclick="closeLightbox()">
-  <img id="lightbox-img" src="" alt="">
-</div>
-
 <script>
 /* ── TRAVEL DATA ── replace with real memories */
 const travels = [
-  { location: "Greece", emoji: "🌋", story: "First time swimming near a volcano. Fantastic experience." },
-  { location: "Vietnam", emoji: "🐠", story: "First country I visited abroad. Caught a Nemo fish from the ocean." },
-  { location: "Hokkaido, Japan", emoji: "⛩️", story: "Soaking in an outdoor hot spring while snow was falling." },
-  { location: "Chiang Mai, Thailand", emoji: "🥭", story: "Ate as much mango and durian as I could." },
-  { location: "UK", emoji: "🍟", story: "A country full of fish and chips. It traumatized me for a while." },
-  { location: "Los Angeles, US", emoji: "🔫", story: "Went to a gun club. My first real-life experience with guns." },
-  { location: "Seattle, US", emoji: "🐦", story: "My food got stolen by a sneaky seagull." },
+  { location: "Greece", emoji: "🌋", story: "First time swimming near a volcano. Fantastic experience and always be my No.1 country to visit." },
+  { location: "Vietnam", emoji: "🐠", story: "First country I visited abroad. Can't remember more but caught a Nemo fish from the ocean." },
+  { location: "Hokkaido, Japan", emoji: "⛩️", story: "Soaking in an outdoor hot spring while snow was falling. Unforgettable New Year trip." },
+  { location: "Chiang Mai, Thailand", emoji: "🥭", story: "Ate as much mango and durian as I could. Still remember how solemn and majestic the temples were." },
+  { location: "UK", emoji: "🍟", story: "A country full of fish and chips. It traumatized me for a while (just kidding). Oxford was lovely, but I was underage back then, so I never got to experience the pub culture. Sounds like a good excuse to visit again." },
+  { location: "Australia", emoji: "🐜", story: "Can't remember which city this was, but huge ants bit my ankle. The pain was unreal. I cried. " },
+  { location: "Los Angeles, US", emoji: "🏜️", story: "(Near LA, part of my LA trip) My first no-man's-land experience at Joshua Tree National Park. Wild, mysterious, and just a little terrifying after spending the night in a quiet Airbnb in the middle of nowhere. Every mile of the drive was worth it." },
+  { location: "Seattle, US", emoji: "🐦", story: "My food got stolen by a sneaky seagull. The city's vibe feels a lot like Chicago, and I loved it." },
   { location: "Hangzhou, China", emoji: "🚲", story: "My hometown. The best city in the world. A city with both tech and nature. Highly recommend cycling around West Lake." }
 ]
 
@@ -827,7 +812,7 @@ const ro = new IntersectionObserver(entries => {
       e.target.classList.toggle('up', window.scrollY < e.target.getBoundingClientRect().top + window.scrollY)
     }
   })
-}, {threshold:0.1, rootMargin:'0px 0px -40px 0px'})
+}, {threshold:0.1, rootMargin:'-40px 0px -40px 0px'})
 
 document.querySelectorAll('.reveal').forEach(el => ro.observe(el))
 
@@ -835,31 +820,25 @@ document.querySelectorAll('.reveal').forEach(el => ro.observe(el))
 /* ── MODAL ── */
 const projects = {
   p1:{
-    accent:'#534AB7',wide:true,caseStudy:true,
-    label:'2025 · Internship at Coohom',
+    accent:'#534AB7',caseStudy:true,
+    label:'2026 · Internship at Coohom',
     title:'Multi-Region Meta Ads Performance Dashboard',
-    overview:'Meta Ads spend across five regions (EMEA, India, NA, Japan, and Thailand) used to live in scattered manual exports. I built an end-to-end reporting pipeline from scratch, starting as a local prototype and iterating into a fully automated, anomaly-alerting dashboard deployed on the company intranet.',
-    images:[
-      {src:'images/meta-header-filters.png',caption:'Dashboard header: live Meta Ads and SQL leads sources, region/campaign/date filters, and the KPI summary row.'},
-      {src:'images/meta-daily-trend.png',caption:'Daily trend, with a switchable metric and region/campaign view.'},
-      {src:'images/meta-campaign-comparison.png',caption:'Campaign comparison: leads and CPL side-by-side across every campaign.'},
-      {src:'images/meta-campaign-table.png',caption:'Campaign summary, sortable by spend, leads, CPL, CTR, or CVR.'},
-      {src:'images/meta-region-comparison.png',caption:'Region comparison: spend share, MQL share, and SQL/MQL rate by region.'}
-    ],
+    overview:'Meta Ads spend across five regions (EMEA, India, NA, Japan, and Thailand) used to live in scattered manual exports. I built an end-to-end reporting pipeline from scratch, starting as a local prototype and iterating into <b>a fully automated, anomaly-alerting dashboard</b> deployed on the company intranet.',
+    demo:'demo/meta_ads_dashboard_demo.html',
     features:[
       {label:'Multi-dimensional analysis',text:'Drill down from a global view to a single region or campaign: daily trend by metric (Spend/Leads/CPL/CTR/CVR/Frequency), campaign comparison bars, region comparison donuts, and multi-line daily totals.'},
       {label:'Filters that stay put',text:'Multi-select region/campaign filters with search, a date range picker, and a draggable floating filter panel so filters never require scrolling back to the top.'},
-      {label:'Key actions on the timeline',text:'Campaign decisions, like creative swaps or audience expansion, are annotated directly on the trend chart as emoji markers, so cause and effect sit on the same timeline.'},
-      {label:'SQL / MQL comparison',text:'Uploading a SQL leads Excel file auto-matches ad sets to campaigns and computes SQL count, SQL/MQL rate, and cost per SQL, with no manual matching required.'},
+      {label:'Key actions on the timeline',text:'Campaign decisions, like creative assets changes or audience expansion, are annotated directly on the trend chart as emoji markers. Easy to see the real impact of each key action.'},
+      {label:'SQL / MQL comparison',text:'Uploading a SQL leads Excel file auto-matches ad sets to campaigns and computes SQL count, SQL/MQL rate, and cost per SQL, with no manual matching required. (The CRM has no API. With one, this could be fully automated as well.)'},
       {label:'Sortable tables and exports',text:'Campaign, region, and SQL summary tables, a key-actions log, audience fatigue alerts, and one-click CSV/PNG export.'}
     ],
-    different:'The whole dashboard is a single HTML file, with no backend, no database, and no Tableau, Looker, or Power BI. All parsing, aggregation, and chart rendering runs entirely in the browser, the lightest possible footprint for a locked-down intranet deployment.',
+    different:'<b>Designed to solve a real workflow problem.</b> This project originated from the repetitive manual process of uploading data every day, where human error was inevitable. The Google Sheet, dashboard, and automated email reports were all built to address actual reporting needs from the business. The final dashboard runs as a standalone HTML page, requiring neither BI software nor any third-party platform.',
     lessons:[
-      'Start from pain points, not upfront design. Every version was triggered by a specific friction, not a roadmap.',
-      'Automate the repetitive. Scripting the daily pull freed up attention for actual analysis.',
-      'Push over pull. A daily anomaly-alert email means issues surface before anyone opens the dashboard.',
-      'Constraint as a design principle. A zero-dependency single file kept deployment and handoff simple even as scope grew.',
-      'Ship stable, then layer. New features only shipped after the current version was confirmed working, avoiding compounding bugs.'
+      'Solve real problems first. Every feature started with a pain point, not a feature wishlist.',
+      'Automate what repeats. Automation is not only for efficiency, but also for accuracy.',
+      'Deliver insights and data proactively, instead of waiting for someone to discover an issue.',
+      'Keep the solution lightweight. No third-part tools, keep everything accessible to everyone.',
+      'Iterate with confidence. Ship a stable version first, then build on top of it.'
     ],
     tags:['Python','Streamlit','Google Sheets API','Apps Script','Meta Marketing API','Chart.js','SheetJS']
   },
@@ -869,7 +848,7 @@ const projects = {
 
 function openModal(id){
   const p=projects[id]
-  document.querySelector('.modal').classList.toggle('wide', !!p.wide)
+  document.querySelector('.modal').classList.toggle('split', !!p.caseStudy)
   document.getElementById('modal-content').innerHTML = p.caseStudy ? renderCaseStudy(p) : `
     <div class="modal-accent" style="background:${p.accent}"></div>
     <p class="modal-eyebrow">${p.label}</p>
@@ -878,288 +857,142 @@ function openModal(id){
     <div class="modal-section"><p class="modal-section-label">What I built</p><p class="modal-text">${p.what}</p></div>
     <div class="modal-section"><p class="modal-section-label">Result</p><p class="modal-text">${p.result}</p></div>
     <div class="modal-tags">${p.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('')}</div>`
-  if(p.caseStudy){ initCarousel(); initEvoStack() }
+  if(p.caseStudy) fitDemoFrame()
   document.getElementById('modal-overlay').classList.add('open')
   document.body.style.overflow='hidden'
 }
+
+const DEMO_WIDTH = 1440
+const DEMO_HEIGHT = 900
+function fitDemoFrame(){
+  const wrapper = document.querySelector('.demo-scale-wrapper')
+  const frame = document.querySelector('.demo-frame')
+  if(!wrapper || !frame) return
+  const scale = wrapper.clientWidth / DEMO_WIDTH
+  frame.style.width = DEMO_WIDTH + 'px'
+  frame.style.height = DEMO_HEIGHT + 'px'
+  frame.style.transform = `scale(${scale})`
+  wrapper.style.height = (DEMO_HEIGHT * scale) + 'px'
+}
+window.addEventListener('resize', fitDemoFrame)
 
 const versions = [
   {
     id: 'v1',
     title: 'V1 · Streamlit prototype',
-    body: 'Python + Streamlit, loading data via manual Excel upload. Proved the analysis worked, but re-uploading files every session was constant friction.',
-    image: 'images/meta-v1-data-sources.png'
+    body: 'Python & Streamlit, loading data via manual Excel upload. Proved the analysis worked, but re-uploading files every session was constant friction.'
   },
   {
     id: 'v2',
     title: 'V2 · Connected to Google Sheets',
-    body: 'Wired the dashboard directly to the Google Sheets API for live data on demand, removing the local file dependency entirely.',
-    image: 'images/meta-v2-data-sources.png'
+    body: 'Wired directly to the Google Sheets API for live data on demand. No more local files.'
   },
   {
     id: 'v3',
     title: 'V3 · Migrated to the company intranet',
-    body: 'I rebuilt the whole dashboard as a single HTML file so that it can be deployed on the internal platform, and used the migration to overhaul the UI and interactions.'
+    body: 'Rebuilt as a single HTML file to deploy on the internal platform, and used the move to overhaul the UI.'
   },
   {
     id: 'v4',
     title: 'V4 · Full automation with Apps Script',
-    body: "· <b>Connected with Meta API</b>: A daily 9am trigger pulls fresh data from the Meta Marketing API into Sheets \n · <b>Emails Daily Report</b>: including <b>cautions</b> such as leads below 3-day average, CPL above 7-day average, zero-lead campaigns and <b>daily data</b>) straight to the team's email inbox."
+    body: "· <b>Connected with Meta API</b>: A daily 8am trigger pulls fresh data from the Meta Marketing API into Sheets \n · <b>Emails Daily Report</b>: including <b>cautions</b> such as leads below 3-day average, CPL above 7-day average, zero-lead campaigns and <b>daily data</b>) straight to the team's email inbox."
   }
 ]
 
-function renderEvoStack(){
-  return `<div class="evo-stack" id="evo-stack">
-    ${versions.map(v=>`<div class="evo-card">
+function renderEvoList(){
+  return `<div class="evo-list">
+    ${versions.map(v=>`<div class="evo-item">
       <p class="evo-title">${v.title}</p>
       <p class="evo-body">${v.body}</p>
-      ${v.image?`<img class="evo-image" src="${v.image}" alt="${v.title}" loading="lazy" onclick="event.stopPropagation();openLightbox('${v.image}')">`:''}
     </div>`).join('')}
-    <div class="evo-indicator">
-      ${versions.map((v,i)=>`<span class="evo-indicator-dot${i===0?' active':''}">${i+1}</span>`).join('')}
-    </div>
   </div>`
-}
-
-const EVO_STEP = {focusedHalf:220, firstGap:22, pillH:52, pillGap:10}
-function evoOffsetY(offset){
-  if(offset===0) return 0
-  const dir = offset>0 ? -1 : 1
-  const n = Math.abs(offset)
-  let y = EVO_STEP.focusedHalf + EVO_STEP.firstGap + EVO_STEP.pillH/2
-  for(let k=1;k<n;k++){ y += EVO_STEP.pillH + EVO_STEP.pillGap }
-  return dir*y
-}
-
-let evoState = null
-function initEvoStack(){
-  if(evoState){
-    if(evoState.timer) clearInterval(evoState.timer)
-    if(evoState.observer) evoState.observer.disconnect()
-  }
-  const container = document.getElementById('evo-stack')
-  if(!container) return
-  const cards = [...container.querySelectorAll('.evo-card')]
-  const dots = [...container.querySelectorAll('.evo-indicator-dot')]
-  evoState = {currentIndex:0, mode:'auto', isPaused:false, timer:null, observer:null, lastWheelTime:0}
-
-  function render(){
-    cards.forEach((card,i)=>{
-      const offset = i - evoState.currentIndex
-      const focused = offset === 0
-      card.classList.toggle('is-focused', focused)
-      card.classList.toggle('is-collapsed', !focused)
-      card.style.transform = `translate(-50%,-50%) translateY(${evoOffsetY(offset)}px) scale(${focused?1:0.85})`
-      card.style.zIndex = focused ? 20 : (10 - Math.abs(offset))
-    })
-    dots.forEach((dot,i)=>dot.classList.toggle('active', i===evoState.currentIndex))
-  }
-
-  function fireFeedback(){
-    if(navigator.vibrate) navigator.vibrate(15)
-    const activeDot = dots[evoState.currentIndex]
-    if(activeDot){
-      activeDot.classList.remove('pulse')
-      void activeDot.offsetWidth
-      activeDot.classList.add('pulse')
-    }
-  }
-
-  function stopAuto(){ if(evoState.timer){ clearInterval(evoState.timer); evoState.timer=null } }
-  function startAuto(){
-    stopAuto()
-    evoState.timer = setInterval(()=>{
-      if(evoState.currentIndex >= versions.length-1){ stopAuto(); return }
-      evoState.currentIndex++
-      render()
-      if(evoState.currentIndex >= versions.length-1) stopAuto()
-    }, 2800)
-  }
-  function goTo(i){
-    evoState.currentIndex = Math.max(0, Math.min(versions.length-1, i))
-    render()
-  }
-  function toManual(){ evoState.mode='manual'; stopAuto() }
-
-  cards.forEach((card,i)=>{
-    card.addEventListener('click', ()=>{
-      if(i === evoState.currentIndex) return
-      toManual()
-      goTo(i)
-    })
-    card.addEventListener('wheel', (e)=>{
-      e.preventDefault()
-      const now = Date.now()
-      if(now - evoState.lastWheelTime < 500) return
-      evoState.lastWheelTime = now
-      toManual()
-      if(e.deltaY>0 && evoState.currentIndex<versions.length-1){ goTo(evoState.currentIndex+1); fireFeedback() }
-      else if(e.deltaY<0 && evoState.currentIndex>0){ goTo(evoState.currentIndex-1); fireFeedback() }
-    }, {passive:false})
-  })
-
-  dots.forEach((dot,i)=>dot.addEventListener('click', ()=>{
-    if(i === evoState.currentIndex) return
-    toManual()
-    goTo(i)
-  }))
-
-  container.addEventListener('mouseenter', ()=>{
-    if(evoState.mode==='auto'){ evoState.isPaused=true; stopAuto() }
-  })
-  container.addEventListener('mouseleave', ()=>{
-    if(evoState.mode==='auto' && evoState.currentIndex < versions.length-1){
-      evoState.isPaused=false
-      startAuto()
-    }
-  })
-
-  render()
-
-  evoState.observer = new IntersectionObserver((entries)=>{
-    entries.forEach(entry=>{
-      if(entry.isIntersecting){
-        startAuto()
-        evoState.observer.disconnect()
-      }
-    })
-  }, {threshold:0.2})
-  evoState.observer.observe(container)
 }
 
 function renderArchDiagram(){
   return `
-  <svg class="arch-diagram" viewBox="0 0 760 366" xmlns="http://www.w3.org/2000/svg">
+  <svg class="arch-diagram" viewBox="0 0 300 290" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <marker id="archArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <marker id="archArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
         <path d="M0,0 L10,5 L0,10 z" fill="var(--text3)"/>
       </marker>
     </defs>
 
-    <line x1="380" y1="60" x2="380" y2="93" stroke="var(--border2)" stroke-width="1.5" marker-end="url(#archArrow)"/>
-    <line x1="380" y1="151" x2="380" y2="171" stroke="var(--border2)" stroke-width="1.5"/>
-    <line x1="230" y1="171" x2="530" y2="171" stroke="var(--border2)" stroke-width="1.5"/>
-    <line x1="230" y1="171" x2="230" y2="193" stroke="var(--border2)" stroke-width="1.5" marker-end="url(#archArrow)"/>
-    <line x1="530" y1="171" x2="530" y2="193" stroke="var(--border2)" stroke-width="1.5" marker-end="url(#archArrow)"/>
-    <path d="M230,251 L230,271 L380,271 L380,293" fill="none" stroke="var(--border2)" stroke-width="1.5" marker-end="url(#archArrow)"/>
+    <line x1="150" y1="44" x2="150" y2="66" stroke="var(--border2)" stroke-width="1.2" marker-end="url(#archArrow)"/>
+    <line x1="150" y1="116" x2="150" y2="130" stroke="var(--border2)" stroke-width="1.2"/>
+    <line x1="80" y1="130" x2="220" y2="130" stroke="var(--border2)" stroke-width="1.2"/>
+    <line x1="80" y1="130" x2="80" y2="142" stroke="var(--border2)" stroke-width="1.2" marker-end="url(#archArrow)"/>
+    <line x1="220" y1="130" x2="220" y2="142" stroke="var(--border2)" stroke-width="1.2" marker-end="url(#archArrow)"/>
+    <path d="M80,192 L80,208 L150,208 L150,220" fill="none" stroke="var(--border2)" stroke-width="1.2" marker-end="url(#archArrow)"/>
 
-    <rect x="270" y="10" width="220" height="50" rx="12" fill="var(--bg2)" stroke="var(--border2)"/>
-    <text x="380" y="40" text-anchor="middle" font-size="14" font-weight="600" fill="var(--text)">Meta Marketing API</text>
+    <rect x="20" y="8" width="260" height="36" rx="8" fill="var(--bg2)" stroke="var(--border2)"/>
+    <text x="150" y="30" text-anchor="middle" font-size="11" font-weight="600" fill="var(--text)">Meta Marketing API</text>
 
-    <rect x="270" y="95" width="220" height="56" rx="12" fill="var(--purple-bg)" stroke="rgba(83,74,183,0.35)"/>
-    <text x="380" y="120" text-anchor="middle" font-size="14" font-weight="600" fill="var(--purple-text)">Google Apps Script</text>
-    <text x="380" y="138" text-anchor="middle" font-size="11.5" fill="var(--purple)">Daily trigger · 9am Beijing</text>
+    <rect x="20" y="70" width="260" height="46" rx="8" fill="var(--purple-bg)" stroke="rgba(83,74,183,0.35)"/>
+    <text x="150" y="88" text-anchor="middle" font-size="11" font-weight="600" fill="var(--purple-text)">Google Apps Script</text>
+    <text x="150" y="103" text-anchor="middle" font-size="8.5" fill="var(--purple)">Daily trigger · 9am Beijing</text>
 
-    <rect x="120" y="195" width="220" height="56" rx="12" fill="var(--teal-bg)" stroke="rgba(15,110,86,0.3)"/>
-    <text x="230" y="220" text-anchor="middle" font-size="14" font-weight="600" fill="var(--teal)">Google Sheets</text>
-    <text x="230" y="238" text-anchor="middle" font-size="11.5" fill="var(--teal)">Per-region data storage</text>
+    <rect x="20" y="142" width="120" height="50" rx="8" fill="var(--teal-bg)" stroke="rgba(15,110,86,0.3)"/>
+    <text x="80" y="163" text-anchor="middle" font-size="10" font-weight="600" fill="var(--teal)">Google Sheets</text>
+    <text x="80" y="178" text-anchor="middle" font-size="8" fill="var(--teal)">Per-region storage</text>
 
-    <rect x="420" y="195" width="220" height="56" rx="12" fill="var(--amber-bg)" stroke="rgba(133,79,11,0.3)"/>
-    <text x="530" y="220" text-anchor="middle" font-size="14" font-weight="600" fill="var(--amber-text)">Daily Email Report</text>
-    <text x="530" y="238" text-anchor="middle" font-size="11.5" fill="var(--amber)">Anomaly alerts to WeChat Work</text>
+    <rect x="160" y="142" width="120" height="50" rx="8" fill="var(--amber-bg)" stroke="rgba(133,79,11,0.3)"/>
+    <text x="220" y="163" text-anchor="middle" font-size="10" font-weight="600" fill="var(--amber-text)">Daily Email Report</text>
+    <text x="220" y="178" text-anchor="middle" font-size="8" fill="var(--amber)">WeChat Work alerts</text>
 
-    <rect x="270" y="295" width="220" height="56" rx="12" fill="var(--purple-bg)" stroke="rgba(83,74,183,0.35)"/>
-    <text x="380" y="320" text-anchor="middle" font-size="14" font-weight="600" fill="var(--purple-text)">HTML Dashboard</text>
-    <text x="380" y="338" text-anchor="middle" font-size="11.5" fill="var(--purple)">Single file · intranet only</text>
+    <rect x="20" y="220" width="260" height="46" rx="8" fill="var(--purple-bg)" stroke="rgba(83,74,183,0.35)"/>
+    <text x="150" y="238" text-anchor="middle" font-size="11" font-weight="600" fill="var(--purple-text)">HTML Dashboard</text>
+    <text x="150" y="253" text-anchor="middle" font-size="8.5" fill="var(--purple)">Single file · intranet only</text>
   </svg>`
 }
 
 function renderCaseStudy(p){
   return `
-    <div class="modal-accent" style="background:${p.accent}"></div>
-    <p class="modal-eyebrow">${p.label}</p>
-    <h2 class="modal-title">${p.title}</h2>
+    <div class="cs-left">
+      <div class="modal-accent" style="background:${p.accent}"></div>
+      <p class="modal-eyebrow">${p.label}</p>
+      <h2 class="modal-title">${p.title}</h2>
 
-    <div class="cs-section"><p class="modal-text">${p.overview}</p></div>
+      <div class="cs-section"><p class="modal-text">${p.overview}</p></div>
 
-    <div class="cs-section">
-      <p class="cs-heading">Architecture</p>
-      ${renderArchDiagram()}
-    </div>
-
-    <div class="cs-section">
-      <p class="cs-heading">How it evolved</p>
-      ${renderEvoStack()}
-    </div>
-
-    <div class="cs-section">
-      <p class="cs-heading">Screenshots</p>
-      <div class="case-carousel">
-        <div class="cc-track">${p.images.map(im=>`<div class="cc-slide"><img src="${im.src}" alt="${im.caption}" loading="lazy" onclick="openLightbox('${im.src}')"><p class="cc-caption">${im.caption}</p></div>`).join('')}</div>
-        <div class="cc-dots">${p.images.map((_,i)=>`<button class="cc-dot${i===0?' active':''}" aria-label="Slide ${i+1}"></button>`).join('')}</div>
+      <div class="cs-section">
+        <p class="cs-heading">Architecture</p>
+        ${renderArchDiagram()}
       </div>
+
+      <div class="cs-section">
+        <p class="cs-heading">How it evolved</p>
+        ${renderEvoList()}
+      </div>
+
+      <div class="cs-section">
+        <p class="cs-heading">Features</p>
+        <ul class="feature-list">${p.features.map(f=>`<li><b>${f.label}.</b> ${f.text}</li>`).join('')}</ul>
+      </div>
+
+      <div class="cs-section"><p class="cs-heading">What makes it different</p><p class="modal-text">${p.different}</p></div>
+
+      <div class="cs-section">
+        <p class="cs-heading">Lessons learned</p>
+        <ul class="feature-list">${p.lessons.map(l=>`<li>${l}</li>`).join('')}</ul>
+      </div>
+
+      <div class="modal-tags">${p.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('')}</div>
     </div>
-
-    <div class="cs-section">
-      <p class="cs-heading">Features</p>
-      <ul class="feature-list">${p.features.map(f=>`<li><b>${f.label}.</b> ${f.text}</li>`).join('')}</ul>
-    </div>
-
-    <div class="cs-section"><p class="cs-heading">What makes it different</p><p class="modal-text">${p.different}</p></div>
-
-    <div class="cs-section">
-      <p class="cs-heading">Lessons learned</p>
-      <ul class="feature-list">${p.lessons.map(l=>`<li>${l}</li>`).join('')}</ul>
-    </div>
-
-    <div class="modal-tags">${p.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('')}</div>`
+    <div class="cs-right">
+      <div class="demo-scale-wrapper">
+        <iframe src="${p.demo}" class="demo-frame" title="${p.title} demo"></iframe>
+      </div>
+      <p class="demo-caption">This demo runs entirely on synthetic data. Click "Connect" to simulate refreshing the dashboard.</p>
+    </div>`
 }
 
-let ccAutoTimer = null
-let ccObserver = null
-function initCarousel(){
-  if(ccAutoTimer){ clearInterval(ccAutoTimer); ccAutoTimer = null }
-  if(ccObserver){ ccObserver.disconnect(); ccObserver = null }
-  const track = document.querySelector('.cc-track')
-  if(!track) return
-  const dots = [...document.querySelectorAll('.cc-dot')]
-
-  function goTo(i){ track.scrollTo({left: i*track.clientWidth, behavior:'smooth'}) }
-  function stopAuto(){ if(ccAutoTimer){ clearInterval(ccAutoTimer); ccAutoTimer=null } }
-  function startAuto(){
-    stopAuto()
-    ccAutoTimer = setInterval(()=>{
-      const idx = Math.round(track.scrollLeft/track.clientWidth)
-      goTo((idx+1) % dots.length)
-    }, 3200)
-  }
-
-  dots.forEach((d,i)=>d.addEventListener('click',()=>{ stopAuto(); goTo(i) }))
-  ;['pointerdown','wheel','touchstart'].forEach(evt=>track.addEventListener(evt, stopAuto, {passive:true, once:true}))
-
-  track.addEventListener('scroll', ()=>{
-    const idx = Math.round(track.scrollLeft/track.clientWidth)
-    dots.forEach((d,i)=>d.classList.toggle('active', i===idx))
-  }, {passive:true})
-
-  ccObserver = new IntersectionObserver((entries)=>{
-    entries.forEach(entry=>{
-      if(entry.isIntersecting){
-        startAuto()
-        ccObserver.disconnect()
-      }
-    })
-  }, {threshold:0.2})
-  ccObserver.observe(track)
-}
 function closeModal(){
   document.getElementById('modal-overlay').classList.remove('open')
   document.body.style.overflow=''
-  if(ccAutoTimer){ clearInterval(ccAutoTimer); ccAutoTimer=null }
-  if(ccObserver){ ccObserver.disconnect(); ccObserver=null }
-  if(evoState){
-    if(evoState.timer){ clearInterval(evoState.timer); evoState.timer=null }
-    if(evoState.observer){ evoState.observer.disconnect() }
-  }
 }
 function closeModalOutside(e){if(e.target===document.getElementById('modal-overlay'))closeModal()}
-function openLightbox(src){
-  document.getElementById('lightbox-img').src = src
-  document.getElementById('lightbox-overlay').classList.add('open')
-}
-function closeLightbox(){document.getElementById('lightbox-overlay').classList.remove('open')}
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){ closeLightbox(); closeModal() }
+  if(e.key==='Escape') closeModal()
 });
 
 /* ── TUBELIGHT NAV ── */

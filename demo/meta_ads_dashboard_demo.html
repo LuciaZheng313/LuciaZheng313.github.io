@@ -1,0 +1,2881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meta Ads Dashboard · Demo</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=fallback');
+
+:root{
+  /* Color palette from provided CSS */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #bfc4cd;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  --color-violet-500: #8470ff;
+  --color-violet-600: #755ff8;
+  --color-violet-700: #5d47de;
+  --color-violet-50: #f1eeff;
+
+  --color-sky-400: #7bc8ff;
+  --color-sky-500: #67bfff;
+  --color-sky-600: #56b1f3;
+  --color-sky-700: #3193da;
+
+  --color-green-400: #4bd37d;
+  --color-green-500: #3ec972;
+  --color-green-600: #34bd68;
+
+  --color-red-500: #ff5656;
+  --color-red-600: #fa4949;
+
+  --color-yellow-400: #f7cd4c;
+  --color-yellow-500: #f0bb33;
+
+  /* Updated primary color to use blue like the webinar page */
+  --primary: #1568E5;
+  --primary-hover: #0052CC;
+  --primary-light: #EEF4FF;
+  --text: var(--color-gray-900);
+  --text2: var(--color-gray-600);
+  --text3: var(--color-gray-400);
+  --bg: #FFFFFF;
+  --bg2: #EEF4FF;
+  --bg3: #F8FAFC;
+  --border: var(--color-gray-200);
+  --success: var(--color-green-500);
+  --warning: var(--color-yellow-500);
+  --danger: var(--color-red-500);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg2);
+  line-height: 1.5715;
+}
+
+.page {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 36px 56px 64px;
+}
+
+/* Header */
+.report-header {
+  background: linear-gradient(135deg, #1568E5 0%, #0052CC 100%);
+  border-radius: 16px 16px 0 0;
+  padding: 40px 32px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.report-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.report-header h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: #FFFFFF;
+  position: relative;
+  z-index: 1;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.meta {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.875rem;
+  margin-top: 8px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+/* Control panel */
+.control-panel {
+  background: #fff;
+  border-radius: 0 0 16px 16px;
+  box-shadow: var(--shadow-lg);
+  padding: 24px 32px;
+  margin-bottom: 32px;
+  border-top: 3px solid var(--primary);
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.ctrl-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ctrl-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text2);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.ctrl-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Form inputs */
+input[type=text],
+input[type=date],
+select {
+  font-size: 0.875rem;
+  font-family: 'Inter', sans-serif;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  transition: all 0.15s;
+  line-height: 1.5715;
+}
+
+input[type=text]:focus,
+input[type=date]:focus,
+select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(132, 112, 255, 0.1);
+}
+
+input[type=text]:hover,
+input[type=date]:hover,
+select:hover {
+  border-color: var(--color-gray-300);
+}
+
+input[type=text] {
+  width: 280px;
+}
+
+/* Multi-select dropdown */
+.ms-wrap {
+  position: relative;
+  display: inline-block;
+}
+.ms-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 140px;
+  max-width: 260px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--text);
+  transition: all 0.15s;
+  user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.ms-trigger:hover { border-color: var(--color-gray-300); }
+.ms-trigger.open { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(21,104,229,0.1); }
+.ms-trigger-text { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+.ms-arrow { font-size: 0.625rem; color: var(--text3); flex-shrink: 0; transition: transform 0.15s; }
+.ms-trigger.open .ms-arrow { transform: rotate(180deg); }
+.ms-badges { display: flex; gap: 3px; flex-wrap: nowrap; overflow: hidden; }
+.ms-badge {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.ms-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  padding: 6px 0;
+  max-height: 240px;
+  overflow-y: auto;
+}
+.ms-dropdown.open { display: block; }
+.ms-search {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+.ms-search input {
+  width: 100%;
+  padding: 5px 8px;
+  font-size: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+}
+.ms-search input:focus { border-color: var(--primary); }
+.ms-opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.1s;
+  white-space: nowrap;
+}
+.ms-opt:hover { background: var(--bg3); }
+.ms-opt input[type=checkbox] { accent-color: var(--primary); width: 14px; height: 14px; cursor: pointer; flex-shrink: 0; }
+.ms-opt.all-opt { border-bottom: 1px solid var(--border); margin-bottom: 2px; font-weight: 600; color: var(--text2); font-size: 0.8rem; }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  transition: all 0.15s;
+  white-space: nowrap;
+  line-height: 1.5715;
+  box-shadow: 0 1px 1px 0 rgb(0 0 0 / 0.05);
+}
+
+.btn:hover {
+  background: var(--bg2);
+  border-color: var(--color-gray-300);
+}
+
+.btn.primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--color-sky-700) 100%);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(21, 104, 229, 0.3);
+}
+
+.btn.primary:hover {
+  background: linear-gradient(135deg, var(--primary-hover) 0%, var(--color-sky-700) 100%);
+  box-shadow: 0 4px 8px rgba(21, 104, 229, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn.sm {
+  padding: 6px 12px;
+  font-size: 0.75rem;
+}
+
+.btn.ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text2);
+  box-shadow: none;
+}
+
+.btn.ghost:hover {
+  background: var(--bg2);
+  color: var(--text);
+}
+
+.sep {
+  width: 1px;
+  background: var(--border);
+  height: 36px;
+  flex-shrink: 0;
+}
+
+/* Status pill */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text2);
+  padding: 8px 14px;
+  background: var(--bg2);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+
+.status-pill:has(.dot-ok) {
+  background: rgba(62, 201, 114, 0.1);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.status-pill:has(.dot-warn) {
+  background: rgba(255, 86, 86, 0.1);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.status-pill:has(.dot-loading) {
+  background: rgba(247, 205, 76, 0.1);
+  border-color: var(--warning);
+  color: var(--warning);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-ok {
+  background: var(--success);
+}
+
+.dot-warn {
+  background: var(--danger);
+}
+
+.dot-idle {
+  background: var(--color-gray-300);
+}
+
+.dot-loading {
+  background: var(--warning);
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* Filter bar */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+/* KPI grid */
+.kpi-grid {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpi-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.kpi-5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.kpi-7 {
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.kpi {
+  background: linear-gradient(135deg, #fff 0%, var(--bg3) 100%);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--color-sky-500) 100%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.kpi:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary);
+}
+
+.kpi:hover::before {
+  opacity: 1;
+}
+
+.kpi-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--text2);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+
+.kpi-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: var(--text);
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+
+.kpi-sub {
+  font-size: 0.6875rem;
+  color: var(--text3);
+  margin-top: 4px;
+  line-height: 1.3;
+}
+
+/* Responsive KPI sizing */
+@media (max-width: 1200px) {
+  .kpi-value {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .kpi-value {
+    font-size: 1.125rem;
+  }
+  .kpi-label {
+    font-size: 0.625rem;
+  }
+}
+
+.kpi.blue .kpi-value {
+  color: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--color-sky-600) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.kpi.green .kpi-value {
+  color: var(--success);
+  background: linear-gradient(135deg, #3ec972 0%, #34bd68 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.kpi.red .kpi-value {
+  color: var(--danger);
+}
+
+.kpi.amber .kpi-value {
+  color: var(--warning);
+  background: linear-gradient(135deg, #f7cd4c 0%, #f0bb33 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.kpi.purple .kpi-value {
+  color: var(--color-violet-600);
+}
+
+.kpi.teal .kpi-value {
+  color: var(--color-sky-600);
+  background: linear-gradient(135deg, #67bfff 0%, #3193da 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Section */
+.section {
+  margin-bottom: 40px;
+}
+
+.section-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.33;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+
+/* Card */
+.card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  padding: 28px;
+  margin-bottom: 16px;
+  transition: all 0.3s;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-gray-300);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.card-sub {
+  font-size: 0.75rem;
+  color: var(--text3);
+  margin-top: 4px;
+}
+
+
+
+.card-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  cursor: pointer;
+  color: var(--text2);
+  font-size: 16px;
+  transition: all 0.15s;
+}
+
+.icon-btn:hover {
+  background: var(--bg2);
+  color: var(--text);
+  border-color: var(--color-gray-300);
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.row3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* Alert */
+.alert {
+  padding: 12px 16px;
+  font-size: 0.875rem;
+  margin-bottom: 16px;
+  border-left: 3px solid;
+  line-height: 1.5715;
+  border-radius: 0 8px 8px 0;
+}
+
+.alert strong {
+  font-weight: 600;
+}
+
+.alert.info {
+  background: #e3f3ff;
+  color: #1c71ae;
+  border-color: var(--color-sky-600);
+}
+
+.alert.ok {
+  background: #d2ffe2;
+  color: #0f5429;
+  border-color: var(--success);
+}
+
+.alert.warn {
+  background: #ffe8e8;
+  color: #941818;
+  border-color: var(--danger);
+}
+
+.alert.amber {
+  background: #fff2c9;
+  color: #4f3d0e;
+  border-color: var(--warning);
+}
+
+/* Table */
+.table-wrap {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+th {
+  background: linear-gradient(180deg, var(--bg2) 0%, var(--bg3) 100%);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text2);
+  padding: 14px 12px;
+  text-align: left;
+  border-bottom: 2px solid var(--primary);
+}
+
+td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+tbody tr {
+  transition: background 0.15s;
+}
+
+tbody tr:hover {
+  background: var(--bg2);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+th.sortable:hover {
+  color: var(--primary);
+}
+.sort-icon {
+  font-size: 0.65em;
+  color: var(--primary);
+}
+
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.bold {
+  font-weight: 600;
+}
+
+/* Ensure table cells don't overflow */
+table {
+  table-layout: auto;
+  min-width: 100%;
+}
+
+th, td {
+  min-width: 80px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+th:first-child, td:first-child {
+  min-width: 120px;
+}
+
+th.num, td.num {
+  min-width: 90px;
+}
+
+/* Tags */
+.tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.tag-blue {
+  background: #e3f3ff;
+  color: #1c71ae;
+}
+
+.tag-green {
+  background: #d2ffe2;
+  color: #0f5429;
+}
+
+.tag-red {
+  background: #ffe8e8;
+  color: #941818;
+}
+
+.tag-amber {
+  background: #fff2c9;
+  color: #4f3d0e;
+}
+
+.tag-gray {
+  background: var(--bg2);
+  color: var(--text2);
+}
+
+.tag-teal {
+  background: #e3f3ff;
+  color: #124d79;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.75rem;
+  color: var(--text2);
+  margin-bottom: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* Chart controls */
+.chart-ctrl {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.chart-ctrl select {
+  font-size: 0.75rem;
+  padding: 6px 10px;
+}
+
+/* Empty state */
+.empty {
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--text3);
+  background: linear-gradient(135deg, var(--bg2) 0%, #fff 100%);
+  border-radius: 16px;
+  border: 2px dashed var(--border);
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+  opacity: 0.5;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.empty strong {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text2);
+  margin-bottom: 12px;
+}
+
+
+/* Desktop layout — no stacking for laptop use */
+@media (max-width: 1200px) {
+  .kpi-7 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+  .control-panel,
+  .header-actions,
+  .card-actions,
+  .modal-overlay,
+  #sectionNav {
+    display: none !important;
+  }
+  .page {
+    padding: 0;
+  }
+}
+
+/* Section nav bar */
+#sectionNav {
+  display: none;
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: #fff;
+  border-bottom: 2px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  margin-bottom: 24px;
+}
+.sec-nav-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 56px;
+  display: flex;
+  align-items: center;
+  height: 44px;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.sec-nav-inner::-webkit-scrollbar { display: none; }
+.sec-nav-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.sec-nav-btn:hover {
+  background: var(--bg2);
+  color: var(--primary);
+}
+.sec-nav-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 0.7rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.sec-nav-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+  flex-shrink: 0;
+  margin: 0 2px;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<div class="report-header">
+  <div class="header-row">
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <svg width="120" height="40" viewBox="0 0 1600 400" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: brightness(0) invert(1);">
+        <path d="M200 100C200 155.228 155.228 200 100 200C44.7715 200 0 155.228 0 100C0 44.7715 44.7715 0 100 0C155.228 0 200 44.7715 200 100Z" fill="currentColor"/>
+        <path d="M100 50L150 90V160H50V90L100 50Z" fill="white"/>
+        <path d="M80 160V120C80 110 90 100 100 100C110 100 120 110 120 120V160" fill="currentColor"/>
+        <circle cx="100" cy="140" r="8" fill="white"/>
+        <text x="220" y="160" font-family="Arial, sans-serif" font-weight="bold" font-size="140" fill="currentColor">COOHOM</text>
+      </svg>
+      <div style="border-left: 2px solid rgba(255,255,255,0.3); height: 40px;"></div>
+      <div>
+        <h1>Meta Ads Dashboard</h1>
+        <div class="meta" id="headerMeta">EMEA · India · NA · JP · TH &nbsp;·&nbsp; Connect data source to begin</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn sm ghost" onclick="exportCSV()">⬇ Export CSV</button>
+      <button class="btn sm primary" onclick="window.print()">Print</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTROL PANEL -->
+<div class="control-panel">
+  <!-- GAS connection -->
+  <div class="ctrl-group">
+    <div class="ctrl-label">Meta Ads · Google Sheets</div>
+    <div class="ctrl-row">
+      <button class="btn primary" onclick="loadFromGAS()">Connect</button>
+      <span class="status-pill" id="gasStatus"><span class="dot dot-idle"></span>Not connected</span>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- SQL upload -->
+  <div class="ctrl-group">
+    <div class="ctrl-label">SQL Leads · Local Excel</div>
+    <div class="ctrl-row">
+      <label class="btn" style="cursor:pointer;">
+        ⬆ Upload file
+        <input type="file" id="sqlFile" accept=".xlsx" onchange="loadSQLFile(this)" style="display:none;">
+      </label>
+      <span class="status-pill" id="sqlStatus"><span class="dot dot-idle"></span>No file</span>
+    </div>
+    <div style="font-size:0.75rem;color:var(--text3);margin-top:4px;">Filename format: SQL_YYYYMMDD.xlsx</div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- Filters -->
+  <div class="ctrl-group" id="filterWrap" style="display:none;">
+    <div class="ctrl-label">Filters</div>
+    <div class="filter-bar">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:0.75rem;font-weight:500;color:var(--text2);">Region</span>
+        <div class="ms-wrap" id="msWrapRegion">
+          <div class="ms-trigger" id="msTriggerRegion" onclick="toggleDropdown('Region')">
+            <span class="ms-trigger-text" id="msLabelRegion">All regions</span>
+            <span class="ms-arrow">▼</span>
+          </div>
+          <div class="ms-dropdown" id="msDropRegion">
+            <div class="ms-opt all-opt">
+              <input type="checkbox" id="msAllRegion" checked onchange="toggleAll('Region')">
+              <label for="msAllRegion" style="cursor:pointer;">All regions</label>
+            </div>
+            <div id="msListRegion"></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:0.75rem;font-weight:500;color:var(--text2);">Campaign</span>
+        <div class="ms-wrap" id="msWrapCampaign">
+          <div class="ms-trigger" id="msTriggerCampaign" onclick="toggleDropdown('Campaign')">
+            <span class="ms-trigger-text" id="msLabelCampaign">All campaigns</span>
+            <span class="ms-arrow">▼</span>
+          </div>
+          <div class="ms-dropdown" id="msDropCampaign">
+            <div class="ms-search"><input type="text" placeholder="Search…" oninput="filterOpts('Campaign',this.value)"></div>
+            <div class="ms-opt all-opt">
+              <input type="checkbox" id="msAllCampaign" checked onchange="toggleAll('Campaign')">
+              <label for="msAllCampaign" style="cursor:pointer;">All campaigns</label>
+            </div>
+            <div id="msListCampaign"></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:0.75rem;font-weight:500;color:var(--text2);">From</span>
+        <input type="date" id="filterStart" onchange="applyFilters()">
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:0.75rem;font-weight:500;color:var(--text2);">To</span>
+        <input type="date" id="filterEnd" onchange="applyFilters()">
+      </div>
+      <button class="btn sm ghost" onclick="resetFilters()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION NAV -->
+<div id="sectionNav">
+  <div class="sec-nav-inner" id="sectionNavInner"></div>
+</div>
+
+<!-- MAIN -->
+<div id="mainContent">
+  <div class="empty">
+    <div class="empty-icon">📊</div>
+    <strong>No data loaded</strong>
+    Click "Connect" above to load Meta Ads data from Google Sheets,<br>or upload a SQL leads file to begin.
+  </div>
+</div>
+
+
+<script>
+// ─── Config ──────────────────────────────────────────────────────────────────
+// Demo build: no live backend. The real Google Apps Script URL has been
+// removed — loadFromGAS is overridden at the bottom of this file to load
+// generated sample data instead.
+const GAS_URL = "";
+
+// ─── State ───────────────────────────────────────────────────────────────────
+let RAW=[], SQL_RAW=[], FILTERED=[], SQL_FILTERED=[], WEEKLY_RAW=[];
+let CHARTS={};
+let _deltas=[], _aggRows=[], _regRows=[], _hasSql=false, _sqlTableRows=[];
+
+// Global plugin for key-action annotations on regional trend charts
+Chart.register({
+  id:'keyActionAnnot',
+  afterDraw(chart){
+    const opts=chart.options?.plugins?.keyActionAnnot;
+    if(!opts?.annotations?.length)return;
+    const{ctx,chartArea,scales}=chart;
+    if(!scales.x||!chartArea)return;
+
+    // Draw dotted vertical lines on canvas
+    opts.annotations.forEach(ann=>{
+      const xPx=scales.x.getPixelForValue(ann.index);
+      if(isNaN(xPx)||xPx<chartArea.left||xPx>chartArea.right)return;
+      ctx.save();
+      ctx.beginPath();ctx.setLineDash([3,3]);
+      ctx.strokeStyle='rgba(107,114,128,0.5)';ctx.lineWidth=1;
+      ctx.moveTo(xPx,chartArea.top);ctx.lineTo(xPx,chartArea.bottom);ctx.stroke();
+      ctx.restore();
+    });
+
+    // Place emoji as HTML elements (canvas fillText is unreliable for emoji)
+    const wrap=chart.canvas.parentElement;
+    let overlay=wrap.querySelector('.kaa-overlay');
+    if(!overlay){
+      overlay=document.createElement('div');
+      overlay.className='kaa-overlay';
+      overlay.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;';
+      wrap.appendChild(overlay);
+    }
+    overlay.innerHTML='';
+    opts.annotations.forEach(ann=>{
+      const xPx=scales.x.getPixelForValue(ann.index);
+      if(isNaN(xPx)||xPx<chartArea.left||xPx>chartArea.right)return;
+      const el=document.createElement('span');
+      el.textContent=ann.emoji;
+      el.style.cssText=`position:absolute;left:${xPx}px;top:${chartArea.top+2}px;transform:translateX(-50%);font-size:14px;line-height:1;`;
+      overlay.appendChild(el);
+    });
+  }
+});
+let _campSort={field:'spend',dir:-1}, _sqlSort={field:'sql',dir:-1};
+
+const REGION_COLORS={
+ EMEA:'#1568E5',
+ INDIA:'#3ec972',
+ NA:'#67bfff',
+ JP:'#f0bb33',
+ TH:'#ff5656'
+};
+
+const CAMPAIGN_FULL_NAME={
+  // Demo campaigns (obviously fake names). Region counts trimmed for a
+  // cleaner public demo: EMEA 3, INDIA 2, NA 2, JP 3, TH 2.
+  'EMEA|Test 101':        '20260210_EMEA_B2B_Test 101',
+  'EMEA|Test 102':        '20260405_EMEA_B2B_Test 102',
+  'EMEA|Test 103':        '20260601_EMEA_B2B_Test 103',
+  'INDIA|Test 201':       '20260120_India_B2B_Test 201',
+  'INDIA|Test 202':       '20260615_India_B2B_Test 202',
+  'NA|Test 301':          '20260215_NA_B2B_Test 301',
+  'NA|Test 302':          '20260520_NA_B2B_Test 302',
+  'JP|Test 401':          '20260305_JP_B2B_Test 401',
+  'JP|Test 402':          '20260501_JP_B2B_Test 402',
+  'JP|Closed_Test 403':   '20260410_JP_B2B_Test 403',
+  'TH|Test 501':          '20260320_TH_B2B_Test 501',
+  'TH|Closed_Test 502':   '20260425_TH_B2B_Test 502',
+};
+function campFullName(region, c){ return CAMPAIGN_FULL_NAME[region+'|'+c] || c; }
+
+// Reverse lookup: full campaign name (normalized) → {region, campaign}
+const FULL_CAMP_LOOKUP=(function(){
+  const m={};
+  for(const[key,fullName]of Object.entries(CAMPAIGN_FULL_NAME)){
+    const sep=key.indexOf('|');
+    const region=key.substring(0,sep);
+    const campaign=key.substring(sep+1);
+    const norm=fullName.toLowerCase().replace(/[\s\-_·]+/g,' ').trim();
+    if(!m[norm])m[norm]={region,campaign};
+  }
+  return m;
+})();
+function mapFromAdset(adset){
+  const norm=String(adset).toLowerCase().replace(/[\s\-_·]+/g,' ').trim();
+  if(FULL_CAMP_LOOKUP[norm])return FULL_CAMP_LOOKUP[norm];
+  for(const[k,info]of Object.entries(FULL_CAMP_LOOKUP)){
+    if(norm.includes(k)){
+      // Disambiguate NA Single vs Carousel (both share the same base full name)
+      if(info.region==='NA'&&info.campaign==='Single'&&norm.includes('carousel'))
+        return{region:'NA',campaign:'Carousel'};
+      return info;
+    }
+  }
+  return null;
+}
+
+const CAMP_COLORS=[
+ '#1568E5',
+ '#67bfff',
+ '#3ec972',
+ '#f7cd4c',
+ '#ff5656',
+ '#3193da',
+ '#34bd68',
+ '#f0bb33'
+];
+
+// ─── Format helpers ───────────────────────────────────────────────────────────
+const fmt={
+  num: v=>(v==null||isNaN(v))?'—':Number(v).toLocaleString('en-US',{maximumFractionDigits:0}),
+  usd: v=>(v==null||isNaN(v)||!isFinite(v))?'—':'$'+Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}),
+  pct: v=>(v==null||isNaN(v)||!isFinite(v))?'—':(v*100).toFixed(2)+'%',
+  dec: (v,d=2)=>(v==null||isNaN(v))?'—':Number(v).toFixed(d),
+};
+function safeDiv(a,b){return(b&&b!==0)?a/b:NaN;}
+function toNum(v){if(v==null||v==='')return NaN;return parseFloat(String(v).replace(/[$,]/g,''));}
+
+function parseDate(v){
+  if(!v)return null;
+  if(v instanceof Date)return v;
+  const m1=String(v).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(m1)return new Date(+m1[3],+m1[1]-1,+m1[2]);
+  const m2=String(v).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(m2)return new Date(+m2[1],+m2[2]-1,+m2[3]);
+  const d=new Date(v);return isNaN(d)?null:d;
+}
+function fmtDate(d){if(!d)return'';return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+
+// ─── Status ───────────────────────────────────────────────────────────────────
+function setStatus(id,type,msg){
+  const dot=type==='ok'?'dot-ok':type==='warn'?'dot-warn':type==='loading'?'dot-loading':'dot-idle';
+  document.getElementById(id).innerHTML=`<span class="dot ${dot}"></span>${msg}`;
+}
+
+// ─── GAS Loader ───────────────────────────────────────────────────────────────
+async function loadFromGAS(){
+  setStatus('gasStatus','loading','Connecting…');
+  try{
+    const res=await fetch(GAS_URL);
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const json=await res.json();
+    if(!Array.isArray(json))throw new Error('Unexpected response format');
+    // Debug: log unique regions and a sample of JP/TH rows
+    const uniqueRegions=[...new Set(json.map(r=>r['Region']||r['region']||'(empty)'))];
+    console.log('[DEBUG] Unique Region values in GAS response:', uniqueRegions);
+    const jpRows=json.filter(r=>(r['Region']||r['region']||'').toString().toUpperCase().includes('JP'));
+    const thRows=json.filter(r=>(r['Region']||r['region']||'').toString().toUpperCase().includes('TH'));
+    console.log('[DEBUG] JP rows count:', jpRows.length, '| Sample:', jpRows[0]);
+    console.log('[DEBUG] TH rows count:', thRows.length, '| Sample:', thRows[0]);
+    RAW=parseGASData(json);
+    console.log('[DEBUG] RAW after parse, unique regions:', [...new Set(RAW.map(r=>r.region))]);
+    setStatus('gasStatus','ok',`Loaded ${RAW.length} rows`);
+    initFilters();applyFilters();
+  }catch(e){setStatus('gasStatus','warn','Failed: '+e.message);}
+}
+
+function parseGASData(rows){
+  return rows.map(r=>{
+    const date=parseDate(r['Date']||r['date']);
+    const region=normalizeRegion(r['Region']||r['region']||'');
+    const campaign=r['Campaign']||r['campaign']||'Unknown';
+    return{date,dateStr:fmtDate(date),region,campaign,
+      spend:toNum(r['Spend']),reach:toNum(r['Reach']),impressions:toNum(r['Impressions']),
+      linkClicks:toNum(r['Link Clicks']||r['linkClicks']),leads:toNum(r['Leads']),
+      dailyNewLeads:toNum(r['Daily New Leads']||r['dailyNewLeads']),
+      ctr:toNum(r['CTR']),cpl:toNum(r['CPL']),leadCvr:toNum(r['Lead CVR']||r['leadCvr']),
+      frequency:toNum(r['Frequency']),avgCpl3d:toNum(r['3-Day Avg CPL']||r['avgCpl3d']),
+      status:r['Status']||'',keyActions:r['Key actions']||'',keyActionsEmoji:r['Key actions Emoji']||'',};
+  }).filter(r=>r.date&&!isNaN(r.spend));
+}
+
+// ─── SQL Loader ───────────────────────────────────────────────────────────────
+const SQL_ADSET_COLS=['Lead Source Drill-Down 3','Lead Source Drill-Down 3(Old)','营销活动','市场活动（text）','市场活动'];
+const SQL_STAGE_COLS=['线索阶段','Lifecycle Stage','生命状态'];
+const SQL_CREATED_COLS=['创建时间','创建日期','网站注册用户的提交日期'];
+const SQL_CONVERTED_COLS=['转换时间','转化时间','Conversion Time','转化日期','SQL转化时间'];
+const SQL_COUNTRY_COLS=['Country / Region of Lead','Country （文本）','国家','手机归属国家'];
+const SQL_ID_COLS=['线索编号（必填）','唯一标识','客户ID','Email','邮件','电话'];
+// Demo alias table (real campaign aliases removed for the public build).
+// Only used by the original xlsx parser, which is overridden in demo mode.
+const CAMP_ALIAS={'Test 101':['test 101'],'Test 102':['test 102'],'Test 103':['test 103'],'Test 201':['test 201'],'Test 202':['test 202'],'Test 301':['test 301'],'Test 302':['test 302'],'Test 401':['test 401'],'Test 402':['test 402'],'Test 403':['test 403'],'Test 501':['test 501'],'Test 502':['test 502']};
+
+function coalesce(row,cols){for(const c of cols)if(row[c]!==undefined&&row[c]!=='')return row[c];return'';}
+function mapCampaign(adset){const k=String(adset).toLowerCase().replace(/[\s\-_]+/g,' ');for(const[n,aliases]of Object.entries(CAMP_ALIAS)){if(aliases.some(a=>k.includes(a)))return n;}return'Unmapped';}
+function inferRegion(adset,country){const t=String(adset).toLowerCase();const c=String(country).toLowerCase().trim();if(t.includes('emea'))return'EMEA';if(t.includes('india')||c==='india')return'INDIA';if(t.includes('japan')||/(^|[^a-z0-9])jp([^a-z0-9]|$)/.test(t)||c==='japan')return'JP';if(t.includes('thailand')||/(^|[^a-z0-9])th([^a-z0-9]|$)/.test(t)||c==='thailand')return'TH';if(/\b(us|usa|na)\b/.test(t)||['united states','usa','us','canada','mexico'].includes(c))return'NA';const EC=new Set(['egypt','saudi arabia','uae','united arab emirates','italy','turkey','germany','france','spain','qatar','kuwait','oman','bahrain','south africa','kenya','namibia','united kingdom','uk','sri lanka']);if(EC.has(c))return'EMEA';return'UNKNOWN';}
+
+function loadSQLFile(input){
+  const file=input.files[0];if(!file)return;
+  setStatus('sqlStatus','loading','Parsing…');
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const wb=XLSX.read(e.target.result,{type:'array',cellDates:true});
+      const sn=wb.SheetNames.find(n=>n.includes('销售线索')||n.includes('SQL')||n.includes('leads'))||wb.SheetNames[0];
+      const rows=XLSX.utils.sheet_to_json(wb.Sheets[sn],{defval:''});
+      const fileIsSQL=file.name.toLowerCase().includes('sql');
+      SQL_RAW=rows.map((r,i)=>{
+        const adset=coalesce(r,SQL_ADSET_COLS);
+        const stage=coalesce(r,SQL_STAGE_COLS);
+        const created=parseDate(coalesce(r,SQL_CREATED_COLS));
+        const converted=parseDate(coalesce(r,SQL_CONVERTED_COLS));
+        const country=coalesce(r,SQL_COUNTRY_COLS);
+        const dup=coalesce(r,['是否存在重复数据']);
+        const leadId=coalesce(r,SQL_ID_COLS)||'row_'+i;
+        const stageL=String(stage).toLowerCase();
+        const isSql=stageL.includes('sql')||(fileIsSQL&&!stageL.includes('mql')&&stage==='');
+        const isMql=stageL.includes('mql')||stageL.includes('sql');
+        const _matched=mapFromAdset(adset);
+        const _region=_matched?_matched.region:inferRegion(adset,country);
+        const _campaign=_matched?_matched.campaign:mapCampaign(adset);
+        return{leadId,adset,stage,created,converted,country,dup,isSql,isMql,region:_region,campaign:_campaign};
+      });
+      setStatus('sqlStatus','ok',`Loaded ${SQL_RAW.length} leads`);
+      applyFilters();
+    }catch(ex){setStatus('sqlStatus','warn','Parse error: '+ex.message);}
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function normalizeRegion(v){const k=String(v).trim().toUpperCase();if(['INDIA','IN'].includes(k))return'INDIA';if(['NA','NORTH AMERICA','US','USA'].includes(k))return'NA';if(['EMEA','EUROPE MIDDLE EAST AFRICA','MIDDLE EAST'].includes(k))return'EMEA';if(['JP','JAPAN'].includes(k))return'JP';if(['TH','THAILAND'].includes(k))return'TH';return k||'UNKNOWN';}
+
+// ─── Checkbox Dropdown ────────────────────────────────────────────────────────
+const MS_STATE = { Region: [], Campaign: [] };
+
+function buildDropdown(name, items) {
+  const list = document.getElementById('msList' + name);
+  list.innerHTML = '';
+  items.forEach(val => {
+    const id = 'ms' + name + '_' + val.replace(/\W/g,'_');
+    const div = document.createElement('div');
+    div.className = 'ms-opt';
+    div.dataset.val = val;
+    div.innerHTML = `<input type="checkbox" id="${id}" value="${val}" checked onchange="onOptChange('${name}')"><label for="${id}" style="cursor:pointer;">${val}</label>`;
+    list.appendChild(div);
+  });
+  MS_STATE[name] = [...items];
+  updateLabel(name);
+}
+
+function toggleDropdown(name) {
+  const drop = document.getElementById('msDrop' + name);
+  const trig = document.getElementById('msTrigger' + name);
+  const isOpen = drop.classList.contains('open');
+  // close all first
+  document.querySelectorAll('.ms-dropdown').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.ms-trigger').forEach(t => t.classList.remove('open'));
+  if (!isOpen) { drop.classList.add('open'); trig.classList.add('open'); }
+}
+
+// close on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.ms-wrap')) {
+    document.querySelectorAll('.ms-dropdown').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.ms-trigger').forEach(t => t.classList.remove('open'));
+  }
+});
+
+function toggleAll(name) {
+  const allCb = document.getElementById('msAll' + name);
+  document.querySelectorAll(`#msList${name} input[type=checkbox]`).forEach(cb => cb.checked = allCb.checked);
+  syncState(name);
+  updateLabel(name);
+  applyFilters();
+}
+
+function onOptChange(name) {
+  syncState(name);
+  const allCb = document.getElementById('msAll' + name);
+  const cbs = [...document.querySelectorAll(`#msList${name} input[type=checkbox]`)];
+  allCb.checked = cbs.every(cb => cb.checked);
+  updateLabel(name);
+  applyFilters();
+}
+
+function syncState(name) {
+  MS_STATE[name] = [...document.querySelectorAll(`#msList${name} input[type=checkbox]:checked`)].map(cb => cb.value);
+}
+
+function updateLabel(name) {
+  const label = document.getElementById('msLabel' + name);
+  const all = [...document.querySelectorAll(`#msList${name} input[type=checkbox]`)];
+  const checked = all.filter(cb => cb.checked);
+  if (checked.length === 0 || checked.length === all.length) {
+    label.textContent = name === 'Region' ? 'All regions' : 'All campaigns';
+  } else if (checked.length <= 3) {
+    label.innerHTML = checked.map(cb => `<span class="ms-badge">${cb.value}</span>`).join('');
+  } else {
+    label.textContent = `${checked.length} selected`;
+  }
+}
+
+function filterOpts(name, query) {
+  const q = query.toLowerCase();
+  document.querySelectorAll(`#msList${name} .ms-opt`).forEach(div => {
+    div.style.display = div.dataset.val.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// ─── Filters ──────────────────────────────────────────────────────────────────
+function initFilters(){
+  const regions=[...new Set(RAW.map(r=>r.region))].sort();
+  // Use "REGION|Campaign" keys so every campaign is uniquely identifiable across regions
+  const campaigns=[...new Set(
+    RAW.filter(r=>r.campaign!=='Total').map(r=>r.region+'|'+r.campaign)
+  )].sort();
+  const dates=RAW.map(r=>r.date).filter(Boolean);
+  const minD=dates.reduce((a,b)=>a<b?a:b,dates[0]);
+  const maxD=dates.reduce((a,b)=>a>b?a:b,dates[0]);
+  buildDropdown('Region', regions);
+  buildDropdown('Campaign', campaigns);
+  const defaultStart=new Date(maxD);defaultStart.setMonth(defaultStart.getMonth()-1);
+  const startD=defaultStart<minD?minD:defaultStart;
+  document.getElementById('filterStart').value=fmtDate(startD);
+  document.getElementById('filterEnd').value=fmtDate(maxD);
+  document.getElementById('filterWrap').style.display='';
+  document.getElementById('headerMeta').textContent=`EMEA · India · NA · JP · TH  ·  ${fmtDate(minD)} – ${fmtDate(maxD)}  ·  ${RAW.length} rows`;
+  if(window.ffpSync) ffpSync();
+}
+
+function applyFilters(){
+  if(!RAW.length)return;
+  const selRegions = MS_STATE.Region;
+  const selCampaigns = MS_STATE.Campaign;
+  const allR = document.getElementById('msAllRegion')?.checked;
+  const allC = document.getElementById('msAllCampaign')?.checked;
+  const start=new Date(document.getElementById('filterStart').value);
+  const end=new Date(document.getElementById('filterEnd').value);
+  FILTERED=RAW.filter(r=>(allR||selRegions.includes(r.region))&&(allC||selCampaigns.includes(r.region+'|'+r.campaign))&&r.date>=start&&r.date<=end);
+  SQL_FILTERED=SQL_RAW.filter(r=>{
+    const d=r.converted||r.created;
+    if(!d)return true;
+    return(allR||selRegions.includes(r.region))&&(allC||selCampaigns.includes(r.region+'|'+r.campaign))&&d>=start&&d<=end;
+  });
+  renderAll();
+}
+
+function resetFilters(){initFilters();applyFilters();}
+
+// ─── Delta computation ────────────────────────────────────────────────────────
+function computeDeltas(rows){
+  const groups={};
+  rows.forEach(r=>{const k=r.region+'|'+r.campaign;if(!groups[k])groups[k]=[];groups[k].push(r);});
+  const result=[];
+  for(const k in groups){
+    const g=groups[k].sort((a,b)=>a.date-b.date);
+    g.forEach((r,i)=>{
+      const prev=g[i-1];
+      const dSpend=prev?r.spend-prev.spend:NaN;
+      const dLeads=prev?r.leads-prev.leads:NaN;
+      const dailyLeads=(!isNaN(r.dailyNewLeads)&&r.dailyNewLeads>0)?r.dailyNewLeads:dLeads;
+      result.push({...r,dSpend,dLeads,dailyLeads,cplD:safeDiv(dSpend,dailyLeads)});
+    });
+  }
+  return result;
+}
+
+function groupBy(rows,key){const m={};rows.forEach(r=>{const k=r[key]||'Unknown';if(!m[k])m[k]=[];m[k].push(r);});return m;}
+function sumF(rows,f){return rows.reduce((s,r)=>s+(isNaN(r[f])?0:r[f]),0);}
+function meanF(rows,f){const v=rows.map(r=>r[f]).filter(x=>!isNaN(x)&&x!=null);return v.length?v.reduce((a,b)=>a+b,0)/v.length:NaN;}
+
+// Calculate total from cumulative data using .diff() logic (matching Python)
+// For cumulative data: sum of all .diff() values (current - previous within filtered data)
+// Returns {total, warnings: [{region, campaign, startDate}]}
+function calcCumulativeTotal(rows, field, filterStartDate = null, allRawData = null) {
+  const groups = {};
+  rows.forEach(r => {
+    const k = r.region + '|' + r.campaign;
+    if (!groups[k]) groups[k] = [];
+    groups[k].push(r);
+  });
+
+  let total = 0;
+  const warnings = [];
+  const debug = [];
+
+  for (const k in groups) {
+    const g = groups[k].sort((a, b) => a.date - b.date);
+    const [region, campaign] = k.split('|');
+
+    // Find ACTUAL start date in RAW data (for warnings only)
+    let actualStartDate = g[0].date;
+    if (allRawData) {
+      const rawForGroup = allRawData.filter(r => r.region === region && r.campaign === campaign);
+      if (rawForGroup.length > 0) {
+        rawForGroup.sort((a, b) => a.date - b.date);
+        actualStartDate = rawForGroup[0].date;
+      }
+    }
+
+    let groupTotal = 0;
+    // Get the baseline: the last cumulative value BEFORE the filter start date
+    // so that g[last] - baseline = spend within the filtered range
+    if (allRawData) {
+      const rawGroup = allRawData
+        .filter(r => r.region === region && r.campaign === campaign && r.date < g[0].date)
+        .sort((a, b) => a.date - b.date);
+      const baseline = rawGroup.length > 0 ? rawGroup[rawGroup.length - 1][field] : 0;
+      const lastVal = g[g.length - 1][field];
+      if (!isNaN(lastVal)) {
+        groupTotal = lastVal - (isNaN(baseline) ? 0 : baseline);
+      }
+    } else {
+      // fallback: no RAW reference, sum diffs from i=0
+      if (g.length > 0 && !isNaN(g[0][field])) groupTotal += g[0][field];
+      for (let i = 1; i < g.length; i++) {
+        const current = g[i][field];
+        const previous = g[i-1][field];
+        if (!isNaN(current) && !isNaN(previous)) groupTotal += (current - previous);
+      }
+    }
+
+    total += groupTotal;
+
+    // Warning: if actual data starts after filter start
+    if (filterStartDate && actualStartDate > filterStartDate) {
+      warnings.push({
+        region,
+        campaign,
+        startDate: fmtDate(actualStartDate)
+      });
+    }
+
+    debug.push({
+      group: k,
+      actualStartDate: fmtDate(actualStartDate),
+      filteredStartDate: fmtDate(g[0].date),
+      filteredLastDate: fmtDate(g[g.length-1].date),
+      groupTotal,
+      rows: g.length,
+      diffsCalculated: g.length - 1
+    });
+  }
+
+  // Debug logging
+  if (field === 'spend') {
+    console.log('=== SPEND CALCULATION DEBUG ===');
+    console.log('Groups:', debug);
+    console.log('Total:', total);
+    console.log('Warnings:', warnings);
+  }
+
+  return {total, warnings};
+}
+
+// ─── Chart download ───────────────────────────────────────────────────────────
+function downloadChart(id, title) {
+  const c = document.getElementById(id);
+  if (!c) return;
+  const a = document.createElement('a');
+  a.href = c.toDataURL('image/png');
+  a.download = (title || id).replace(/\s+/g, '_') + '.png';
+  a.click();
+}
+
+// ─── Chart helpers ────────────────────────────────────────────────────────────
+function destroyChart(id){if(CHARTS[id]){CHARTS[id].destroy();delete CHARTS[id];}}
+function makeChart(id,config){destroyChart(id);const ctx=document.getElementById(id);if(!ctx)return;CHARTS[id]=new Chart(ctx,config);return CHARTS[id];}
+
+const AXIS_STYLE={ticks:{font:{size:11,family:'Inter'},color:'#6b7280'},grid:{color:'rgba(0,0,0,.04)'}};
+const AXIS_STYLE_X={ticks:{font:{size:11,family:'Inter'},color:'#6b7280',maxRotation:30},grid:{display:false}};
+
+function barCfg(labels,data,colors,yFmt='$'){
+  return{type:'bar',data:{labels,datasets:[{data,backgroundColor:colors,borderRadius:6,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{...AXIS_STYLE_X},y:{...AXIS_STYLE,ticks:{...AXIS_STYLE.ticks,callback:v=>yFmt==='%'?(v*100).toFixed(0)+'%':yFmt==='n'?v.toLocaleString():'$'+v.toLocaleString()}}}}};
+}
+
+// ─── Chart card HTML ──────────────────────────────────────────────────────────
+function chartCard(id,title,sub,height=220,extra=''){
+  return`<div class="card">
+    <div class="card-header">
+      <div><div class="card-title">${title}</div>${sub?`<div class="card-sub">${sub}</div>`:''}</div>
+      <div class="card-actions">
+        <span class="icon-btn" title="Download PNG" onclick="downloadChart('${id}','${title}')">⬇</span>
+      </div>
+    </div>
+    ${extra}
+    <div style="position:relative;width:100%;height:${height}px;"><canvas id="${id}" role="img" aria-label="${title}"></canvas></div>
+  </div>`;
+}
+
+
+// ─── Main render ──────────────────────────────────────────────────────────────
+function renderAll(){
+  const mc=document.getElementById('mainContent');
+  if(!FILTERED.length){mc.innerHTML='<div class="empty"><div class="empty-icon">🔍</div><strong>No data</strong>Adjust filters and try again.</div>';return;}
+
+  const deltas=computeDeltas(FILTERED);
+
+  // Get filter start date
+  const filterStart=new Date(document.getElementById('filterStart')?.value);
+
+  const FILTERED_NO_TOTAL = FILTERED.filter(r => r.campaign !== 'Total');
+  const spendResult=calcCumulativeTotal(FILTERED_NO_TOTAL,'spend',filterStart,RAW);
+  const leadsResult=calcCumulativeTotal(FILTERED_NO_TOTAL,'leads',filterStart,RAW);
+  const totalSpend=spendResult.total;
+  const totalLeads=leadsResult.total;
+
+  const blendedCpl=safeDiv(totalSpend,totalLeads);
+  const avgCtr=meanF(FILTERED_NO_TOTAL,'ctr');
+  const avgCvr=meanF(FILTERED_NO_TOTAL,'leadCvr');
+
+  const hasSql=SQL_FILTERED.length>0;
+  const sqlCount=hasSql?new Set(SQL_FILTERED.filter(r=>r.isSql).map(r=>r.leadId)).size:0;
+  const sqlMqlRate=safeDiv(sqlCount,totalLeads);
+  const costPerSql=safeDiv(totalSpend,sqlCount);
+
+  // Agg by campaign
+  const campaignKeys=[...new Set(deltas.filter(r=>r.campaign!=='Total').map(r=>r.region+'\x00'+r.campaign))];
+  const aggRows=campaignKeys.map(key=>{
+    const sep=key.indexOf('\x00');
+    const region=key.substring(0,sep);
+    const c=key.substring(sep+1);
+    const campRows=FILTERED.filter(r=>r.region===region&&r.campaign===c);
+    const spend=calcCumulativeTotal(campRows,'spend',filterStart,RAW).total;
+    const leads=calcCumulativeTotal(campRows,'leads',filterStart,RAW).total;
+    return{campaign:c,region,spend,leads,cpl:safeDiv(spend,leads),
+      ctr:meanF(campRows,'ctr'),
+      cvr:meanF(campRows,'leadCvr')};
+  });
+  const _regionOrder={'EMEA':0,'INDIA':1,'NA':2,'JP':3,'TH':4,'UNKNOWN':5};
+  aggRows.sort((a,b)=>{
+    const rA=_regionOrder[a.region]??3;
+    const rB=_regionOrder[b.region]??3;
+    if(rA!==rB)return rA-rB;
+    return a.campaign.localeCompare(b.campaign);
+  });
+
+  // Agg by region
+  const regions=[...new Set(deltas.map(r=>r.region))].sort();
+  const regRows=regions.map(reg=>{
+    const regRows=FILTERED.filter(r=>r.region===reg&&r.campaign!=='Total');
+    const spend=calcCumulativeTotal(regRows,'spend',filterStart,RAW).total;
+    const leads=calcCumulativeTotal(regRows,'leads',filterStart,RAW).total;
+    const sql=hasSql?new Set(SQL_FILTERED.filter(r=>r.isSql&&r.region===reg).map(r=>r.leadId)).size:0;
+    return{region:reg,spend,leads,cpl:safeDiv(spend,leads),sql,sqlMql:safeDiv(sql,leads)};
+  });
+
+  // SQL by campaign
+  const sqlByCamp={};
+  if(hasSql)SQL_FILTERED.filter(r=>r.isSql).forEach(r=>{const k=r.region+'\x00'+r.campaign;if(!sqlByCamp[k])sqlByCamp[k]=new Set();sqlByCamp[k].add(r.leadId);});
+  const sqlTableRows=aggRows.map(r=>{const k=r.region+'\x00'+r.campaign;const s=(sqlByCamp[k]||new Set()).size;return{...r,sql:s,sqlMql:safeDiv(s,r.leads),costSql:safeDiv(r.spend,s)};}).sort((a,b)=>b.sql-a.sql);
+
+  _deltas=deltas;_aggRows=aggRows;_regRows=regRows;_hasSql=hasSql;_sqlTableRows=sqlTableRows;
+
+  const _campNameCount={};aggRows.forEach(r=>{_campNameCount[r.campaign]=(_campNameCount[r.campaign]||0)+1;});
+  const campLabels=aggRows.map(r=>_campNameCount[r.campaign]>1?r.region+' · '+r.campaign:r.campaign);
+  const campColors=aggRows.map(r=>REGION_COLORS[r.region]||'#6b7280');
+  const _usedRegions=[...new Set(aggRows.map(r=>r.region))];
+  const campLegendHTML=`<div class="legend">${_usedRegions.map(reg=>`<span class="legend-item"><span class="legend-dot" style="background:${REGION_COLORS[reg]||'#6b7280'}"></span>${reg}</span>`).join('')}</div>`;
+  const regLabels=regRows.map(r=>r.region);
+  const regColors=regLabels.map(r=>REGION_COLORS[r]||'#6b7280');
+
+  let html='';
+
+  // ── Data Warnings（只在 filter start 早于该 region 实际数据开始日期时才提示）──
+  const filterStartDate = new Date(document.getElementById('filterStart').value);
+
+  // 计算每个 region 在 FILTERED_NO_TOTAL 里实际最早的日期
+  const regionEarliestInFiltered = {};
+  FILTERED_NO_TOTAL.forEach(r => {
+    if (!regionEarliestInFiltered[r.region] || r.date < regionEarliestInFiltered[r.region]) {
+      regionEarliestInFiltered[r.region] = r.date;
+    }
+  });
+
+  // 计算每个 region 在全量 RAW（排除Total）里实际最早的日期
+  const regionEarliestInRaw = {};
+  RAW.filter(r => r.campaign !== 'Total').forEach(r => {
+    if (!regionEarliestInRaw[r.region] || r.date < regionEarliestInRaw[r.region]) {
+      regionEarliestInRaw[r.region] = r.date;
+    }
+  });
+
+  // 只有 filter start 比该 region 的 RAW 最早日期还早，才说明有数据缺口
+  Object.entries(regionEarliestInRaw).forEach(([region, earliestRaw]) => {
+    if (filterStartDate < earliestRaw) {
+      html += `<div class="alert amber"><strong>Data availability notice:</strong> ${region} data only starts from ${fmtDate(earliestRaw)}, earlier dates are unavailable.</div>`;
+    }
+  });
+
+  
+
+  // ── 1. KPIs ──
+  html+=`<div class="section">`;
+  if(hasSql){
+    html+=`<div class="kpi-grid kpi-7">
+      <div class="kpi blue"><div class="kpi-label">Total Spend</div><div class="kpi-value">${fmt.usd(totalSpend)}</div><div class="kpi-sub">filtered period</div></div>
+      <div class="kpi"><div class="kpi-label">MQL Leads</div><div class="kpi-value">${fmt.num(totalLeads)}</div><div class="kpi-sub">from Meta Ads</div></div>
+      <div class="kpi green"><div class="kpi-label">SQL</div><div class="kpi-value">${fmt.num(sqlCount)}</div><div class="kpi-sub">converted leads</div></div>
+      <div class="kpi teal"><div class="kpi-label">SQL / MQL</div><div class="kpi-value">${fmt.pct(sqlMqlRate)}</div><div class="kpi-sub">conversion rate</div></div>
+      <div class="kpi amber"><div class="kpi-label">Cost / SQL</div><div class="kpi-value">${fmt.usd(costPerSql)}</div><div class="kpi-sub">per SQL lead</div></div>
+      <div class="kpi"><div class="kpi-label">Blended CPL</div><div class="kpi-value">${fmt.usd(blendedCpl)}</div><div class="kpi-sub">spend ÷ MQL</div></div>
+      <div class="kpi"><div class="kpi-label">Avg CTR</div><div class="kpi-value">${fmt.pct(avgCtr)}</div><div class="kpi-sub">average</div></div>
+    </div>`;
+  }else{
+    html+=`<div class="kpi-grid kpi-5">
+      <div class="kpi blue"><div class="kpi-label">Total Spend</div><div class="kpi-value">${fmt.usd(totalSpend)}</div></div>
+      <div class="kpi"><div class="kpi-label">Total Leads / MQL</div><div class="kpi-value">${fmt.num(totalLeads)}</div></div>
+      <div class="kpi amber"><div class="kpi-label">Blended CPL</div><div class="kpi-value">${fmt.usd(blendedCpl)}</div></div>
+      <div class="kpi"><div class="kpi-label">Avg CTR</div><div class="kpi-value">${fmt.pct(avgCtr)}</div></div>
+      <div class="kpi"><div class="kpi-label">Avg Lead CVR</div><div class="kpi-value">${fmt.pct(avgCvr)}</div></div>
+    </div>`;
+  }
+  html+=`</div>`;
+
+  // ── 2. Daily Trend ──
+  html+=`<div class="section"><div class="section-heading">1 · Daily Trend</div>`;
+  html+=`<div class="chart-ctrl">
+    <span style="font-size:0.75rem;color:var(--text2);font-weight:600;">Metric</span>
+    <select id="trendMetric" onchange="updateTrendChart();updateRegionalTrendCharts()">
+      <option value="dSpend">Spend</option>
+      <option value="dailyLeads" selected>Leads</option>
+      <option value="cplD">CPL</option>
+      <option value="ctr">CTR</option>
+      <option value="leadCvr">Lead CVR</option>
+      <option value="frequency">Frequency</option>
+    </select>
+    <span style="font-size:0.75rem;color:var(--text2);font-weight:600;margin-left:8px;">View</span>
+    <select id="trendView" onchange="updateTrendChart()">
+      <option value="region">By region</option>
+      <option value="campaign">By campaign</option>
+    </select>
+  </div>`;
+  html+=`<div class="card">
+    <div class="card-header">
+      <div><div class="card-title" id="trendTitle">Daily Spend trend</div><div class="card-sub">Cumulative data restored to daily increments</div></div>
+      <div class="card-actions">
+        <span class="icon-btn" title="Download PNG" onclick="downloadChart('trendChart','Daily_Trend')">⬇</span>
+      </div>
+    </div>
+    <div id="trendLegend" class="legend"></div>
+    <div style="position:relative;width:100%;height:260px;"><canvas id="trendChart" role="img" aria-label="Daily trend line chart"></canvas></div>
+  </div>`;
+  html+=`</div>`;
+
+  // ── 2. Regional Trends & Key Actions ──
+  {
+    const REGION_ORDER_RT=['EMEA','INDIA','NA','JP','TH'];
+    const activeRT=deltas.filter(r=>r.campaign!=='Total');
+    const rtRegions=REGION_ORDER_RT.filter(reg=>activeRT.some(r=>r.region===reg));
+    let rtCards='';
+    rtRegions.forEach(region=>{
+      rtCards+=`<div class="card" style="margin-bottom:16px;">
+        <div class="card-header">
+          <div><div class="card-title">${region}</div></div>
+          <div class="card-actions">
+            <select id="regionalMetric_${region}" onchange="updateSingleRegionalChart('${region}')" style="font-size:0.75rem;padding:5px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;">
+              <option value="dSpend">Spend</option>
+              <option value="dailyLeads" selected>Leads</option>
+              <option value="cplD">CPL</option>
+              <option value="ctr">CTR</option>
+              <option value="leadCvr">Lead CVR</option>
+              <option value="frequency">Frequency</option>
+            </select>
+            <span class="icon-btn" title="Download PNG" onclick="downloadChart('regionalTrend_${region}','${region}_Trend')">⬇</span>
+          </div>
+        </div>
+        <div id="regionalLegend_${region}" class="legend"></div>
+        <div style="position:relative;width:100%;height:240px;"><canvas id="regionalTrend_${region}" role="img"></canvas></div>
+        <div id="regionalActions_${region}" style="margin-top:8px;font-size:0.75rem;"></div>
+      </div>`;
+    });
+    const notes=FILTERED.filter(r=>r.keyActions&&r.keyActions.trim());
+    const fatigue=FILTERED.filter(r=>r.status&&r.status.toLowerCase().includes('fatigue'));
+    let _kaHtml='';
+    if(notes.length||fatigue.length){
+      if(fatigue.length)_kaHtml+=`<div class="alert warn" style="margin-top:16px;"><strong>Audience Fatigue alert:</strong> ${fatigue.length} records show fatigue status — consider refreshing creatives or expanding audience.</div>`;
+      if(notes.length){
+        const noteRegions=[...new Set(notes.map(r=>r.region))].sort();
+        _kaHtml+=`<div class="card" style="margin-top:16px;">
+          <div class="card-header">
+            <div><div class="card-title">Key Actions Log</div><div class="card-sub">${notes.length} entries in selected period</div></div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <span style="font-size:0.75rem;color:var(--text2);font-weight:500;">Region</span>
+              <select id="keyActionsRegionFilter" onchange="filterKeyActionsLog()" style="font-size:0.75rem;padding:5px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;">
+                <option value="">All regions</option>
+                ${noteRegions.map(reg=>`<option value="${reg}">${reg}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+          <div class="table-wrap" style="max-height:860px;overflow-y:auto;">
+            <table id="keyActionsTable">
+              <thead style="position:sticky;top:0;z-index:2;"><tr><th>Date</th><th>Region</th><th>Campaign</th><th>Status</th><th>Notes</th></tr></thead>
+              <tbody>${notes.slice().sort((a,b)=>b.date-a.date).map(r=>`<tr data-region="${r.region}">
+                <td>${fmtDate(r.date)}</td><td>${r.region}</td><td>${campFullName(r.region,r.campaign)}</td><td>${r.status||'—'}</td><td>${r.keyActions}</td>
+              </tr>`).join('')}</tbody>
+            </table>
+          </div>
+        </div>`;
+      }
+    }
+    html+=`<div class="section"><div class="section-heading">2 · Regional Trends &amp; Key Actions</div>${rtCards}${_kaHtml}</div>`;
+  }
+
+  // ── 3. Campaign Comparison ──
+  html+=`<div class="section"><div class="section-heading">3 · Campaign Comparison</div>`;
+  html+=`<div class="row2">
+    ${chartCard('leadsChart','Leads by Campaign','Total MQL leads',220,campLegendHTML)}
+    ${chartCard('cplChart','CPL by Campaign','Spend ÷ MQL leads',220,campLegendHTML)}
+  </div>
+  <div class="row2">
+    ${chartCard('spendChart','Spend by Campaign','',220,campLegendHTML)}
+    ${chartCard('ctrChart','Avg CTR by Campaign','',220,campLegendHTML)}
+  </div>
+  <div class="row2">
+    ${chartCard('cvrChart','Avg Lead CVR by Campaign','',220,campLegendHTML)}
+  </div>`;
+
+  // Campaign table
+  html+=`<div class="card"><div class="card-header"><div class="card-title">Campaign Summary</div></div>
+    <div class="table-wrap"><table id="campSummaryTable">
+      <thead><tr>
+        <th>Campaign</th>
+        <th class="num sortable" id="campTh_spend" onclick="sortTable('camp','spend')">Spend<span class="sort-icon"> ▼</span></th>
+        <th class="num sortable" id="campTh_leads" onclick="sortTable('camp','leads')">Leads<span class="sort-icon"></span></th>
+        <th class="num sortable" id="campTh_cpl" onclick="sortTable('camp','cpl')">CPL<span class="sort-icon"></span></th>
+        <th class="num sortable" id="campTh_ctr" onclick="sortTable('camp','ctr')">CTR<span class="sort-icon"></span></th>
+        <th class="num sortable" id="campTh_cvr" onclick="sortTable('camp','cvr')">Lead CVR<span class="sort-icon"></span></th>
+      </tr></thead>
+      <tbody id="campSummaryTbody">${[...aggRows].sort((a,b)=>b.spend-a.spend).map(r=>`<tr${r.campaign.startsWith('Closed_')?' style="color:var(--text3);"':''}>
+        <td class="bold">${campFullName(r.region, r.campaign)}</td>
+        <td class="num">${fmt.usd(r.spend)}</td>
+        <td class="num">${fmt.num(r.leads)}</td>
+        <td class="num">${fmt.usd(r.cpl)}</td>
+        <td class="num">${fmt.pct(r.ctr)}</td>
+        <td class="num">${fmt.pct(r.cvr)}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>
+  </div>`;
+  html+=`</div>`;
+
+  // ── 4. SQL/MQL ──
+  if(hasSql){
+    const _sqlRegions=[...new Set(sqlTableRows.map(r=>r.region))];
+    const sqlLegendHTML=`<div class="legend">${_sqlRegions.map(reg=>`<span class="legend-item"><span class="legend-dot" style="background:${REGION_COLORS[reg]||'#6b7280'}"></span>${reg}</span>`).join('')}</div>`;
+    html+=`<div class="section"><div class="section-heading">4 · SQL / MQL Conversion</div>`;
+    html+=`<div class="row2">
+      ${chartCard('sqlCountChart','SQL Count by Campaign','',220,sqlLegendHTML)}
+      ${chartCard('sqlRateChart','SQL / MQL Rate by Campaign','',220,sqlLegendHTML)}
+    </div>`;
+    html+=`<div class="card"><div class="card-header"><div class="card-title">SQL / MQL Summary</div></div>
+      <div class="table-wrap"><table id="sqlSummaryTable">
+        <thead><tr>
+          <th>Campaign</th>
+          <th class="num sortable" id="sqlTh_spend" onclick="sortTable('sql','spend')">Spend<span class="sort-icon"></span></th>
+          <th class="num sortable" id="sqlTh_leads" onclick="sortTable('sql','leads')">MQL<span class="sort-icon"></span></th>
+          <th class="num sortable" id="sqlTh_sql" onclick="sortTable('sql','sql')">SQL<span class="sort-icon"> ▼</span></th>
+          <th class="num sortable" id="sqlTh_sqlMql" onclick="sortTable('sql','sqlMql')">SQL/MQL<span class="sort-icon"></span></th>
+          <th class="num sortable" id="sqlTh_cpl" onclick="sortTable('sql','cpl')">MQL CPL<span class="sort-icon"></span></th>
+          <th class="num sortable" id="sqlTh_costSql" onclick="sortTable('sql','costSql')">Cost/SQL<span class="sort-icon"></span></th>
+        </tr></thead>
+        <tbody id="sqlSummaryTbody">${sqlTableRows.map(r=>`<tr>
+          <td class="bold">${campFullName(r.region, r.campaign)}</td>
+          <td class="num">${fmt.usd(r.spend)}</td>
+          <td class="num">${fmt.num(r.leads)}</td>
+          <td class="num">${fmt.num(r.sql)}</td>
+          <td class="num">${fmt.pct(r.sqlMql)}</td>
+          <td class="num">${fmt.usd(r.cpl)}</td>
+          <td class="num">${fmt.usd(r.costSql)}</td>
+        </tr>`).join('')}</tbody>
+      </table></div>
+    </div>`;
+    html+=`</div>`;
+  }
+
+  // ── 5. Region Comparison ──
+  html+=`<div class="section"><div class="section-heading">5 · Region Comparison</div>`;
+  html+=`<div class="row3">
+    ${chartCard('regSpendChart','Spend Share','',200)}
+    ${chartCard('regLeadsChart','MQL Leads Share','',200)}
+    ${chartCard('regCplChart',hasSql?'SQL / MQL by Region':'Blended CPL by Region','',200)}
+  </div>`;
+  html+=`<div class="card"><div class="card-header"><div class="card-title">Region Summary</div></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Region</th><th class="num">Spend</th><th class="num">MQL</th>${hasSql?'<th class="num">SQL</th><th class="num">SQL/MQL</th>':''}<th class="num">Blended CPL</th></tr></thead>
+      <tbody>${regRows.map(r=>`<tr>
+        <td class="bold">${r.region}</td>
+        <td class="num">${fmt.usd(r.spend)}</td>
+        <td class="num">${fmt.num(r.leads)}</td>
+        ${hasSql?`<td class="num">${fmt.num(r.sql)}</td><td class="num">${fmt.pct(r.sqlMql)}</td>`:''}
+        <td class="num">${fmt.usd(r.cpl)}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>
+  </div>`;
+  html+=`</div>`;
+
+  // ── 6. Daily Total Trend ──
+  const dailyTotalData = _deltas.filter(r => r.campaign === 'Total');
+  if(dailyTotalData.length > 0){
+    html+=`<div class="section"><div class="section-heading">6 · Daily Total Trend (per region)</div>`;
+    html+=chartCard('dailySpendChart','Daily Spend (actual daily, not cumulative)','Total spend per day by region',300);
+    html+=chartCard('dailyLeadsChart','Daily New Leads','New leads per day by region',300);
+    html+=chartCard('dailyCplChart','Daily CPL','Cost per lead per day by region',300);
+    html+=`</div>`;
+  }
+
+  // ── 7. Weekly Summary ──
+  if(WEEKLY_RAW.length > 0){
+    const weeklyFiltered = WEEKLY_RAW.filter(r =>
+      sel_region_keys.has(r.regionKey) &&
+      r.period && r.period.trim() !== ''
+    );
+
+    if(weeklyFiltered.length > 0){
+      html+=`<div class="section"><div class="section-heading">7 · Weekly Summary</div>`;
+      html+=chartCard('weeklyChart','Weekly Spend & Avg CPL','Weekly performance by region',300);
+
+      // Add weekly data table
+      html+=`<div class="card"><div class="card-header"><div class="card-title">Weekly Data Table</div></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Region</th><th>Period</th><th class="num">Spend</th><th class="num">Leads</th><th class="num">Avg CPL</th></tr></thead>
+          <tbody>${weeklyFiltered.map(r=>`<tr>
+            <td class="bold">${r.region}</td>
+            <td>${r.period}</td>
+            <td class="num">${fmt.usd(r.spend)}</td>
+            <td class="num">${fmt.num(r.leads)}</td>
+            <td class="num">${fmt.usd(r.avgCpl)}</td>
+          </tr>`).join('')}</tbody>
+        </table></div>
+      </div>`;
+      html+=`</div>`;
+    }
+  }
+
+  // ── Raw data (no nav) ──
+  html+=`<div class="section" data-no-nav="true">
+    <div class="card"><div class="card-header"><div class="card-title">Raw Data Export</div><button class="btn sm" onclick="exportCSV()">⬇ Export all as CSV</button></div></div>
+  </div>`;
+
+  mc.innerHTML=html;
+
+  setTimeout(()=>{
+    refreshSectionNav();
+    updateTrendChart();
+    updateRegionalTrendCharts();
+    makeChart('cplChart',barCfg(campLabels,aggRows.map(r=>+(r.cpl||0).toFixed(2)),campColors,'$'));
+    makeChart('spendChart',barCfg(campLabels,aggRows.map(r=>Math.round(r.spend||0)),campColors,'$'));
+    makeChart('leadsChart',barCfg(campLabels,aggRows.map(r=>Math.round(r.leads||0)),campColors,'n'));
+    makeChart('ctrChart',barCfg(campLabels,aggRows.map(r=>+(r.ctr||0).toFixed(4)),campColors,'%'));
+    makeChart('cvrChart',barCfg(campLabels,aggRows.map(r=>+(r.cvr||0).toFixed(4)),campColors,'%'));
+    const pieOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11,family:'Inter'},boxWidth:12,padding:10}}}};
+    makeChart('regSpendChart',{type:'doughnut',data:{labels:regLabels,datasets:[{data:regRows.map(r=>Math.round(r.spend||0)),backgroundColor:regColors,borderWidth:2,borderColor:'#fff'}]},options:pieOpts});
+    makeChart('regLeadsChart',{type:'doughnut',data:{labels:regLabels,datasets:[{data:regRows.map(r=>Math.round(r.leads||0)),backgroundColor:regColors,borderWidth:2,borderColor:'#fff'}]},options:pieOpts});
+    if(hasSql){
+      makeChart('regCplChart',barCfg(regLabels,regRows.map(r=>+(r.sqlMql||0).toFixed(4)),regColors,'%'));
+      // Use same color mapping for SQL charts
+      const sqlCampColors = sqlTableRows.map(r => REGION_COLORS[r.region] || '#6b7280');
+      const sqlCampLabels = sqlTableRows.map(r => _campNameCount[r.campaign] > 1 ? r.region + ' · ' + r.campaign : r.campaign);
+      makeChart('sqlCountChart',barCfg(sqlCampLabels,sqlTableRows.map(r=>r.sql||0),sqlCampColors,'n'));
+      makeChart('sqlRateChart',barCfg(sqlCampLabels,sqlTableRows.map(r=>+(r.sqlMql||0).toFixed(4)),sqlCampColors,'%'));
+    }else{
+      makeChart('regCplChart',barCfg(regLabels,regRows.map(r=>+(r.cpl||0).toFixed(2)),regColors,'$'));
+    }
+
+    // Daily Total Trend charts
+    const dailyTotalData = _deltas.filter(r => r.campaign === 'Total');
+    if(dailyTotalData.length > 0){
+      // Group by region for daily total charts
+      const dailyByRegion = {};
+      dailyTotalData.forEach(r => {
+        if(!dailyByRegion[r.region]) dailyByRegion[r.region] = [];
+        dailyByRegion[r.region].push(r);
+      });
+
+      const allDailyDates = [...new Set(dailyTotalData.map(r=>r.dateStr))].sort();
+
+      // Daily Spend Chart
+      const dailySpendDatasets = Object.entries(dailyByRegion).map(([region, rows]) => {
+        const byDate = {};
+        rows.forEach(r => { byDate[r.dateStr] = r.dSpend; });
+        const color = REGION_COLORS[region] || '#6b7280';
+        return {
+          label: region,
+          data: allDailyDates.map(d => {
+            const v = byDate[d];
+            return (v == null || isNaN(v)) ? null : Math.round(v);
+          }),
+          borderColor: color,
+          backgroundColor: color + '18',
+          borderWidth: 2,
+          pointRadius: 3,
+          tension: 0.3,
+          spanGaps: true
+        };
+      });
+
+      makeChart('dailySpendChart', {
+        type: 'line',
+        data: { labels: allDailyDates, datasets: dailySpendDatasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: true, position: 'bottom' },
+            tooltip: { backgroundColor: 'rgba(31,41,55,.9)' }
+          },
+          scales: {
+            x: { ...AXIS_STYLE_X },
+            y: { ...AXIS_STYLE, ticks: { ...AXIS_STYLE.ticks, callback: v => '$' + v.toLocaleString() } }
+          }
+        }
+      });
+
+      // Daily Leads Chart
+      const dailyLeadsDatasets = Object.entries(dailyByRegion).map(([region, rows]) => {
+        const byDate = {};
+        rows.forEach(r => { byDate[r.dateStr] = r.dailyLeads; });
+        const color = REGION_COLORS[region] || '#6b7280';
+        return {
+          label: region,
+          data: allDailyDates.map(d => {
+            const v = byDate[d];
+            return (v == null || isNaN(v)) ? null : Math.round(v);
+          }),
+          borderColor: color,
+          backgroundColor: color + '18',
+          borderWidth: 2,
+          pointRadius: 3,
+          tension: 0.3,
+          spanGaps: true
+        };
+      });
+
+      makeChart('dailyLeadsChart', {
+        type: 'line',
+        data: { labels: allDailyDates, datasets: dailyLeadsDatasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: true, position: 'bottom' },
+            tooltip: { backgroundColor: 'rgba(31,41,55,.9)' }
+          },
+          scales: {
+            x: { ...AXIS_STYLE_X },
+            y: { ...AXIS_STYLE, ticks: { ...AXIS_STYLE.ticks, callback: v => v.toLocaleString() } }
+          }
+        }
+      });
+
+      // Daily CPL Chart
+      const dailyCplDatasets = Object.entries(dailyByRegion).map(([region, rows]) => {
+        const byDate = {};
+        rows.forEach(r => { byDate[r.dateStr] = r.cplD; });
+        const color = REGION_COLORS[region] || '#6b7280';
+        return {
+          label: region,
+          data: allDailyDates.map(d => {
+            const v = byDate[d];
+            return (v == null || isNaN(v) || !isFinite(v)) ? null : +v.toFixed(2);
+          }),
+          borderColor: color,
+          backgroundColor: color + '18',
+          borderWidth: 2,
+          pointRadius: 3,
+          tension: 0.3,
+          spanGaps: true
+        };
+      });
+
+      makeChart('dailyCplChart', {
+        type: 'line',
+        data: { labels: allDailyDates, datasets: dailyCplDatasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: true, position: 'bottom' },
+            tooltip: { backgroundColor: 'rgba(31,41,55,.9)' }
+          },
+          scales: {
+            x: { ...AXIS_STYLE_X },
+            y: { ...AXIS_STYLE, ticks: { ...AXIS_STYLE.ticks, callback: v => '$' + v.toFixed(2) } }
+          }
+        }
+      });
+    }
+
+    // Weekly Summary Chart
+    if(WEEKLY_RAW.length > 0){
+      const weeklyFiltered = WEEKLY_RAW.filter(r =>
+        sel_region_keys.has(r.regionKey) &&
+        r.period && r.period.trim() !== ''
+      );
+
+      if(weeklyFiltered.length > 0){
+        // Get unique periods (sorted)
+        const periods = [...new Set(weeklyFiltered.map(r => r.period))];
+
+        // Create datasets for Spend (bars) by region
+        const weeklyByRegion = {};
+        weeklyFiltered.forEach(r => {
+          if(!weeklyByRegion[r.region]) weeklyByRegion[r.region] = [];
+          weeklyByRegion[r.region].push(r);
+        });
+
+        const spendDatasets = Object.entries(weeklyByRegion).map(([region, rows]) => {
+          const byPeriod = {};
+          rows.forEach(r => { byPeriod[r.period] = r.spend; });
+          const color = REGION_COLORS[region] || '#6b7280';
+          return {
+            label: region + ' Spend',
+            data: periods.map(p => byPeriod[p] || 0),
+            backgroundColor: color,
+            type: 'bar',
+            yAxisID: 'y'
+          };
+        });
+
+        // Create datasets for Avg CPL (lines) by region
+        const cplDatasets = Object.entries(weeklyByRegion).map(([region, rows]) => {
+          const byPeriod = {};
+          rows.forEach(r => { byPeriod[r.period] = r.avgCpl; });
+          const color = REGION_COLORS[region] || '#6b7280';
+          return {
+            label: region + ' Avg CPL',
+            data: periods.map(p => byPeriod[p] || null),
+            borderColor: color,
+            backgroundColor: color,
+            type: 'line',
+            yAxisID: 'y2',
+            borderWidth: 3,
+            pointRadius: 4,
+            tension: 0.3
+          };
+        });
+
+        makeChart('weeklyChart', {
+          type: 'bar',
+          data: {
+            labels: periods,
+            datasets: [...spendDatasets, ...cplDatasets]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: { display: true, position: 'bottom' },
+              tooltip: { backgroundColor: 'rgba(31,41,55,.9)' }
+            },
+            scales: {
+              x: { ...AXIS_STYLE_X },
+              y: {
+                type: 'linear',
+                position: 'left',
+                title: { display: true, text: 'Spend ($)' },
+                ticks: { ...AXIS_STYLE.ticks, callback: v => '$' + v.toLocaleString() }
+              },
+              y2: {
+                type: 'linear',
+                position: 'right',
+                title: { display: true, text: 'Avg CPL ($)' },
+                grid: { drawOnChartArea: false },
+                ticks: { ...AXIS_STYLE.ticks, callback: v => '$' + v.toFixed(2) }
+              }
+            }
+          }
+        });
+      }
+    }
+  },0);
+}
+
+// ─── Trend chart ─────────────────────────────────────────────────────────────
+function updateTrendChart(){
+  const metric=document.getElementById('trendMetric')?.value||'dailyLeads';
+  const view=document.getElementById('trendView')?.value||'region';
+  if(!_deltas.length)return;
+  const mLabel={dSpend:'Spend',dailyLeads:'Leads',cplD:'CPL',ctr:'CTR',leadCvr:'Lead CVR',frequency:'Frequency'};
+  document.getElementById('trendTitle').textContent=`Daily ${mLabel[metric]} trend`;
+  const trendDeltas=_deltas.filter(r=>r.campaign!=='Total');
+  const groups=groupBy(trendDeltas,view==='region'?'region':'campaign');
+  const allDates=[...new Set(trendDeltas.map(r=>r.dateStr))].sort();
+  let ci=0;
+  const datasets=Object.entries(groups).map(([key,rows])=>{
+    const byDate={};rows.forEach(r=>{if(byDate[r.dateStr]==null||isNaN(byDate[r.dateStr]))byDate[r.dateStr]=r[metric];});
+    const color=(view==='region'?REGION_COLORS[key]:null)||CAMP_COLORS[ci++%CAMP_COLORS.length];
+    return{label:key,data:allDates.map(d=>{const v=byDate[d];return(v==null||isNaN(v))?null:+v.toFixed(4);}),
+      borderColor:color,backgroundColor:color+'18',borderWidth:2,pointRadius:allDates.length>30?0:3,tension:0.3,spanGaps:true};
+  });
+  const leg=document.getElementById('trendLegend');
+  if(leg)leg.innerHTML=datasets.map(d=>`<span class="legend-item"><span class="legend-dot" style="background:${d.borderColor}"></span>${d.label}</span>`).join('');
+  const isPct=['ctr','leadCvr'].includes(metric);
+  const isPlain=['dailyLeads','frequency'].includes(metric);
+  makeChart('trendChart',{type:'line',data:{labels:allDates,datasets},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(31,41,55,.9)',titleFont:{size:12,family:'Inter'},bodyFont:{size:12,family:'Inter'},padding:12,cornerRadius:8}},
+      scales:{x:{...AXIS_STYLE_X,ticks:{...AXIS_STYLE_X.ticks,autoSkip:true,maxTicksLimit:12}},
+        y:{...AXIS_STYLE,ticks:{...AXIS_STYLE.ticks,callback:v=>isPct?(v*100).toFixed(1)+'%':isPlain?v.toLocaleString():'$'+v.toLocaleString()}}}}});
+}
+
+// ─── Regional Trends & Key Actions ───────────────────────────────────────────
+function updateSingleRegionalChart(region){
+  if(!_deltas.length)return;
+  const canvasEl=document.getElementById('regionalTrend_'+region);
+  if(!canvasEl)return;
+
+  const metric=document.getElementById('regionalMetric_'+region)?.value||'dailyLeads';
+  const isPct=['ctr','leadCvr'].includes(metric);
+  const isPlain=['dailyLeads','frequency'].includes(metric);
+  const yFmtTick=v=>{
+    if(metric==='dSpend')return'$'+Math.round(v).toLocaleString();
+    if(metric==='cplD')return'$'+Number(v).toFixed(2);
+    if(metric==='ctr'||metric==='leadCvr')return(v*100).toFixed(1)+'%';
+    if(metric==='dailyLeads')return Math.round(v).toLocaleString();
+    if(metric==='frequency')return Number(v).toFixed(1)+'x';
+    return v;
+  };
+  const yFmt=v=>{
+    if(metric==='dSpend')return'$'+Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+    if(metric==='cplD')return'$'+Number(v).toFixed(2);
+    if(metric==='ctr'||metric==='leadCvr')return(v*100).toFixed(2)+'%';
+    if(metric==='dailyLeads')return Math.round(v).toLocaleString()+' leads';
+    if(metric==='frequency')return Number(v).toFixed(2)+'x';
+    return v;
+  };
+
+  const regionDeltas=_deltas.filter(r=>r.region===region&&r.campaign!=='Total');
+  if(!regionDeltas.length)return;
+
+  const camps=[...new Set(regionDeltas.map(r=>r.campaign))];
+  const allDates=[...new Set(regionDeltas.map(r=>r.dateStr))].sort();
+
+  const keyActionRows=FILTERED.filter(r=>
+    r.region===region&&r.campaign!=='Total'&&(r.keyActionsEmoji||r.keyActions)
+  );
+  const annotByDate={};
+  keyActionRows.forEach(r=>{
+    if(!annotByDate[r.dateStr])annotByDate[r.dateStr]=[];
+    annotByDate[r.dateStr].push({campaign:r.campaign,emoji:r.keyActionsEmoji||'📌'});
+  });
+  const annotations=Object.entries(annotByDate).map(([d,items])=>({
+    x:d,emoji:items.map(i=>i.emoji).join(''),items
+  }));
+
+  let ci=0;
+  const datasets=camps.map(camp=>{
+    const isClosed=camp.startsWith('Closed_');
+    const byDate={};
+    regionDeltas.filter(r=>r.campaign===camp).forEach(r=>{byDate[r.dateStr]=r[metric];});
+    const color=CAMP_COLORS[ci++%CAMP_COLORS.length];
+    return{
+      label:isClosed?camp.replace(/^Closed_/,'')+'  (closed)':camp,
+      data:allDates.map(d=>{const v=byDate[d];return(v==null||isNaN(v))?null:isPct?+v.toFixed(4):isPlain?Math.round(v):+v.toFixed(2);}),
+      borderColor:color,backgroundColor:color+'18',
+      borderWidth:isClosed?1.5:2,
+      borderDash:isClosed?[5,4]:[],
+      pointRadius:allDates.length>40?0:3,
+      tension:0.3,spanGaps:true,
+      order:isClosed?1:0
+    };
+  });
+
+  const annotList=annotations.map(ann=>({
+    index:allDates.indexOf(ann.x),emoji:ann.emoji
+  })).filter(a=>a.index>=0);
+
+  const legEl=document.getElementById('regionalLegend_'+region);
+  if(legEl)legEl.innerHTML=datasets.map(d=>`<span class="legend-item"><span class="legend-dot" style="background:${d.borderColor}"></span>${d.label}</span>`).join('');
+
+  destroyChart('regionalTrend_'+region);
+  const ctx2=document.getElementById('regionalTrend_'+region);
+  if(!ctx2)return;
+  CHARTS['regionalTrend_'+region]=new Chart(ctx2,{
+    type:'line',
+    data:{labels:allDates,datasets},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:false},
+        keyActionAnnot:{annotations:annotList},
+        tooltip:{
+          backgroundColor:'rgba(31,41,55,.9)',titleFont:{size:12,family:'Inter'},
+          bodyFont:{size:12,family:'Inter'},padding:12,cornerRadius:8,
+          callbacks:{
+            label(ti){return ti.dataset.label+': '+yFmt(ti.parsed.y);},
+            afterBody(tis){
+              const date=tis[0]?.label;
+              const items=annotByDate[date];
+              if(!items?.length)return[];
+              return['',items.map(i=>`${i.emoji}  ${i.campaign}`).join('   ')];
+            }
+          }
+        }
+      },
+      scales:{
+        x:{...AXIS_STYLE_X,ticks:{...AXIS_STYLE_X.ticks,autoSkip:true,maxTicksLimit:12}},
+        y:{...AXIS_STYLE,ticks:{...AXIS_STYLE.ticks,callback:yFmtTick}}
+      }
+    },
+  });
+
+  const actEl=document.getElementById('regionalActions_'+region);
+  if(actEl)actEl.innerHTML='';
+}
+
+function updateRegionalTrendCharts(){
+  ['EMEA','INDIA','NA','JP','TH'].forEach(region=>updateSingleRegionalChart(region));
+}
+
+// ─── Section nav ─────────────────────────────────────────────────────────────
+function refreshSectionNav(){
+  const nav=document.getElementById('sectionNav');
+  const inner=document.getElementById('sectionNavInner');
+  if(!nav||!inner)return;
+  const sections=[...document.querySelectorAll('#mainContent .section')];
+  if(!sections.length){nav.style.display='none';return;}
+  inner.innerHTML='';
+  sections.forEach((sec,i)=>{
+    if(sec.dataset.noNav)return;
+    const heading=sec.querySelector('.section-heading');
+    if(!heading)return;
+    const text=heading.textContent.trim();
+    const m=text.match(/^(\d+)\s*·\s*(.+)$/);
+    const num=m?m[1]:String(i+1);
+    const label=m?m[2]:text;
+    if(i>0){const sep=document.createElement('div');sep.className='sec-nav-sep';inner.appendChild(sep);}
+    const btn=document.createElement('button');
+    btn.className='sec-nav-btn';
+    btn.innerHTML=`<span class="sec-nav-num">${num}</span>${label}`;
+    btn.onclick=()=>{
+      const navH=nav.offsetHeight;
+      const top=sec.getBoundingClientRect().top+window.scrollY-navH-8;
+      window.scrollTo({top,behavior:'smooth'});
+    };
+    inner.appendChild(btn);
+  });
+  nav.style.display='block';
+}
+
+// ─── Sortable summary tables ─────────────────────────────────────────────────
+function sortTable(which,field){
+  const state=which==='camp'?_campSort:_sqlSort;
+  if(state.field===field)state.dir*=-1;
+  else{state.field=field;state.dir=-1;}
+  const rows=which==='camp'?[..._aggRows]:[..._sqlTableRows];
+  rows.sort((a,b)=>{
+    const va=a[field],vb=b[field];
+    const na=isNaN(va)||!isFinite(va),nb=isNaN(vb)||!isFinite(vb);
+    if(na&&nb)return 0;if(na)return 1;if(nb)return-1;
+    return state.dir*(vb-va);
+  });
+  const tbody=document.getElementById(which==='camp'?'campSummaryTbody':'sqlSummaryTbody');
+  if(!tbody)return;
+  tbody.innerHTML=(which==='camp'
+    ?rows.map(r=>`<tr${r.campaign.startsWith('Closed_')?' style="color:var(--text3);"':''}>
+        <td class="bold">${campFullName(r.region,r.campaign)}</td>
+        <td class="num">${fmt.usd(r.spend)}</td>
+        <td class="num">${fmt.num(r.leads)}</td>
+        <td class="num">${fmt.usd(r.cpl)}</td>
+        <td class="num">${fmt.pct(r.ctr)}</td>
+        <td class="num">${fmt.pct(r.cvr)}</td>
+      </tr>`)
+    :rows.map(r=>`<tr>
+        <td class="bold">${campFullName(r.region,r.campaign)}</td>
+        <td class="num">${fmt.usd(r.spend)}</td>
+        <td class="num">${fmt.num(r.leads)}</td>
+        <td class="num">${fmt.num(r.sql)}</td>
+        <td class="num">${fmt.pct(r.sqlMql)}</td>
+        <td class="num">${fmt.usd(r.cpl)}</td>
+        <td class="num">${fmt.usd(r.costSql)}</td>
+      </tr>`)
+  ).join('');
+  const pfx=which==='camp'?'campTh':'sqlTh';
+  document.querySelectorAll(`[id^="${pfx}_"] .sort-icon`).forEach(el=>el.textContent='');
+  const ai=document.getElementById(`${pfx}_${field}`);
+  if(ai){const si=ai.querySelector('.sort-icon');if(si)si.textContent=state.dir===-1?' ▼':' ▲';}
+}
+
+// ─── Key Actions Log filter ───────────────────────────────────────────────────
+function filterKeyActionsLog(){
+  const region=document.getElementById('keyActionsRegionFilter')?.value||'';
+  document.querySelectorAll('#keyActionsTable tbody tr').forEach(tr=>{
+    tr.style.display=(!region||tr.dataset.region===region)?'':'none';
+  });
+}
+
+// ─── CSV Export ───────────────────────────────────────────────────────────────
+function exportCSV(){
+  if(!FILTERED.length){alert('No data to export');return;}
+  const h=['Date','Region','Campaign','Spend','Reach','Impressions','Link Clicks','Leads','CTR','CPL','Lead CVR','Frequency','Status','Key Actions'];
+  const rows=FILTERED.map(r=>[fmtDate(r.date),r.region,r.campaign,r.spend,r.reach,r.impressions,r.linkClicks,r.leads,r.ctr,r.cpl,r.leadCvr,r.frequency,r.status,r.keyActions]);
+  const csv=[h,...rows].map(r=>r.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download='meta_ads_'+fmtDate(new Date())+'.csv';a.click();
+}
+
+</script>
+<!-- ── Floating Filter Panel ─────────────────────────────────── -->
+<div id="ffp" style="
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 9999;
+  width: 260px;
+  user-select: none;
+  font-family: 'Inter', -apple-system, sans-serif;
+">
+  <!-- collapsed pill (always visible) -->
+  <div id="ffp-pill" style="
+    background: linear-gradient(135deg, #1568E5 0%, #0052CC 100%);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: grab;
+    box-shadow: 0 4px 12px rgba(21,104,229,0.35);
+    transition: box-shadow 0.2s;
+  ">
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0">
+      <path d="M2 4h12M4 8h8M6 12h4" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <span style="color:#fff;font-size:13px;font-weight:600;flex:1;">Filters</span>
+    <span id="ffp-badge" style="
+      background:rgba(255,255,255,0.25);
+      color:#fff;
+      font-size:11px;
+      font-weight:600;
+      padding:2px 7px;
+      border-radius:20px;
+      display:none;
+    "></span>
+    <svg id="ffp-arrow" width="10" height="10" viewBox="0 0 10 10" fill="none" style="transition:transform 0.2s">
+      <path d="M2 3.5L5 6.5L8 3.5" stroke="rgba(255,255,255,0.8)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <!-- expandable body -->
+  <div id="ffp-body" style="
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    margin-top:6px;
+    box-shadow:0 10px 24px rgba(0,0,0,0.12);
+    overflow:hidden;
+    max-height:0;
+    opacity:0;
+    transition:max-height 0.28s cubic-bezier(0.4,0,0.2,1), opacity 0.2s;
+    pointer-events:none;
+  ">
+    <div style="padding:16px 16px 12px;">
+
+      <!-- Region -->
+      <div style="margin-bottom:12px;">
+        <div style="font-size:11px;font-weight:600;color:#6b7280;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:6px;">Region</div>
+        <!-- cloned trigger pointing to same DOM -->
+        <div class="ms-wrap" style="width:100%;">
+          <div class="ms-trigger" id="ffpTriggerRegion" onclick="ffpToggle('Region')" style="width:100%;box-sizing:border-box;">
+            <span class="ms-trigger-text" id="ffpLabelRegion">All regions</span>
+            <span class="ms-arrow">▼</span>
+          </div>
+          <div class="ms-dropdown" id="ffpDropRegion" style="width:100%;">
+            <div class="ms-opt all-opt">
+              <input type="checkbox" id="ffpAllRegion" checked onchange="ffpToggleAll('Region')">
+              <label for="ffpAllRegion" style="cursor:pointer;">All regions</label>
+            </div>
+            <div id="ffpListRegion"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Campaign -->
+      <div style="margin-bottom:12px;">
+        <div style="font-size:11px;font-weight:600;color:#6b7280;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:6px;">Campaign</div>
+        <div class="ms-wrap" style="width:100%;">
+          <div class="ms-trigger" id="ffpTriggerCampaign" onclick="ffpToggle('Campaign')" style="width:100%;box-sizing:border-box;">
+            <span class="ms-trigger-text" id="ffpLabelCampaign">All campaigns</span>
+            <span class="ms-arrow">▼</span>
+          </div>
+          <div class="ms-dropdown" id="ffpDropCampaign" style="width:100%;max-height:180px;">
+            <div class="ms-search"><input type="text" placeholder="Search…" oninput="ffpFilterOpts('Campaign',this.value)"></div>
+            <div class="ms-opt all-opt">
+              <input type="checkbox" id="ffpAllCampaign" checked onchange="ffpToggleAll('Campaign')">
+              <label for="ffpAllCampaign" style="cursor:pointer;">All campaigns</label>
+            </div>
+            <div id="ffpListCampaign"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Date range -->
+      <div style="margin-bottom:12px;">
+        <div style="font-size:11px;font-weight:600;color:#6b7280;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:6px;">Date range</div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <input type="date" id="ffpStart" onchange="ffpApply()" style="flex:1;min-width:0;font-size:12px;padding:6px 8px;">
+          <span style="color:#9ca3af;font-size:12px;">–</span>
+          <input type="date" id="ffpEnd" onchange="ffpApply()" style="flex:1;min-width:0;font-size:12px;padding:6px 8px;">
+        </div>
+      </div>
+
+      <!-- Reset -->
+      <button onclick="ffpReset()" style="
+        width:100%;
+        padding:7px 0;
+        font-size:12px;
+        font-weight:500;
+        font-family:'Inter',sans-serif;
+        border:1px solid #e5e7eb;
+        border-radius:8px;
+        background:#f8fafc;
+        color:#6b7280;
+        cursor:pointer;
+        transition:background 0.15s;
+      " onmouseover="this.style.background='#EEF4FF';this.style.color='#1568E5'"
+         onmouseout="this.style.background='#f8fafc';this.style.color='#6b7280'">
+        Reset filters
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const ffp = document.getElementById('ffp');
+  const pill = document.getElementById('ffp-pill');
+  const body = document.getElementById('ffp-body');
+  const arrow = document.getElementById('ffp-arrow');
+  let expanded = false;
+
+  // ── hover expand/collapse ──────────────────────────────────────
+  ffp.addEventListener('mouseenter', () => {
+    expanded = true;
+    body.style.maxHeight = '520px';
+    body.style.opacity = '1';
+    body.style.pointerEvents = '';
+    arrow.style.transform = 'rotate(180deg)';
+    pill.style.borderRadius = '12px 12px 0 0';
+    pill.style.boxShadow = '0 2px 8px rgba(21,104,229,0.2)';
+  });
+  ffp.addEventListener('mouseleave', () => {
+    // don't collapse if a dropdown is open
+    if(document.querySelector('#ffpDropRegion.open,#ffpDropCampaign.open')) return;
+    expanded = false;
+    body.style.maxHeight = '0';
+    body.style.opacity = '0';
+    body.style.pointerEvents = 'none';
+    arrow.style.transform = '';
+    pill.style.borderRadius = '12px';
+    pill.style.boxShadow = '0 4px 12px rgba(21,104,229,0.35)';
+  });
+
+  // ── drag ──────────────────────────────────────────────────────
+  let dragging = false, ox = 0, oy = 0;
+  pill.style.cursor = 'grab';
+  pill.addEventListener('mousedown', e => {
+    if(e.target.closest('.ms-trigger')) return;
+    dragging = true;
+    ox = e.clientX - ffp.getBoundingClientRect().left;
+    oy = e.clientY - ffp.getBoundingClientRect().top;
+    pill.style.cursor = 'grabbing';
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', e => {
+    if(!dragging) return;
+    let x = e.clientX - ox;
+    let y = e.clientY - oy;
+    x = Math.max(8, Math.min(window.innerWidth - ffp.offsetWidth - 8, x));
+    y = Math.max(8, Math.min(window.innerHeight - ffp.offsetHeight - 8, y));
+    ffp.style.right = 'auto';
+    ffp.style.bottom = 'auto';
+    ffp.style.left = x + 'px';
+    ffp.style.top = y + 'px';
+  });
+  document.addEventListener('mouseup', () => { dragging = false; pill.style.cursor = 'grab'; });
+
+  // ── sync from original filter DOM (called after initFilters) ──
+  window.ffpSync = function() {
+    // mirror region list
+    const srcR = document.getElementById('msListRegion');
+    const dstR = document.getElementById('ffpListRegion');
+    dstR.innerHTML = '';
+    srcR.querySelectorAll('.ms-opt').forEach(opt => {
+      const cb = opt.querySelector('input[type=checkbox]');
+      if(!cb) return;
+      const val = cb.value;
+      const id = 'ffpR_' + val.replace(/\W/g,'_');
+      const div = document.createElement('div');
+      div.className = 'ms-opt'; div.dataset.val = val;
+      div.innerHTML = `<input type="checkbox" id="${id}" value="${val}" ${cb.checked?'checked':''} onchange="ffpOnChange('Region')"><label for="${id}" style="cursor:pointer;">${val}</label>`;
+      dstR.appendChild(div);
+    });
+    // mirror campaign list
+    const srcC = document.getElementById('msListCampaign');
+    const dstC = document.getElementById('ffpListCampaign');
+    dstC.innerHTML = '';
+    srcC.querySelectorAll('.ms-opt').forEach(opt => {
+      const cb = opt.querySelector('input[type=checkbox]');
+      if(!cb) return;
+      const val = cb.value;
+      const id = 'ffpC_' + val.replace(/\W/g,'_');
+      const div = document.createElement('div');
+      div.className = 'ms-opt'; div.dataset.val = val;
+      div.innerHTML = `<input type="checkbox" id="${id}" value="${val}" ${cb.checked?'checked':''} onchange="ffpOnChange('Campaign')"><label for="${id}" style="cursor:pointer;">${val}</label>`;
+      dstC.appendChild(div);
+    });
+    // dates
+    document.getElementById('ffpStart').value = document.getElementById('filterStart').value;
+    document.getElementById('ffpEnd').value   = document.getElementById('filterEnd').value;
+    ffpUpdateLabel('Region');
+    ffpUpdateLabel('Campaign');
+    ffpUpdateBadge();
+  };
+
+  // ── dropdown toggle (float panel) ─────────────────────────────
+  window.ffpToggle = function(name) {
+    const drop = document.getElementById('ffpDrop'+name);
+    const trig = document.getElementById('ffpTrigger'+name);
+    const isOpen = drop.classList.contains('open');
+    document.querySelectorAll('#ffp .ms-dropdown').forEach(d=>d.classList.remove('open'));
+    document.querySelectorAll('#ffp .ms-trigger').forEach(t=>t.classList.remove('open'));
+    if(!isOpen){ drop.classList.add('open'); trig.classList.add('open'); }
+  };
+
+  window.ffpToggleAll = function(name) {
+    const allCb = document.getElementById('ffpAll'+name);
+    document.querySelectorAll(`#ffpList${name} input[type=checkbox]`).forEach(cb => cb.checked = allCb.checked);
+    ffpPushToMain(name);
+  };
+
+  window.ffpOnChange = function(name) {
+    const cbs = [...document.querySelectorAll(`#ffpList${name} input[type=checkbox]`)];
+    document.getElementById('ffpAll'+name).checked = cbs.every(cb=>cb.checked);
+    ffpPushToMain(name);
+  };
+
+  window.ffpFilterOpts = function(name, q) {
+    document.querySelectorAll(`#ffpList${name} .ms-opt`).forEach(div => {
+      div.style.display = div.dataset.val.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+    });
+  };
+
+  // push ffp state → original hidden filter → applyFilters()
+  function ffpPushToMain(name) {
+    const ffpCbs = [...document.querySelectorAll(`#ffpList${name} input[type=checkbox]`)];
+    const mainList = document.getElementById('msList'+name);
+    mainList.querySelectorAll('input[type=checkbox]').forEach(cb => {
+      const mirror = ffpCbs.find(f=>f.value===cb.value);
+      if(mirror) cb.checked = mirror.checked;
+    });
+    const allChecked = ffpCbs.every(cb=>cb.checked);
+    document.getElementById('msAll'+name).checked = allChecked;
+    syncState(name);
+    ffpUpdateLabel(name);
+    ffpUpdateBadge();
+    applyFilters();
+  }
+
+  window.ffpApply = function() {
+    document.getElementById('filterStart').value = document.getElementById('ffpStart').value;
+    document.getElementById('filterEnd').value   = document.getElementById('ffpEnd').value;
+    ffpUpdateBadge();
+    applyFilters();
+  };
+
+  window.ffpReset = function() {
+    resetFilters();           // resets main panel
+    ffpSync();                // mirror back to float panel
+  };
+
+  function ffpUpdateLabel(name) {
+    const label = document.getElementById('ffpLabel'+name);
+    const all = [...document.querySelectorAll(`#ffpList${name} input[type=checkbox]`)];
+    const checked = all.filter(cb=>cb.checked);
+    if(!all.length || checked.length===all.length){
+      label.textContent = name==='Region'?'All regions':'All campaigns';
+    } else if(checked.length<=2){
+      label.innerHTML = checked.map(cb=>`<span class="ms-badge">${cb.value}</span>`).join('');
+    } else {
+      label.textContent = `${checked.length} selected`;
+    }
+  }
+
+  function ffpUpdateBadge() {
+    const badge = document.getElementById('ffp-badge');
+    const rAll  = document.getElementById('ffpAllRegion')?.checked ?? true;
+    const cAll  = document.getElementById('ffpAllCampaign')?.checked ?? true;
+    const hasDateFilter = (() => {
+      const s = document.getElementById('ffpStart')?.value;
+      const e = document.getElementById('ffpEnd')?.value;
+      const os = document.getElementById('filterStart')?.dataset?.init;
+      const oe = document.getElementById('filterEnd')?.dataset?.init;
+      return s && e && (s !== os || e !== oe);
+    })();
+    const count = (!rAll?1:0) + (!cAll?1:0);
+    if(count > 0){
+      badge.style.display = '';
+      badge.textContent = count + (count===1?' filter':' filters');
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  // close float dropdowns on outside click
+  document.addEventListener('click', e => {
+    if(!e.target.closest('#ffp .ms-wrap')){
+      document.querySelectorAll('#ffp .ms-dropdown').forEach(d=>d.classList.remove('open'));
+      document.querySelectorAll('#ffp .ms-trigger').forEach(t=>t.classList.remove('open'));
+    }
+  });
+})();
+</script>
+
+<!-- ================================================================
+     DEMO DATA MODE
+     This block replaces the live Google-Apps-Script / xlsx-upload data
+     sources with generated sample data, so the dashboard is fully
+     populated the moment the page loads on a static personal site.
+     The "Connect" and "Upload file" buttons are left in place and both
+     still work — they just reload a fresh batch of sample data instead
+     of hitting the real Meta Ads API / reading a real file.
+     ================================================================ -->
+<script>
+(function(){
+  // ── seeded RNG so the demo looks the same on every load ──────────
+  function mulberry32(a){
+    return function(){
+      a|=0;a=a+0x6D2B79F5|0;
+      let t=Math.imul(a^a>>>15,1|a);
+      t=t+Math.imul(t^t>>>7,61|t)^t;
+      return((t^t>>>14)>>>0)/4294967296;
+    };
+  }
+  const rand=mulberry32(20260705);
+  const rnd=(min,max)=>min+rand()*(max-min);
+  const rndInt=(min,max)=>Math.floor(rnd(min,max+1));
+  const choice=arr=>arr[Math.floor(rand()*arr.length)];
+  const addDays=(d,n)=>{const r=new Date(d);r.setDate(r.getDate()+n);return r;};
+
+  const TODAY=new Date(2026,6,5); // fixed "as of" date for the demo
+  const MIN_START=addDays(TODAY,-180);
+
+  // Uses the (demo) campaign map defined at the top of the page.
+  // The leading date in each full name is parsed as the campaign start
+  // date; "Closed_" campaigns get an end date in the past so the
+  // "closed campaign" UI paths render too.
+  const CAMPAIGNS=CAMPAIGN_FULL_NAME;
+
+  const REGION_BUDGET={EMEA:[140,420],INDIA:[35,130],NA:[110,340],JP:[55,190],TH:[28,110]};
+  const REGION_CPM={EMEA:[8,17],INDIA:[2,6],NA:[10,20],JP:[6,14],TH:[3,8]};
+  const REGION_CPL_MULT={EMEA:1.15,INDIA:0.7,NA:1.2,JP:0.9,TH:0.65};
+  const REGION_SQL_RATE={EMEA:0.108,INDIA:0.05,NA:0.062,JP:0.05,TH:0.04};
+  const REGION_COUNTRIES={
+    EMEA:['United Kingdom','Germany','France','United Arab Emirates','Saudi Arabia','Italy','Spain','South Africa','Qatar'],
+    INDIA:['India'], NA:['United States','Canada'], JP:['Japan'], TH:['Thailand']
+  };
+
+  function buildCampaignMeta(){
+    const metas=[];
+    for(const key in CAMPAIGNS){
+      const sep=key.indexOf('|');
+      const region=key.substring(0,sep), campaign=key.substring(sep+1);
+      const fullName=CAMPAIGNS[key];
+      const m=fullName.match(/^(\d{4})(\d{2})(\d{2})/);
+      let start=m?new Date(+m[1],+m[2]-1,+m[3]):addDays(TODAY,-60);
+      if(start<MIN_START)start=new Date(MIN_START);
+      const closed=/Closed_/.test(campaign)||/^Test/.test(fullName);
+      let end;
+      if(closed){
+        end=addDays(start,rndInt(18,75));
+        if(end>addDays(TODAY,-1))end=addDays(TODAY,-rndInt(3,20));
+        if(end<=start)end=addDays(start,10);
+      } else {
+        end=new Date(TODAY);
+      }
+      if(end>TODAY)end=new Date(TODAY);
+      if(start>=end)start=addDays(end,-14);
+      metas.push({region,campaign,fullName,start,end,
+        targetCpl:rnd(10,42)*REGION_CPL_MULT[region],
+        targetCpm:rnd(REGION_CPM[region][0],REGION_CPM[region][1]),
+        targetCtr:rnd(0.009,0.028),
+        targetFreq:rnd(1.25,2.3),
+        budgetRange:REGION_BUDGET[region]});
+    }
+    return metas;
+  }
+
+  function generateFakeData(){
+    const metas=buildCampaignMeta();
+    const rawRows=[], sqlRows=[];
+    let leadSeq=1;
+    metas.forEach(meta=>{
+      let cumSpend=0,cumLeads=0,cumImpr=0,cumClicks=0;
+      const cplHist=[];
+      let d=new Date(meta.start), dayIdx=0;
+      while(d<=meta.end){
+        const isLearning=dayIdx<7;
+        const pauseDay=rand()<0.03;
+        let dailySpend=pauseDay?0:rnd(meta.budgetRange[0],meta.budgetRange[1])*rnd(0.6,1.35);
+        if(isLearning)dailySpend*=rnd(0.4,0.8);
+        dailySpend=Math.round(dailySpend*100)/100;
+
+        const dailyLeadsF=dailySpend>0?dailySpend/(meta.targetCpl*rnd(0.75,1.3)):0;
+        const dailyNewLeads=Math.max(0,Math.round(dailyLeadsF));
+
+        const dailyImpr=dailySpend>0?Math.round(dailySpend/(meta.targetCpm*rnd(0.8,1.25))*1000):0;
+        const dailyClicks=Math.round(dailyImpr*meta.targetCtr*rnd(0.75,1.3));
+
+        cumSpend+=dailySpend; cumLeads+=dailyNewLeads; cumImpr+=dailyImpr; cumClicks+=dailyClicks;
+        const cumReach=Math.round(cumImpr/meta.targetFreq);
+
+        const ctr=dailyImpr>0?dailyClicks/dailyImpr:NaN;
+        const leadCvr=dailyClicks>0?dailyNewLeads/dailyClicks:NaN;
+        const marginalCpl=dailyNewLeads>0?dailySpend/dailyNewLeads:NaN;
+        cplHist.push(marginalCpl);
+        const last3=cplHist.slice(-3).filter(x=>!isNaN(x));
+        const avgCpl3d=last3.length?last3.reduce((a,b)=>a+b,0)/last3.length:NaN;
+        const frequency=cumReach>0?cumImpr/cumReach:NaN;
+
+        let status='';
+        if(isLearning&&rand()<0.5)status='Learning phase';
+        else if(frequency>2.1&&rand()<0.4)status='Frequency Fatigue';
+
+        let keyActions='',keyActionsEmoji='';
+        if(rand()<0.035){
+          const acts=[['Increased daily budget','💰'],['Refreshed ad creative','🎨'],['Paused underperforming ad set','⏸'],['Expanded audience targeting','🎯'],['Adjusted bid strategy','⚙️']];
+          const a=choice(acts); keyActions=a[0]; keyActionsEmoji=a[1];
+        }
+
+        rawRows.push({date:new Date(d),dateStr:fmtDate(d),region:meta.region,campaign:meta.campaign,
+          spend:+cumSpend.toFixed(2),reach:cumReach,impressions:cumImpr,linkClicks:cumClicks,leads:cumLeads,
+          dailyNewLeads,ctr,cpl:marginalCpl,leadCvr,frequency,avgCpl3d,status,keyActions,keyActionsEmoji});
+
+        for(let i=0;i<dailyNewLeads;i++){
+          const isMql=rand()<0.82;
+          const isSql=isMql&&rand()<(REGION_SQL_RATE[meta.region]/0.82);
+          let converted=null;
+          if(isSql){converted=addDays(d,rndInt(1,28)); if(converted>TODAY)converted=new Date(TODAY);}
+          sqlRows.push({leadId:'L'+(leadSeq++),adset:meta.fullName,stage:isSql?'SQL':(isMql?'MQL':'New Lead'),
+            created:new Date(d),converted,country:choice(REGION_COUNTRIES[meta.region]),
+            dup:rand()<0.04?'是':'否',isSql,isMql,region:meta.region,campaign:meta.campaign});
+        }
+        d=addDays(d,1); dayIdx++;
+      }
+    });
+    return{rawRows,sqlRows};
+  }
+
+  function loadDemoData(){
+    const{rawRows,sqlRows}=generateFakeData();
+    RAW=rawRows;
+    SQL_RAW=sqlRows;
+    setStatus('gasStatus','ok',`Loaded ${RAW.length} rows`);
+    setStatus('sqlStatus','ok',`Loaded ${SQL_RAW.length} leads`);
+    initFilters();
+    applyFilters();
+  }
+
+  // Buttons stay wired up — clicking them just reloads a fresh demo batch
+  // instead of calling the real Google Apps Script endpoint / parsing a
+  // real uploaded file (there's no backend on a static personal site).
+  window.loadFromGAS=function(){
+    setStatus('gasStatus','loading','Connecting…');
+    setTimeout(loadDemoData,350);
+  };
+  window.loadSQLFile=function(){
+    setStatus('sqlStatus','loading','Parsing…');
+    setTimeout(loadDemoData,350);
+  };
+
+  // Auto-populate on page load so it looks like both sources are
+  // already connected the moment the page opens.
+  loadDemoData();
+})();
+</script>
+
+</body>
+</html>
