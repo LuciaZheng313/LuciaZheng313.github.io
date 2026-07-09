@@ -222,6 +222,9 @@ h1 em{font-style:italic;color:var(--text2)}
 .modal-accent{width:40px;height:4px;border-radius:2px;margin-bottom:20px}
 .modal-eyebrow{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
 .modal-title{font-size:22px;font-weight:500;letter-spacing:-.02em;margin-bottom:24px}
+.modal-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:6px 13px;border-radius:20px;background:var(--bg2);border:0.5px solid var(--border2);color:var(--text);text-decoration:none;margin:0 0 20px;transition:background .15s}
+.modal-link:hover{background:var(--bg3)}
+.modal-link svg{width:14px;height:14px}
 .modal-section{margin-bottom:20px}
 .modal-section-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:8px}
 .modal-text{font-size:14px;color:var(--text2);line-height:1.75}
@@ -486,7 +489,7 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
             <span class="work-period">Jan 2026 – present</span>
           </div>
           <p class="work-role">Course Assistant</p>
-          <p class="work-desc">Java tutoring and forum Q&amp;A for introductory CS students. Guided students through problem-solving logic, not just syntax.</p>
+          <p class="work-desc">Provided 2 hours/week of online Java tutoring and forum Q&A for introductory CS students. Assisted with debugging code, explaining core programming concepts, and guiding students through Machine Projects while promoting independent problem-solving.</p>
           <div class="work-tags">
             <span class="wtag">Java</span><span class="wtag">Tutoring</span>
           </div>
@@ -505,16 +508,16 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
         <div class="pc-accent" style="background:var(--purple)"></div>
         <p class="pc-eyebrow">2026 · Coohom</p>
         <p class="pc-title"><svg class="pc-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Multi-Region Meta Ads Dashboard</p>
-        <p class="pc-desc">Meta API → Apps Script → Sheets → single-file HTML dashboard. Automated daily reporting across 5 regions.</p>
+        <p class="pc-desc">Meta Ads spend across five regions used to live in scattered manual exports. I built an end-to-end reporting pipeline from scratch, starting as a local prototype and iterating into a fully automated, anomaly-alerting dashboard.</p>
         <div class="pc-tags"><span class="pc-tag-pill">Python</span><span class="pc-tag-pill">Apps Script</span><span class="pc-tag-pill">Meta API</span></div>
         <span class="project-arrow">↗</span>
       </div></div>
       <div class="reveal"><div class="project-card reveal-inner" onclick="openModal('p2')">
         <div class="pc-accent" style="background:var(--teal)"></div>
-        <p class="pc-eyebrow">2025 · Data Analysis</p>
-        <p class="pc-title">Identity V Survivor Performance Analysis</p>
-        <p class="pc-desc">Classified 49 characters, ran 1k-iteration simulation, applied linear regression.</p>
-        <div class="pc-tags"><span class="pc-tag-pill">Python</span><span class="pc-tag-pill">Matplotlib</span><span class="pc-tag-pill">Simulation</span></div>
+        <p class="pc-eyebrow">2026 · Systems / Tooling</p>
+        <p class="pc-title">Intranet VPN Switcher</p>
+        <p class="pc-desc">A Chrome extension (macOS) that warns you when a proxy is silently blocking access to your internal sites, and gives you a one-click way to turn it off.</p>
+        <div class="pc-tags"><span class="pc-tag-pill">Chrome Extension</span><span class="pc-tag-pill">Python</span><span class="pc-tag-pill">macOS System</span></div>
         <span class="project-arrow">↗</span>
       </div></div>
       <div class="reveal"><div class="project-card reveal-inner" onclick="openModal('p3')">
@@ -852,7 +855,7 @@ const projects = {
     ],
     tags:['Python','Streamlit','Google Sheets API','Apps Script','Meta Marketing API','Chart.js','SheetJS']
   },
-  p2:{accent:'#0F6E56',label:'2025 · Data Analysis',title:'Identity V Survivor Performance Analysis',problem:'Which survivor characters are actually most efficient at completing objectives? 49 characters with overlapping stats, hard to compare intuitively.',what:'Classified all 49 characters into 4 functional roles (rescue, fast/normal/slow decoders) using threshold logic on Rocket Chair Ascent Time (60s) and Decoding Time (75s/85s/95s). Ran a 1,000 iteration simulation to estimate team efficiency for a standard 4 person team composition. Applied linear regression on standardized features to find the strongest predictors of decoding time.',result:'A randomly composed team takes an average of 435 seconds to decode all 5 machines, but the range between the best and worst team compositions spans over a minute (404s to 475s), meaning team composition alone meaningfully changes survival risk. Regression also revealed a counterintuitive tradeoff: characters strong at self healing tend to be worse decoders, while the "Rescue Role" trait carries a consistent decoding penalty, suggesting the game enforces a genuine specialization tradeoff rather than letting any single character be good at everything.',tags:['Python','Pandas','NumPy','Matplotlib','Simulation','Linear Regression']},
+  p2:{accent:'#0F6E56',label:'2026 · Systems / Tooling',title:'Intranet VPN Switcher',github:'https://github.com/LuciaZheng313/intranet-vpn-switcher',problem:'Daily work often requires switching between two incompatible network states: a proxy/VPN on for general browsing, and the proxy off for accessing internal company sites. Forgetting to switch causes internal tools to fail silently, connections time out or DNS resolution fails with no visible error, and in some cases (like autosave on internal wiki tools) content gets lost without warning.',what:"A Chrome extension for macOS with two independent detection layers: one watches for connection failures against user-configured internal domain/IP patterns (supporting wildcards), and an optional second layer watches for a specific 'unsaved changes' UI state on a user-specified internal wiki URL, detected through markup rather than text so it works across interface languages. Both are fully configurable through an options page, not hardcoded, so the extension generalizes to any internal domain setup. When a proxy conflict is detected, a one-click action disables the system proxy via a local Python script communicating over Chrome's Native Messaging API, correctly toggling HTTP, HTTPS, and SOCKS together across all active network interfaces.",result:"Widely used among team members because we share the same problems. The harder part of this project wasn't the extension logic, but debugging macOS's permission model (TCC silently blocking scripts run from common folders like Downloads) and getting proxy state changes to apply consistently across multiple proxy types and network services.",tags:['Chrome Extension','Native Messaging','Python','macOS System Debugging','Networking']},
   p3:{accent:'#854F0B',label:'2025 · Android Development',title:'Event Filtering Interface',problem:'How do multi-stage filters compose correctly when UI state must stay in sync with async API responses?',what:'Extended an instructor-provided Android skeleton to implement sequential filter logic (date, virtual, favorites, search), RecyclerView display, and async error handling.',result:'Gained concrete understanding of client-side data pipelines — directly applicable to dashboard work.',tags:['Java','Android','RecyclerView','Async / API','State management']}
 }
 
@@ -863,6 +866,7 @@ function openModal(id){
     <div class="modal-accent" style="background:${p.accent}"></div>
     <p class="modal-eyebrow">${p.label}</p>
     <h2 class="modal-title">${p.title}</h2>
+    ${p.github ? `<a href="${p.github}" class="modal-link" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>View on GitHub</a>` : ''}
     <div class="modal-section"><p class="modal-section-label">Problem</p><p class="modal-text">${p.problem}</p></div>
     <div class="modal-section"><p class="modal-section-label">What I built</p><p class="modal-text">${p.what}</p></div>
     <div class="modal-section"><p class="modal-section-label">Result</p><p class="modal-text">${p.result}</p></div>
