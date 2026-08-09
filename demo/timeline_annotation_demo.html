@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Key Action Timeline · Interactive Demo</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=fallback');
+
+:root{
+  --color-gray-200:#e5e7eb; --color-gray-300:#bfc4cd; --color-gray-600:#4b5563; --color-gray-900:#111827;
+  --primary:#1568E5; --primary-light:#EEF4FF;
+  --text:var(--color-gray-900); --text2:var(--color-gray-600); --text3:#9ca3af;
+  --bg:#FFFFFF; --bg2:#EEF4FF; --bg3:#F8FAFC; --border:var(--color-gray-200);
+  --shadow-md:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);
+  --shadow-lg:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -2px rgba(0,0,0,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',-apple-system,'Segoe UI',sans-serif;font-size:13px;color:var(--text);background:var(--bg2);line-height:1.5715;}
+.page{max-width:1000px;margin:0 auto;padding:36px 40px 64px;}
+
+.intro{margin-bottom:24px;}
+.intro h1{font-size:1.5rem;font-weight:700;letter-spacing:-.01em;margin-bottom:6px;}
+.intro p{color:var(--text2);font-size:.875rem;max-width:640px;}
+.intro .note{display:inline-block;margin-top:10px;font-size:.75rem;color:var(--primary);background:var(--primary-light);padding:4px 10px;border-radius:20px;font-weight:600;}
+
+.card{background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-md);padding:24px;}
+.card-title{font-size:.875rem;font-weight:600;color:var(--text);margin-bottom:2px;}
+.card-sub{font-size:.75rem;color:var(--text3);margin-bottom:16px;}
+
+.chart-wrap{position:relative;height:340px;}
+
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:.8rem;color:var(--text2);margin-top:18px;padding-top:16px;border-top:1px solid var(--border);}
+.legend-item{display:flex;align-items:center;gap:7px;}
+.legend-emoji{font-size:15px;}
+
+.toggle-row{display:flex;align-items:center;gap:10px;margin-top:14px;}
+.toggle-row label{font-size:.8rem;color:var(--text2);display:flex;align-items:center;gap:6px;cursor:pointer;}
+.toggle-row input{accent-color:var(--primary);width:14px;height:14px;cursor:pointer;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="intro">
+    <h1>Key Action Timeline</h1>
+    <p>Campaign decisions (creative swaps, audience changes, budget shifts) plotted directly on the performance trend line, so the impact of each action is visible at a glance. Chart data below is randomly generated sample data, no real campaign information.</p>
+    <span class="note">Standalone Chart.js plugin demo</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">CPL Trend — Sample Campaign</div>
+    <div class="card-sub">Daily blended cost per lead, with key actions annotated</div>
+    <div class="chart-wrap">
+      <canvas id="trendChart"></canvas>
+    </div>
+    <div class="toggle-row">
+      <label><input type="checkbox" id="toggleAnnot" checked onchange="toggleAnnotations()"> Show action markers</label>
+    </div>
+    <div class="legend" id="legend"></div>
+  </div>
+
+</div>
+
+<script>
+// ─── Sample data (fully synthetic) ───
+const LABELS=[];
+const DATA=[];
+const startDate=new Date(2026,5,1);
+for(let i=0;i<28;i++){
+  const d=new Date(startDate);d.setDate(d.getDate()+i);
+  LABELS.push(d.getMonth()+1+'/'+d.getDate());
+}
+// hand-crafted-ish CPL curve so the annotations visibly correspond to shifts
+const base=[14.2,13.8,14.5,13.9,14.1,13.6,13.9, // week 1: steady
+            13.7,12.1,11.4,10.8,11.0,10.6,10.9, // week 2: creative refresh drops CPL
+            10.7,10.9,11.3,12.4,13.6,14.8,15.9, // week 3: fatigue creeps up
+            9.8,9.2,8.9,9.1,8.7,9.0,8.8];        // week 4: audience expansion recovers it
+DATA.push(...base);
+
+const ANNOTATIONS=[
+  {index:8,  emoji:'🎨', label:'Creative refresh'},
+  {index:19, emoji:'⚠️', label:'Creative fatigue observed'},
+  {index:21, emoji:'👥', label:'Audience expanded'}
+];
+
+let showAnnotations=true;
+
+// ─── Custom Chart.js plugin: draws dotted line + emoji marker at given indices ───
+const keyActionAnnot={
+  id:'keyActionAnnot',
+  afterDraw(chart){
+    if(!showAnnotations)return;
+    const{ctx,chartArea,scales}=chart;
+    if(!scales.x||!chartArea)return;
+
+    ANNOTATIONS.forEach(ann=>{
+      const xPx=scales.x.getPixelForValue(ann.index);
+      if(isNaN(xPx)||xPx<chartArea.left||xPx>chartArea.right)return;
+      ctx.save();
+      ctx.beginPath();ctx.setLineDash([3,3]);
+      ctx.strokeStyle='rgba(107,114,128,0.5)';ctx.lineWidth=1;
+      ctx.moveTo(xPx,chartArea.top);ctx.lineTo(xPx,chartArea.bottom);ctx.stroke();
+      ctx.restore();
+    });
+
+    const wrap=chart.canvas.parentElement;
+    let overlay=wrap.querySelector('.kaa-overlay');
+    if(!overlay){
+      overlay=document.createElement('div');
+      overlay.className='kaa-overlay';
+      overlay.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;';
+      wrap.appendChild(overlay);
+    }
+    overlay.innerHTML='';
+    ANNOTATIONS.forEach(ann=>{
+      const xPx=scales.x.getPixelForValue(ann.index);
+      if(isNaN(xPx)||xPx<chartArea.left||xPx>chartArea.right)return;
+      const el=document.createElement('span');
+      el.textContent=ann.emoji;
+      el.title=ann.label;
+      el.style.cssText=`position:absolute;left:${xPx}px;top:${chartArea.top+2}px;transform:translateX(-50%);font-size:15px;line-height:1;`;
+      overlay.appendChild(el);
+    });
+  }
+};
+Chart.register(keyActionAnnot);
+
+const ctx=document.getElementById('trendChart').getContext('2d');
+const chart=new Chart(ctx,{
+  type:'line',
+  data:{
+    labels:LABELS,
+    datasets:[{
+      label:'Blended CPL ($)',
+      data:DATA,
+      borderColor:'#1568E5',
+      backgroundColor:'rgba(21,104,229,0.08)',
+      borderWidth:2,
+      pointRadius:2,
+      pointHoverRadius:5,
+      tension:0.3,
+      fill:true
+    }]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    layout:{padding:{top:22}},
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        callbacks:{
+          label:ctx=>' $'+ctx.parsed.y.toFixed(2)
+        }
+      }
+    },
+    scales:{
+      y:{
+        beginAtZero:false,
+        ticks:{callback:v=>'$'+v}
+      },
+      x:{
+        ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:10}
+      }
+    }
+  }
+});
+
+function toggleAnnotations(){
+  showAnnotations=document.getElementById('toggleAnnot').checked;
+  const wrap=document.getElementById('trendChart').parentElement;
+  const overlay=wrap.querySelector('.kaa-overlay');
+  if(overlay)overlay.innerHTML='';
+  chart.update();
+}
+
+// ─── Legend ───
+document.getElementById('legend').innerHTML=ANNOTATIONS.map(a=>
+  `<div class="legend-item"><span class="legend-emoji">${a.emoji}</span>${a.label}</div>`
+).join('');
+</script>
+</body>
+</html>

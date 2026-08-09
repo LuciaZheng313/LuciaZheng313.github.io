@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sortable Summary Table · Interactive Demo</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=fallback');
+
+:root{
+  --color-gray-200:#e5e7eb; --color-gray-300:#bfc4cd; --color-gray-600:#4b5563; --color-gray-900:#111827;
+  --primary:#1568E5; --primary-light:#EEF4FF;
+  --text:var(--color-gray-900); --text2:var(--color-gray-600); --text3:#9ca3af;
+  --bg:#FFFFFF; --bg2:#EEF4FF; --bg3:#F8FAFC; --border:var(--color-gray-200);
+  --shadow-md:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',-apple-system,'Segoe UI',sans-serif;font-size:13px;color:var(--text);background:var(--bg2);line-height:1.5715;}
+.page{max-width:1000px;margin:0 auto;padding:36px 40px 64px;}
+
+.intro{margin-bottom:24px;}
+.intro h1{font-size:1.5rem;font-weight:700;letter-spacing:-.01em;margin-bottom:6px;}
+.intro p{color:var(--text2);font-size:.875rem;max-width:640px;}
+.intro .note{display:inline-block;margin-top:10px;font-size:.75rem;color:var(--primary);background:var(--primary-light);padding:4px 10px;border-radius:20px;font-weight:600;}
+
+.card{background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-md);padding:24px;}
+.card-title{font-size:.875rem;font-weight:600;color:var(--text);margin-bottom:2px;}
+.card-sub{font-size:.75rem;color:var(--text3);margin-bottom:16px;}
+
+.table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);background:#fff;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+th{background:linear-gradient(180deg,var(--bg2) 0%,var(--bg3) 100%);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);padding:12px;text-align:left;border-bottom:2px solid var(--primary);}
+td{padding:12px;border-bottom:1px solid var(--border);}
+tbody tr:hover{background:var(--bg2);}
+tbody tr:last-child td{border-bottom:none;}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:500;}
+th.num{text-align:right;}
+th.sortable{cursor:pointer;user-select:none;}
+th.sortable:hover{color:var(--primary);}
+.sort-icon{font-size:.65em;color:var(--primary);}
+.bold{font-weight:600;}
+.region-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="intro">
+    <h1>Sortable Summary Table</h1>
+    <p>Click any column header to sort the campaign summary table by that metric, click again to reverse the order. Data below is randomly generated sample data, no real campaign information.</p>
+    <span class="note">Standalone UI component demo</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Campaign Summary</div>
+    <div class="card-sub">Click a column header to sort</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Campaign</th>
+            <th class="num sortable" id="th_spend" onclick="sortTable('spend')">Spend<span class="sort-icon"></span></th>
+            <th class="num sortable" id="th_leads" onclick="sortTable('leads')">Leads<span class="sort-icon"></span></th>
+            <th class="num sortable" id="th_cpl" onclick="sortTable('cpl')">CPL<span class="sort-icon"> ▼</span></th>
+            <th class="num sortable" id="th_ctr" onclick="sortTable('ctr')">CTR<span class="sort-icon"></span></th>
+            <th class="num sortable" id="th_cvr" onclick="sortTable('cvr')">Lead CVR<span class="sort-icon"></span></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── Sample data (fully synthetic) ───
+const REGION_COLORS={'Region A':'#1568E5','Region B':'#3ec972','Region C':'#67bfff','Region D':'#f0bb33','Region E':'#ff5656'};
+const ROWS=[
+  {region:'Region A', campaign:'Campaign A'},
+  {region:'Region A', campaign:'Campaign B'},
+  {region:'Region B', campaign:'Campaign C'},
+  {region:'Region B', campaign:'Campaign D'},
+  {region:'Region C', campaign:'Campaign E'},
+  {region:'Region D', campaign:'Campaign F'},
+  {region:'Region D', campaign:'Campaign G'},
+  {region:'Region E', campaign:'Campaign H'},
+];
+function seededRand(seed){let x=Math.sin(seed)*10000;return x-Math.floor(x);}
+let seed=7;
+ROWS.forEach(r=>{
+  r.spend=Math.round((600+seededRand(seed++)*4000)*100)/100;
+  r.leads=Math.round(20+seededRand(seed++)*260);
+  r.cpl=r.spend/r.leads;
+  r.ctr=0.003+seededRand(seed++)*0.007;
+  r.cvr=0.04+seededRand(seed++)*0.13;
+});
+
+const fmt={
+  num:v=>(v==null||isNaN(v))?'—':Number(v).toLocaleString('en-US',{maximumFractionDigits:0}),
+  usd:v=>(v==null||isNaN(v)||!isFinite(v))?'—':'$'+Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}),
+  pct:v=>(v==null||isNaN(v)||!isFinite(v))?'—':(v*100).toFixed(2)+'%',
+};
+
+// ─── Sortable table logic (same pattern as the full dashboard) ───
+let sortState={field:'cpl',dir:-1};
+
+function sortTable(field){
+  if(sortState.field===field)sortState.dir*=-1;
+  else{sortState.field=field;sortState.dir=-1;}
+  render();
+}
+
+function render(){
+  const rows=[...ROWS].sort((a,b)=>{
+    const va=a[sortState.field],vb=b[sortState.field];
+    const na=isNaN(va)||!isFinite(va),nb=isNaN(vb)||!isFinite(vb);
+    if(na&&nb)return 0;if(na)return 1;if(nb)return-1;
+    return sortState.dir*(vb-va);
+  });
+
+  document.getElementById('tbody').innerHTML=rows.map(r=>`
+    <tr>
+      <td class="bold"><span class="region-dot" style="background:${REGION_COLORS[r.region]}"></span>${r.region} · ${r.campaign}</td>
+      <td class="num">${fmt.usd(r.spend)}</td>
+      <td class="num">${fmt.num(r.leads)}</td>
+      <td class="num">${fmt.usd(r.cpl)}</td>
+      <td class="num">${fmt.pct(r.ctr)}</td>
+      <td class="num">${fmt.pct(r.cvr)}</td>
+    </tr>
+  `).join('');
+
+  document.querySelectorAll('.sort-icon').forEach(el=>el.textContent='');
+  const activeTh=document.getElementById('th_'+sortState.field);
+  if(activeTh){
+    const icon=activeTh.querySelector('.sort-icon');
+    if(icon)icon.textContent=sortState.dir===-1?' ▼':' ▲';
+  }
+}
+
+render();
+</script>
+</body>
+</html>

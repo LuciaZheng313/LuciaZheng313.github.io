@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Dimensional Trend Chart · Interactive Demo</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=fallback');
+
+:root{
+  --color-gray-200:#e5e7eb; --color-gray-300:#bfc4cd; --color-gray-600:#4b5563; --color-gray-900:#111827;
+  --primary:#1568E5; --primary-light:#EEF4FF;
+  --text:var(--color-gray-900); --text2:var(--color-gray-600); --text3:#9ca3af;
+  --bg:#FFFFFF; --bg2:#EEF4FF; --bg3:#F8FAFC; --border:var(--color-gray-200);
+  --shadow-md:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',-apple-system,'Segoe UI',sans-serif;font-size:13px;color:var(--text);background:var(--bg2);line-height:1.5715;}
+.page{max-width:1000px;margin:0 auto;padding:36px 40px 64px;}
+
+.intro{margin-bottom:24px;}
+.intro h1{font-size:1.5rem;font-weight:700;letter-spacing:-.01em;margin-bottom:6px;}
+.intro p{color:var(--text2);font-size:.875rem;max-width:640px;}
+.intro .note{display:inline-block;margin-top:10px;font-size:.75rem;color:var(--primary);background:var(--primary-light);padding:4px 10px;border-radius:20px;font-weight:600;}
+
+.card{background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-md);padding:24px;}
+.card-title{font-size:.875rem;font-weight:600;color:var(--text);margin-bottom:2px;}
+.card-sub{font-size:.75rem;color:var(--text3);margin-bottom:16px;}
+
+.chart-ctrl{display:flex;gap:20px;align-items:flex-end;margin-bottom:18px;flex-wrap:wrap;}
+.ctrl-group{display:flex;flex-direction:column;gap:6px;}
+.ctrl-label{font-size:.7rem;font-weight:600;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;}
+select{font-size:.85rem;font-family:'Inter',sans-serif;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;cursor:pointer;}
+select:focus{border-color:var(--primary);}
+
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.seg button{border:none;background:var(--bg);color:var(--text2);font-family:'Inter',sans-serif;font-size:.8rem;font-weight:500;padding:7px 14px;cursor:pointer;transition:all .15s;}
+.seg button + button{border-left:1px solid var(--border);}
+.seg button.active{background:var(--primary);color:#fff;}
+.seg button:hover:not(.active){background:var(--bg2);}
+
+.chart-wrap{position:relative;height:340px;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="intro">
+    <h1>Multi-Dimensional Trend Chart</h1>
+    <p>Pick a metric and a grouping dimension to explore daily performance either by region or by campaign. Data below is randomly generated sample data, no real campaign information.</p>
+    <span class="note">Standalone Chart.js component demo</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Daily Trend</div>
+    <div class="card-sub">Select a metric and group by region or campaign</div>
+
+    <div class="chart-ctrl">
+      <div class="ctrl-group">
+        <span class="ctrl-label">Metric</span>
+        <select id="metricSelect" onchange="render()">
+          <option value="leads">Leads</option>
+          <option value="cpl">CPL</option>
+          <option value="spend">Spend</option>
+          <option value="ctr">CTR</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Group By</span>
+        <div class="seg" id="groupSeg">
+          <button class="active" data-mode="region" onclick="setGroupMode('region')">By Region</button>
+          <button data-mode="campaign" onclick="setGroupMode('campaign')">By Campaign</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <canvas id="trendChart"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── Sample data (fully synthetic) ───
+const REGIONS={
+  'Region A':['Campaign A','Campaign B'],
+  'Region B':['Campaign C','Campaign D'],
+  'Region C':['Campaign E']
+};
+const REGION_COLORS={'Region A':'#1568E5','Region B':'#3ec972','Region C':'#67bfff'};
+const CAMP_COLORS=['#1568E5','#67bfff','#3ec972','#f7cd4c','#ff5656'];
+
+function seededRand(seed){let x=Math.sin(seed)*10000;return x-Math.floor(x);}
+
+const DAYS=18;
+const LABELS=[];
+const startDate=new Date(2026,5,1);
+for(let i=0;i<DAYS;i++){
+  const d=new Date(startDate);d.setDate(d.getDate()+i);
+  LABELS.push(d.getMonth()+1+'/'+d.getDate());
+}
+
+// series[region][campaign] = {leads:[], cpl:[], spend:[], ctr:[]}
+const SERIES={};
+let seed=3;
+Object.entries(REGIONS).forEach(([region,camps])=>{
+  SERIES[region]={};
+  camps.forEach(camp=>{
+    const leads=[],cpl=[],spend=[],ctr=[];
+    for(let i=0;i<DAYS;i++){
+      const l=Math.round(4+seededRand(seed++)*14);
+      const s=Math.round((60+seededRand(seed++)*90)*100)/100;
+      leads.push(l);
+      spend.push(s);
+      cpl.push(s/l);
+      ctr.push(0.003+seededRand(seed++)*0.007);
+    }
+    SERIES[region][camp]={leads,cpl,spend,ctr};
+  });
+});
+
+const METRIC_LABEL={leads:'Leads',cpl:'CPL ($)',spend:'Spend ($)',ctr:'CTR (%)'};
+let groupMode='region';
+let chart=null;
+
+function setGroupMode(mode){
+  groupMode=mode;
+  document.querySelectorAll('#groupSeg button').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
+  render();
+}
+
+function sumRegionSeries(region,metric){
+  const camps=Object.values(SERIES[region]);
+  const out=new Array(DAYS).fill(0);
+  camps.forEach(c=>{
+    c[metric].forEach((v,i)=>{ out[i]+= (metric==='cpl'||metric==='ctr') ? v/camps.length : v; });
+  });
+  return out;
+}
+
+function buildDatasets(metric){
+  if(groupMode==='region'){
+    return Object.keys(REGIONS).map(region=>({
+      label:region,
+      data:sumRegionSeries(region,metric),
+      borderColor:REGION_COLORS[region],
+      backgroundColor:REGION_COLORS[region]+'20',
+      borderWidth:2,pointRadius:2,tension:.3,fill:false
+    }));
+  }
+  const datasets=[];
+  let ci=0;
+  Object.entries(REGIONS).forEach(([region,camps])=>{
+    camps.forEach(camp=>{
+      datasets.push({
+        label:region+' · '+camp,
+        data:SERIES[region][camp][metric],
+        borderColor:CAMP_COLORS[ci%CAMP_COLORS.length],
+        backgroundColor:CAMP_COLORS[ci%CAMP_COLORS.length]+'20',
+        borderWidth:2,pointRadius:2,tension:.3,fill:false
+      });
+      ci++;
+    });
+  });
+  return datasets;
+}
+
+function metricTick(metric,v){
+  if(metric==='cpl'||metric==='spend')return '$'+v.toFixed(0);
+  if(metric==='ctr')return (v*100).toFixed(1)+'%';
+  return v;
+}
+
+function render(){
+  const metric=document.getElementById('metricSelect').value;
+  const datasets=buildDatasets(metric);
+  const ctx=document.getElementById('trendChart').getContext('2d');
+  if(chart)chart.destroy();
+  chart=new Chart(ctx,{
+    type:'line',
+    data:{labels:LABELS,datasets},
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},
+        tooltip:{
+          callbacks:{
+            label:ctx=>` ${ctx.dataset.label}: ${metricTick(metric,ctx.parsed.y)}`
+          }
+        }
+      },
+      scales:{
+        y:{ticks:{callback:v=>metricTick(metric,v)}},
+        x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:9}}
+      }
+    }
+  });
+}
+
+render();
+</script>
+</body>
+</html>

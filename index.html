@@ -147,9 +147,9 @@ h1 em{font-style:italic;color:var(--text2)}
 .work-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;margin-top:2px}
 .work-body{flex:1}
 .work-meta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
-.work-title{font-size:15px;font-weight:500;letter-spacing:-.01em}
+.work-title{font-size:15px;font-weight:500;letter-spacing:-.01em;color:var(--text2)}
 .work-period{font-size:12px;color:var(--text3)}
-.work-role{font-size:13px;color:var(--text3);margin-bottom:6px}
+.work-role{font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
 .work-desc{font-size:13px;color:var(--text2);line-height:1.65}
 .work-desc-list{list-style:none;display:flex;flex-direction:column;gap:8px}
 .work-desc-list li{font-size:13px;color:var(--text2);line-height:1.65;padding-left:14px;position:relative}
@@ -182,7 +182,6 @@ h1 em{font-style:italic;color:var(--text2)}
     0 1px 0 rgba(255,255,255,0.9) inset,
     0 -1px 0 rgba(255,255,255,0.3) inset;
 }
-.project-card:hover .project-arrow{opacity:1;transform:translate(0,0)}
 .pc-glare{
   position:absolute;inset:-1px;
   border-radius:18px;
@@ -203,7 +202,17 @@ h1 em{font-style:italic;color:var(--text2)}
   color:var(--text2);
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
 }
-.project-arrow{position:absolute;top:16px;right:16px;font-size:14px;color:var(--text3);opacity:0;transform:translate(-4px,4px);transition:opacity .2s,transform .2s}
+.project-arrow{
+  position:absolute;top:14px;right:14px;
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:var(--text2);
+  background:rgba(255,255,255,0.5);
+  border:0.5px solid rgba(255,255,255,0.8);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  transition:background .2s,color .2s,transform .2s,border-color .2s;
+}
+.project-card:hover .project-arrow{background:var(--text);color:#fff;border-color:var(--text);transform:translate(2px,-2px)}
 
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);backdrop-filter:blur(4px);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .2s}
@@ -261,10 +270,14 @@ h1 em{font-style:italic;color:var(--text2)}
 
 /* CASE STUDY: split-screen layout */
 .cs-left{width:26%;flex-shrink:0;overflow-y:auto;padding:32px 28px;box-sizing:border-box;border-right:0.5px solid var(--border)}
-.cs-right{width:74%;flex-shrink:0;background:var(--bg2);overflow-y:auto;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.demo-caption{font-style:italic;color:var(--text3);font-size:12px;margin-top:14px;text-align:center}
-.demo-scale-wrapper{width:100%;height:100%;overflow:hidden;position:relative}
-.demo-frame{border:none;position:absolute;top:0;left:0;transform-origin:top left}
+.cs-right{width:74%;flex-shrink:0;background:var(--bg2);overflow:hidden;display:flex;flex-direction:column}
+.demo-tabs{display:flex;gap:6px;flex-wrap:wrap;padding:20px 24px 0;flex-shrink:0}
+.demo-tab{font-size:12px;padding:7px 14px;border-radius:20px;border:0.5px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+.demo-tab:hover{background:var(--bg3)}
+.demo-tab.active{background:var(--text);color:#fff;border-color:var(--text)}
+.demo-frame-wrap{flex:1;width:100%;overflow:hidden;position:relative;margin-top:16px}
+.demo-frame-responsive{width:100%;height:100%;border:none;display:block}
+.demo-caption{font-style:italic;color:var(--text3);font-size:12px;padding:0 24px 18px;margin-top:12px;text-align:center;flex-shrink:0}
 
 /* SKILLS */
 .skills-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:start}
@@ -844,21 +857,12 @@ const projects = {
     label:'2026 · Internship at Coohom',
     title:'Multi-Region Meta Ads Performance Dashboard',
     overview:'Meta Ads spend across five regions (EMEA, India, NA, Japan, and Thailand) used to live in scattered manual exports. I built an end-to-end reporting pipeline from scratch, starting as a local prototype and iterating into <b>a fully automated, anomaly-alerting dashboard</b> deployed on the company intranet.',
-    demo:'demo/meta_ads_dashboard_demo.html',
     features:[
-      {label:'Multi-dimensional analysis',text:'Drill down from a global view to a single region or campaign: daily trend by metric (Spend/Leads/CPL/CTR/CVR/Frequency), campaign comparison bars, region comparison donuts, and multi-line daily totals.'},
-      {label:'Filters that stay put',text:'Multi-select region/campaign filters with search, a date range picker, and a draggable floating filter panel so filters never require scrolling back to the top.'},
-      {label:'Key actions on the timeline',text:'Campaign decisions, like creative assets changes or audience expansion, are annotated directly on the trend chart as emoji markers. Easy to see the real impact of each key action.'},
+      {label:'Multi-dimensional analysis',text:'Drill down from a global view to a single region or campaign: daily trend by metric (Spend/Leads/CPL/CTR/CVR/Frequency), campaign comparison bars, region comparison donuts, and multi-line daily totals.',demo:'demo/multi_dimensional_chart_demo.html',demoLabel:'Trend Chart'},
+      {label:'Filters that stay put',text:'Multi-select region/campaign filters with search, a date range picker, and a draggable floating filter panel so filters never require scrolling back to the top.',demo:'demo/filters_demo.html',demoLabel:'Filters'},
+      {label:'Key actions on the timeline',text:'Campaign decisions, like creative assets changes or audience expansion, are annotated directly on the trend chart as emoji markers. Easy to see the real impact of each key action.',demo:'demo/timeline_annotation_demo.html',demoLabel:'Timeline'},
       {label:'SQL / MQL comparison',text:'Uploading a SQL leads Excel file auto-matches ad sets to campaigns and computes SQL count, SQL/MQL rate, and cost per SQL, with no manual matching required. (The CRM has no API. With one, this could be fully automated as well.)'},
-      {label:'Sortable tables and exports',text:'Campaign, region, and SQL summary tables, a key-actions log, audience fatigue alerts, and one-click CSV/PNG export.'}
-    ],
-    different:'<b>Designed to solve a real workflow problem.</b> This project originated from the repetitive manual process of uploading data every day, where human error was inevitable. The Google Sheet, dashboard, and automated email reports were all built to address actual reporting needs from the business. The final dashboard runs as a standalone HTML page, requiring neither BI software nor any third-party platform.',
-    lessons:[
-      'Solve real problems first. Every feature started with a pain point, not a feature wishlist.',
-      'Automate what repeats. Automation is not only for efficiency, but also for accuracy.',
-      'Deliver insights and data proactively, instead of waiting for someone to discover an issue.',
-      'Keep the solution lightweight. No third-part tools, keep everything accessible to everyone.',
-      'Iterate with confidence. Ship a stable version first, then build on top of it.'
+      {label:'Sortable tables and exports',text:'Campaign, region, and SQL summary tables, a key-actions log, audience fatigue alerts, and one-click CSV/PNG export.',demo:'demo/sortable_table_demo.html',demoLabel:'Sortable Table'}
     ],
     tags:['Python','Streamlit','Google Sheets API','Apps Script','Meta Marketing API','Chart.js','SheetJS']
   },
@@ -878,24 +882,17 @@ function openModal(id){
     <div class="modal-section"><p class="modal-section-label">What I built</p><p class="modal-text">${p.what}</p></div>
     <div class="modal-section"><p class="modal-section-label">Result</p><p class="modal-text">${p.result}</p></div>
     <div class="modal-tags">${p.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('')}</div>`
-  if(p.caseStudy) fitDemoFrame()
   document.getElementById('modal-overlay').classList.add('open')
   document.body.style.overflow='hidden'
 }
 
-const DEMO_WIDTH = 1440
-const DEMO_HEIGHT = 900
-function fitDemoFrame(){
-  const wrapper = document.querySelector('.demo-scale-wrapper')
-  const frame = document.querySelector('.demo-frame')
-  if(!wrapper || !frame) return
-  const scale = wrapper.clientWidth / DEMO_WIDTH
-  frame.style.width = DEMO_WIDTH + 'px'
-  frame.style.height = DEMO_HEIGHT + 'px'
-  frame.style.transform = `scale(${scale})`
-  wrapper.style.height = (DEMO_HEIGHT * scale) + 'px'
+let activeDemos = []
+function switchDemo(idx){
+  const f = activeDemos[idx]
+  if(!f) return
+  document.getElementById('demo-frame').src = f.demo
+  document.querySelectorAll('.demo-tab').forEach((btn,i)=>btn.classList.toggle('active', i===idx))
 }
-window.addEventListener('resize', fitDemoFrame)
 
 const versions = [
   {
@@ -967,6 +964,7 @@ function renderArchDiagram(){
 }
 
 function renderCaseStudy(p){
+  activeDemos = p.features.filter(f=>f.demo)
   return `
     <div class="cs-left">
       <div class="modal-accent" style="background:${p.accent}"></div>
@@ -990,20 +988,16 @@ function renderCaseStudy(p){
         <ul class="feature-list">${p.features.map(f=>`<li><b>${f.label}.</b> ${f.text}</li>`).join('')}</ul>
       </div>
 
-      <div class="cs-section"><p class="cs-heading">What makes it different</p><p class="modal-text">${p.different}</p></div>
-
-      <div class="cs-section">
-        <p class="cs-heading">Lessons learned</p>
-        <ul class="feature-list">${p.lessons.map(l=>`<li>${l}</li>`).join('')}</ul>
-      </div>
-
       <div class="modal-tags">${p.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('')}</div>
     </div>
     <div class="cs-right">
-      <div class="demo-scale-wrapper">
-        <iframe src="${p.demo}" class="demo-frame" title="${p.title} demo"></iframe>
+      <div class="demo-tabs">
+        ${activeDemos.map((f,i)=>`<button class="demo-tab${i===0?' active':''}" onclick="switchDemo(${i})">${f.demoLabel}</button>`).join('')}
       </div>
-      <p class="demo-caption">This demo runs entirely on synthetic data. Click "Connect" to simulate refreshing the dashboard.</p>
+      <div class="demo-frame-wrap">
+        <iframe src="${activeDemos[0].demo}" class="demo-frame-responsive" id="demo-frame" title="${p.title} demo"></iframe>
+      </div>
+      <p class="demo-caption">Each demo runs standalone on synthetic data — click a feature above to explore it.</p>
     </div>`
 }
 
