@@ -213,6 +213,8 @@ h1 em{font-style:italic;color:var(--text2)}
   transition:background .2s,color .2s,transform .2s,border-color .2s;
 }
 .project-card:hover .project-arrow{background:var(--text);color:#fff;border-color:var(--text);transform:translate(2px,-2px)}
+.pc-demo-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:500;color:var(--teal);background:var(--teal-bg);border:0.5px solid rgba(15,110,86,0.25);border-radius:20px;padding:3px 9px;margin-bottom:10px}
+.pc-demo-dot{width:5px;height:5px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite}
 
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);backdrop-filter:blur(4px);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .2s}
@@ -459,7 +461,7 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
           Open to opportunities
         </div>
         <h1>I build things,<br><em>then measure</em><br>if they work.</h1>
-        <p class="hero-sub">Hi there! This is Lucia, a Mathematics and Computer Science student interested in how data, technology, and business come together to solve real-world problems. I'm always excited to learn new things, connect with people from different backgrounds, and explore opportunities around the world.</p>
+        <p class="hero-sub">Hi there! This is Guo Zheng, a Mathematics and Computer Science student interested in how data, technology, and business come together to solve real-world problems. I'm always excited to learn new things, connect with people from different backgrounds, and explore opportunities around the world.</p>
         <div class="hero-badges">
           <span class="badge badge-purple">UIUC · Mathematics · GPA 4.0 · 2029</span>
           <span class="badge badge-teal">Champaign, IL · Open to remote</span>
@@ -527,6 +529,7 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
       <div class="reveal"><div class="project-card reveal-inner" onclick="openModal('p1')">
         <div class="pc-accent" style="background:var(--purple)"></div>
         <p class="pc-eyebrow">2026 · Coohom</p>
+        <span class="pc-demo-badge"><span class="pc-demo-dot"></span>Live demo</span>
         <p class="pc-title"><svg class="pc-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Multi-Region Meta Ads Dashboard</p>
         <p class="pc-desc">Meta Ads spend across five regions used to live in scattered manual exports. I built an end-to-end reporting pipeline from scratch, starting as a local prototype and iterating into a fully automated, anomaly-alerting dashboard.</p>
         <div class="pc-tags"><span class="pc-tag-pill">Python</span><span class="pc-tag-pill">Apps Script</span><span class="pc-tag-pill">Meta API</span></div>
@@ -854,7 +857,7 @@ document.querySelectorAll('.reveal').forEach(el => ro.observe(el))
 const projects = {
   p1:{
     accent:'#534AB7',caseStudy:true,
-    label:'2026 · Internship at Coohom',
+    label:'2026 · Internship at Coohom · Independent Project',
     title:'Multi-Region Meta Ads Performance Dashboard',
     overview:'Meta Ads spend across five regions (EMEA, India, NA, Japan, and Thailand) used to live in scattered manual exports. I built an end-to-end reporting pipeline from scratch, starting as a local prototype and iterating into <b>a fully automated, anomaly-alerting dashboard</b> deployed on the company intranet.',
     features:[
@@ -867,7 +870,7 @@ const projects = {
     tags:['Python','Streamlit','Google Sheets API','Apps Script','Meta Marketing API','Chart.js','SheetJS']
   },
   p2:{accent:'#0F6E56',label:'2026 · Systems / Tooling',title:'Intranet VPN Switcher',github:'https://github.com/LuciaZheng313/intranet-vpn-switcher',problem:'Daily work often requires switching between two incompatible network states: a proxy/VPN on for general browsing, and the proxy off for accessing internal company sites. Forgetting to switch causes internal tools to fail silently, connections time out or DNS resolution fails with no visible error, and in some cases (like autosave on internal wiki tools) content gets lost without warning.',what:"A Chrome extension for macOS with two independent detection layers: one watches for connection failures against user-configured internal domain/IP patterns (supporting wildcards), and an optional second layer watches for a specific 'unsaved changes' UI state on a user-specified internal wiki URL, detected through markup rather than text so it works across interface languages. Both are fully configurable through an options page, not hardcoded, so the extension generalizes to any internal domain setup. When a proxy conflict is detected, a one-click action disables the system proxy via a local Python script communicating over Chrome's Native Messaging API, correctly toggling HTTP, HTTPS, and SOCKS together across all active network interfaces.",result:"Widely used among team members because we share the same problems. The harder part of this project wasn't the extension logic, but debugging macOS's permission model (TCC silently blocking scripts run from common folders like Downloads) and getting proxy state changes to apply consistently across multiple proxy types and network services.",tags:['Chrome Extension','Native Messaging','Python','macOS System Debugging','Networking']},
-  p3:{accent:'#854F0B',label:'Independent Project (qualification logic provided by sales team) · Jun 2026 – present',title:'Automated Lead Qualification & Outreach Agent',problem:'Designed and built an automation agent that handles the full lifecycle of leads generated from Meta ad forms, from ingestion to qualification to first-touch outreach, reducing manual triage work and shortening time-to-first-contact.',what:'The agent receives and parses incoming leads in real time, applies rule-based logic to route them by region (EMEA / India / North America / Japan / Thailand), then runs them through a fixed qualification framework built around five key questions (provided by the sales team) to determine lead fit before deciding the next action: auto-engage or hand off to a sales rep. Lead status and conversation history are persisted in Supabase for tracking and follow-up.',result:'For EMEA / India / North America, the plan is to reach leads via WhatsApp with email as fallback; this channel is currently blocked on WhatsApp Business API setup and blue-tick verification. For Japan and Thailand, the team built an automated email (Auto EDM) flow instead, both of which are now fully live: leads flow from Meta into Supabase and trigger an automatic outreach email on submission.',tags:['Automation','Supabase','WhatsApp API','Lead Scoring','Rule-Based Logic']}
+  p3:{accent:'#854F0B',label:'2026 · Internship at Coohom ',title:'Automated Lead Qualification & Outreach Agent',problem:'Designed and built an automation agent that handles the full lifecycle of leads generated from Meta ad forms, from ingestion to qualification to first-touch outreach, reducing manual triage work and shortening time-to-first-contact.',what:'The agent receives and parses incoming leads in real time, applies rule-based logic to route them by region (EMEA / India / North America / Japan / Thailand), then runs them through a fixed qualification framework built around five key questions (provided by the sales team) to determine lead fit before deciding the next action: auto-engage or hand off to a sales rep. Lead status and conversation history are persisted in Supabase for tracking and follow-up.',result:'For EMEA / India / North America, the plan is to reach leads via WhatsApp with email as fallback; this channel is currently blocked on WhatsApp Business API setup and blue-tick verification. For Japan and Thailand, the team built an automated email (Auto EDM) flow instead, both of which are now fully live: leads flow from Meta into Supabase and trigger an automatic outreach email on submission.',tags:['Automation','Supabase','WhatsApp API','Lead Scoring','Rule-Based Logic']}
 }
 
 function openModal(id){
@@ -1042,12 +1045,10 @@ document.addEventListener('keydown',e=>{
     el.querySelector('.nav-light').style.opacity = '1'
   }
 
-  // 初始化：激活第一个
+ 
   requestAnimationFrame(() => movePill(links[0]))
 
-  // 字体异步加载完成后，文字实际宽度可能和用 fallback 字体量出来的不一样，
-  // pill 的 left/width 是缓存的像素值，不会跟着字体变化自动更新（.nav-light 用的是
-  // CSS 百分比定位，是实时的，所以两者会跟着字体加载错开）。字体就绪后重新measure一次。
+
   if(document.fonts && document.fonts.ready){
     document.fonts.ready.then(() => {
       const current = document.querySelector('.nav-links a.active') || links[0]
@@ -1055,10 +1056,10 @@ document.addEventListener('keydown',e=>{
     })
   }
 
-  // 点击切换
+
   links.forEach(a => a.addEventListener('click', () => movePill(a)))
 
-  // 滚动自动高亮
+
   const sections = ['hero','work','projects','skills','travel','contact']
   window.addEventListener('scroll', () => {
     let cur = 0
