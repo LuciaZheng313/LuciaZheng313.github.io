@@ -495,8 +495,8 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
             <span class="work-title">UIUC, CS124</span>
             <span class="work-period">Jan 2026 – present</span>
           </div>
-          <p class="work-role">Course Assistant</p>
-          <p class="work-desc">Provided 2 hours/week of online Java tutoring and forum Q&A for introductory CS students. Assisted with debugging code, explaining core programming concepts, and guiding students through Machine Projects while promoting independent problem-solving.</p>
+          <p class="work-role">Course Assistant → Tutor (starting Aug 2026)</p>
+          <p class="work-desc">Provided 2 hours/week of online Java tutoring and forum Q&A for introductory CS students. Assisted with debugging code, explaining core programming concepts, and guiding students through Machine Projects while promoting independent problem-solving. Recently promoted to Tutor, effective Aug 2026.</p>
           <div class="work-tags">
             <span class="wtag">Java</span><span class="wtag">Tutoring</span>
           </div>
@@ -529,10 +529,10 @@ footer{border-top:0.5px solid var(--border);padding:22px 48px;display:flex;justi
       </div></div>
       <div class="reveal"><div class="project-card reveal-inner" onclick="openModal('p3')">
         <div class="pc-accent" style="background:var(--amber)"></div>
-        <p class="pc-eyebrow">2025 · Android</p>
-        <p class="pc-title">Event Filtering Interface</p>
-        <p class="pc-desc">Multi-stage filter pipeline with async API sync and RecyclerView display.</p>
-        <div class="pc-tags"><span class="pc-tag-pill">Java</span><span class="pc-tag-pill">Android</span><span class="pc-tag-pill">Async</span></div>
+        <p class="pc-eyebrow">2026 · Automation</p>
+        <p class="pc-title">Automated Lead Qualification & Outreach Agent</p>
+        <p class="pc-desc">Ingests Meta ad leads in real time, routes them by region, and runs them through a five-question qualification framework before auto-engaging or handing off to sales.</p>
+        <div class="pc-tags"><span class="pc-tag-pill">Automation</span><span class="pc-tag-pill">Supabase</span><span class="pc-tag-pill">Lead Scoring</span></div>
         <span class="project-arrow">↗</span>
       </div></div>
     </div>
@@ -863,7 +863,7 @@ const projects = {
     tags:['Python','Streamlit','Google Sheets API','Apps Script','Meta Marketing API','Chart.js','SheetJS']
   },
   p2:{accent:'#0F6E56',label:'2026 · Systems / Tooling',title:'Intranet VPN Switcher',github:'https://github.com/LuciaZheng313/intranet-vpn-switcher',problem:'Daily work often requires switching between two incompatible network states: a proxy/VPN on for general browsing, and the proxy off for accessing internal company sites. Forgetting to switch causes internal tools to fail silently, connections time out or DNS resolution fails with no visible error, and in some cases (like autosave on internal wiki tools) content gets lost without warning.',what:"A Chrome extension for macOS with two independent detection layers: one watches for connection failures against user-configured internal domain/IP patterns (supporting wildcards), and an optional second layer watches for a specific 'unsaved changes' UI state on a user-specified internal wiki URL, detected through markup rather than text so it works across interface languages. Both are fully configurable through an options page, not hardcoded, so the extension generalizes to any internal domain setup. When a proxy conflict is detected, a one-click action disables the system proxy via a local Python script communicating over Chrome's Native Messaging API, correctly toggling HTTP, HTTPS, and SOCKS together across all active network interfaces.",result:"Widely used among team members because we share the same problems. The harder part of this project wasn't the extension logic, but debugging macOS's permission model (TCC silently blocking scripts run from common folders like Downloads) and getting proxy state changes to apply consistently across multiple proxy types and network services.",tags:['Chrome Extension','Native Messaging','Python','macOS System Debugging','Networking']},
-  p3:{accent:'#854F0B',label:'2025 · Android Development',title:'Event Filtering Interface',problem:'How do multi-stage filters compose correctly when UI state must stay in sync with async API responses?',what:'Extended an instructor-provided Android skeleton to implement sequential filter logic (date, virtual, favorites, search), RecyclerView display, and async error handling.',result:'Gained concrete understanding of client-side data pipelines — directly applicable to dashboard work.',tags:['Java','Android','RecyclerView','Async / API','State management']}
+  p3:{accent:'#854F0B',label:'Independent Project (qualification logic provided by sales team) · Jun 2026 – present',title:'Automated Lead Qualification & Outreach Agent',problem:'Designed and built an automation agent that handles the full lifecycle of leads generated from Meta ad forms, from ingestion to qualification to first-touch outreach, reducing manual triage work and shortening time-to-first-contact.',what:'The agent receives and parses incoming leads in real time, applies rule-based logic to route them by region (EMEA / India / North America / Japan / Thailand), then runs them through a fixed qualification framework built around five key questions (provided by the sales team) to determine lead fit before deciding the next action: auto-engage or hand off to a sales rep. Lead status and conversation history are persisted in Supabase for tracking and follow-up.',result:'For EMEA / India / North America, the plan is to reach leads via WhatsApp with email as fallback; this channel is currently blocked on WhatsApp Business API setup and blue-tick verification. For Japan and Thailand, the team built an automated email (Auto EDM) flow instead, both of which are now fully live: leads flow from Meta into Supabase and trigger an automatic outreach email on submission.',tags:['Automation','Supabase','WhatsApp API','Lead Scoring','Rule-Based Logic']}
 }
 
 function openModal(id){
